@@ -36,13 +36,14 @@ $(PROG_NAME)$(ROM_EXTENSION): $(PROG_NAME).elf $(PROG_NAME).dfs
 	$(N64TOOL) $(N64_FLAGS) -t "$(PROG_NAME)" -s 1M $(PROG_NAME).dfs
 	$(CHKSUM64PATH) $(PROG_NAME)$(ROM_EXTENSION)
 
-#LD_OFILES += $(CURDIR)/obj/$(PROG_NAME).o
+LD_OFILES += $(CURDIR)/obj/weather.o
 
 # Produces the disassembly, with symbols included.
 $(PROG_NAME).dsm: $(PROG_NAME).elf
 	mips-linux-gnu-objdump $(PROG_NAME).elf -m mips -D > $(PROG_NAME).dsm
 
 $(PROG_NAME).elf : $(PROG_NAME).o $(LD_FILE)
+	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/weather.o $(CURDIR)/weather.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/$(PROG_NAME).o $(CURDIR)/$(PROG_NAME).c
 
 	$(LD) -o $(PROG_NAME).elf $(CURDIR)/obj/$(PROG_NAME).o $(LD_OFILES) $(LINK_FLAGS)
@@ -52,6 +53,5 @@ $(PROG_NAME).dfs:
 	$(MKDFSPATH) $(PROG_NAME).dfs ./filesystem/
 
 clean:
-	rm -f *.v64 *.z64 *.elf *.o *.bin *.dfs $(LD_FILE)
+	rm -f *.v64 *.z64 *.elf *.o *.bin *.dfs
 	rm -f ./obj/*.o
-	$(MAKE) -C ./rsp/ clean
