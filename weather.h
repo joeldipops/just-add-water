@@ -1,10 +1,10 @@
 #ifndef WEATHER_INCLUDED
 #define WEATHER_INCLUDED
 
-typedef enum { WEATHER_SUNNY, WEATHER_CLOUDY, WEATHER_RAIN, WEATHER_STORM } WEATHER;
+typedef enum { WEATHER_SUNNY, WEATHER_CLOUDY, WEATHER_RAIN, WEATHER_STORM } Weather;
 
-WEATHER getCurrentWeather();
-WEATHER getCurrentForecast();
-void newDay();
+Weather getCurrentWeather();
+Weather getCurrentForecast();
+void newDayWeather();
 
 #endif

@@ -1,8 +1,13 @@
 #include "weather.h"
+#include "line.h"
 #include <libdragon.h>
 
 int main(void) {
+    initLine();
+
     while(true) {
-        newDay();
+        newDayWeather();
+        //updateClothQueue();
+        updateHangingCloths(getCurrentWeather());
     }
 }

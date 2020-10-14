@@ -1,19 +1,21 @@
 #include "weather.h"
+#include <stdlib.h>
 
-const WEATHER ForecastDie[6] = { 
+const Weather ForecastDie[6] = { 
     WEATHER_RAIN, WEATHER_RAIN, WEATHER_RAIN,
     WEATHER_SUNNY, WEATHER_SUNNY, WEATHER_SUNNY
 };
-const WEATHER WeatherDie[8] = { 
+const Weather WeatherDie[8] = { 
     WEATHER_STORM,
     WEATHER_RAIN, WEATHER_RAIN, WEATHER_RAIN,
     WEATHER_SUNNY, WEATHER_SUNNY, WEATHER_SUNNY, WEATHER_SUNNY
 };
 
-static WEATHER forecast;
-static WEATHER weather;
+static Weather nextForecast;
+static Weather forecast;
+static Weather weather;
 
-WEATHER getCurrentWeather() {
+Weather getCurrentWeather() {
     switch (weather) {
         case WEATHER_STORM:
             return forecast == WEATHER_RAIN ? WEATHER_STORM : WEATHER_RAIN;
@@ -27,10 +29,12 @@ WEATHER getCurrentWeather() {
     }
 }
 
-WEATHER getCurrentForecast() {
-    return forecast;
+Weather getForecast() {
+    return nextForecast;
 }
 
-void newDay() {
-    // roll some dice.
+void newDayWeather() {
+    forecast = nextForecast;
+    nextForecast = rand() % 6;
+    weather = rand() % 8;
 }

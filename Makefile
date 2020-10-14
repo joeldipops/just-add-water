@@ -37,6 +37,8 @@ $(PROG_NAME)$(ROM_EXTENSION): $(PROG_NAME).elf $(PROG_NAME).dfs
 	$(CHKSUM64PATH) $(PROG_NAME)$(ROM_EXTENSION)
 
 LD_OFILES += $(CURDIR)/obj/weather.o
+LD_OFILES += $(CURDIR)/obj/cloth.o
+LD_OFILES += $(CURDIR)/obj/line.o
 
 # Produces the disassembly, with symbols included.
 $(PROG_NAME).dsm: $(PROG_NAME).elf
@@ -44,6 +46,8 @@ $(PROG_NAME).dsm: $(PROG_NAME).elf
 
 $(PROG_NAME).elf : $(PROG_NAME).o $(LD_FILE)
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/weather.o $(CURDIR)/weather.c
+	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/cloth.o $(CURDIR)/cloth.c	
+	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/line.o $(CURDIR)/line.c	
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/$(PROG_NAME).o $(CURDIR)/$(PROG_NAME).c
 
 	$(LD) -o $(PROG_NAME).elf $(CURDIR)/obj/$(PROG_NAME).o $(LD_OFILES) $(LINK_FLAGS)
