@@ -4,13 +4,9 @@
 #include <stdlib.h>
 #include <libdragon.h>
 
-static Cloth* clothQueue;
-static u32 clothQueueSize = 0;
-
 static u32 CLOTH_COLOURS[4];
 
 void initCloths() {
-    clothQueue = calloc(sizeof(Cloth), 5);
     CLOTH_COLOURS[0] = graphics_make_color(0xff, 0xff, 0xff, 0xff); // white/dry
     CLOTH_COLOURS[1] = graphics_make_color(0x00, 0xff, 0x00, 0xff); // green/damp
     CLOTH_COLOURS[2] = graphics_make_color(0xff, 0xa5, 0x00, 0xff); // orange/spun

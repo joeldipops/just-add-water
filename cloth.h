@@ -6,8 +6,7 @@
 
 
 typedef enum {
-    // A buffer so we don't go below 0.
-    DRYING_NONE = 0,
+    DRYING_COMPLETE = 0,
     DRYING_DRY = 1,
     DRYING_DAMP = 2,
     DRYING_SPUN = 3,
@@ -22,6 +21,7 @@ typedef enum {
 } GrowthType;
 
 typedef struct {
+    bool isFreeable;
     u32 size;
     DryingState dryingState;
     GrowthType growthType;

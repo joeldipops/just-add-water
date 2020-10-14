@@ -9,3 +9,7 @@ typedef int8_t  s8;
 typedef int16_t s16;
 typedef int32_t s32;
 typedef int64_t s64;
+
+typedef struct controller_data N64ControllerState;
+
+#define TICKS_PER_SECOND 1000000
