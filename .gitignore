@@ -3,3 +3,4 @@ obj/
 *.elf
 *.dfs
 *.bin
+test.sh

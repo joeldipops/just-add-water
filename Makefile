@@ -40,12 +40,16 @@ LD_OFILES += $(CURDIR)/obj/weather.o
 LD_OFILES += $(CURDIR)/obj/cloth.o
 LD_OFILES += $(CURDIR)/obj/line.o
 LD_OFILES += $(CURDIR)/obj/clothManager.o
+LD_OFILES += $(CURDIR)/obj/resources.o
+LD_OFILES += $(CURDIR)/obj/text.o
 
 # Produces the disassembly, with symbols included.
 $(PROG_NAME).dsm: $(PROG_NAME).elf
 	mips-linux-gnu-objdump $(PROG_NAME).elf -m mips -D > $(PROG_NAME).dsm
 
 $(PROG_NAME).elf : $(PROG_NAME).o $(LD_FILE)
+	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/resources.o $(CURDIR)/resources.c
+	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/text.o $(CURDIR)/text.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/weather.o $(CURDIR)/weather.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/cloth.o $(CURDIR)/cloth.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/line.o $(CURDIR)/line.c
@@ -54,9 +58,12 @@ $(PROG_NAME).elf : $(PROG_NAME).o $(LD_FILE)
 
 	$(LD) -o $(PROG_NAME).elf $(CURDIR)/obj/$(PROG_NAME).o $(LD_OFILES) $(LINK_FLAGS)
 
-$(PROG_NAME).dfs:
-	#mksprite 16 8 2 ./assets/spriteSheet.png ./filesystem/spriteSheet.sprite
+$(PROG_NAME).dfs: font.sprite
 	$(MKDFSPATH) $(PROG_NAME).dfs ./filesystem/
+
+font.sprite:
+	mksprite 32 32 3 ./assets/font.png ./filesystem/font.sprite
+
 
 clean:
 	rm -f *.v64 *.z64 *.elf *.o *.bin *.dfs

@@ -1,3 +1,6 @@
+#ifndef CORE_INCLUDED
+#define CORE_INCLUDED
+
 #include <libdragon.h>
 
 typedef uint8_t  u8;
@@ -10,6 +13,14 @@ typedef int16_t s16;
 typedef int32_t s32;
 typedef int64_t s64;
 
+typedef char string[128];
+
+typedef struct {
+    size_t size;
+    u8* data;
+} Buffer;
+
 typedef struct controller_data N64ControllerState;
 
 #define TICKS_PER_SECOND 1000000
+#endif
