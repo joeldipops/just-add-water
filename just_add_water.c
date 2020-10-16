@@ -60,7 +60,19 @@ void renderStep() {
     display_context_t frameId;
     while(!(frameId = display_lock()));
 
-    drawText(frameId, "Hello world", 10, 10, 1);
+    // Assure RDP is ready for new commands
+    rdp_sync(SYNC_PIPE);
+    // Remove any clipping windows
+    rdp_set_default_clipping();
+    // Enable sprite display instead of solid color fill
+    rdp_enable_texture_copy();
+    // Attach RDP to display
+    rdp_attach_display(frameId);
+
+    rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), 2);
+    rdp_draw_sprite_scaled(0, 8, 8, 1, 1, MIRROR_DISABLED);
+
+    rdp_detach_display();
 
     display_show(frameId);
 }
