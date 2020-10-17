@@ -10,23 +10,8 @@
 
 static bool textInitted = false;
 
-static const u32 CHARACTER_SIZE = 24;
+static const u32 CHARACTER_SIZE = 8;
 static const u32 SPRITE_SIZE = 32;
-
-/**
- * Gets the RDP module ready to render a new texture.
- * @param frame identifies frame to render to.
- */
-void prepareRdpForSprite(const display_context_t frame) {
-    // Assure RDP is ready for new commands
-    rdp_sync(SYNC_PIPE);
-    // Remove any clipping windows
-    rdp_set_default_clipping();
-    // Enable sprite display instead of solid color fill
-    rdp_enable_texture_copy();
-    // Attach RDP to display
-    rdp_attach_display(frame);
-}
 
 /**
  * Initialises text subsystem by loading sprites etc.
@@ -231,10 +216,7 @@ void drawText(const display_context_t frame, const string text, const u32 x, con
     if (!textInitted) {
         initText();
     }
-    prepareRdpForSprite(frame);
     drawTextLine(text, x, y, scale);
-
-    rdp_detach_display();
 }
 
 /**
@@ -253,7 +235,6 @@ void drawTextParagraph(
     const float scale,
     const u32 width
 ) {
-    prepareRdpForSprite(frame);
 
     u32 top = y;
 

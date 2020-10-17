@@ -62,9 +62,10 @@ $(PROG_NAME).dfs: font.sprite
 	$(MKDFSPATH) $(PROG_NAME).dfs ./filesystem/
 
 font.sprite:
-	mksprite 32 32 3 ./assets/font.png ./filesystem/font.sprite
+	mksprite 16 32 3 ./assets/font.png ./filesystem/font.sprite
 
 
 clean:
 	rm -f *.v64 *.z64 *.elf *.o *.bin *.dfs
+	rm -f ./filesystem/*
 	rm -f ./obj/*.o

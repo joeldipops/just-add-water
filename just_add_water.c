@@ -9,10 +9,10 @@
 #include "resources.h"
 
 void initialiseSubsystems() {
-    //initLine();
+    initLine();
     init_interrupts();
 
-    display_init(RESOLUTION_320x240, DEPTH_32_BPP, 2, GAMMA_NONE, ANTIALIAS_OFF);    
+    display_init(RESOLUTION_320x240, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_OFF);    
     dfs_init(DFS_DEFAULT_LOCATION);
     rdp_init();
     controller_init();
@@ -28,6 +28,7 @@ void gameOver() {
 }
 
 void onNewDay() {
+    drawText()
     newDayWeather();
     updateHangingCloths(getCurrentWeather());
 
@@ -52,25 +53,14 @@ void inputStep() {
     N64ControllerState keysReleased = get_keys_up();
 };
 
-u32 boxpos = 0;
-
-u32 timesFucked = 0;
-
 void renderStep() {
     display_context_t frameId;
     while(!(frameId = display_lock()));
 
-    // Assure RDP is ready for new commands
-    rdp_sync(SYNC_PIPE);
-    // Remove any clipping windows
-    rdp_set_default_clipping();
-    // Enable sprite display instead of solid color fill
-    rdp_enable_texture_copy();
     // Attach RDP to display
     rdp_attach_display(frameId);
 
-    rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), 2);
-    rdp_draw_sprite_scaled(0, 8, 8, 1, 1, MIRROR_DISABLED);
+    drawText(frameId, "HELLO WORLD", 10, 10, 1);
 
     rdp_detach_display();
 
@@ -86,7 +76,14 @@ int main(void) {
     initialiseSubsystems();
     resetScreen();
 
-    //updateTimer(10 * TICKS_PER_SECOND);
+    updateTimer(10 * TICKS_PER_SECOND);
+
+    // Assure RDP is ready for new commands
+    rdp_sync(SYNC_PIPE);
+    // Remove any clipping windows
+    rdp_set_default_clipping();
+    // Enable sprite display instead of solid color fill
+    rdp_enable_texture_copy();
 
     while(true) {
         inputStep();
