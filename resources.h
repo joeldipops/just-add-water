@@ -5,20 +5,20 @@
 #include <string.h>
 #include "core.h"
 
-/*
-static const byte GB_START_SPRITE = 0;
-static const byte GB_SELECT_SPRITE = 1;
-static const byte N64_START_SPRITE = 2;
-static const byte MENU_SPRITE = 3;
-static const byte N64_L_SPRITE = 4;
-static const byte N64_R_SPRITE = 5;
-static const byte N64_Z_SPRITE = 6;
-static const byte N64_C_SPRITE = 7;
-static const byte BLUE_BG_TEXTURE = 8;
-static const byte CREAM_BG_TEXTURE = 9;
-static const byte GB_BG_TEXTURE = 0x0A;
-static const byte ERROR_SPRITE = 0x0B;
-*/
+typedef enum {
+    ROOF_SPRITE,
+    DRY_SPRITE,
+    DRENCHED_SPRITE,
+    SPUN_SPRITE,
+    DAMP_SPRITE,
+    RAIN_SPRITE,
+    SUN_SPRITE, 
+    CLOUD_SPRITE,
+    INSIDE_LINE,
+    OUTSIDE_LINE,
+    HANG_SPRITE,
+    TAKE_SPRITE
+} SpriteCode;
 
 typedef enum {
     ROTATE_90 = '>',

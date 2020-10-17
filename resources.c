@@ -143,7 +143,7 @@ s32 initResources() {
     dfs_close(textMapPointer);
 
     // Read in other sprites.
-    s32 spriteSheetPointer = dfs_open("/spriteSheet.sprite");
+    s32 spriteSheetPointer = dfs_open("/sprites.sprite");
     if (!spriteSheetPointer) {
         return -1;
     }

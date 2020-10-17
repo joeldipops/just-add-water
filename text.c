@@ -65,10 +65,16 @@ u8 parseByte(const char* start, const u8 maxLength, const u8 base) {
  * @param scale Scale the sprite.
  * @private
  */
-static void drawSprite(const u32 spriteCode, sprite_t* spriteSheet, const u32 x, const u32 y, const float scale) {
+static void draw(const u32 spriteCode, sprite_t* spriteSheet, const u32 x, const u32 y, const float scale) {
     rdp_load_texture_stride(0, 0, MIRROR_DISABLED, spriteSheet, spriteCode);
     rdp_draw_sprite_scaled(0, x, y, scale, scale, MIRROR_DISABLED);
 }
+
+void drawSprite(const SpriteCode spriteCode, const u32 x, const u32 y, const float scale) {
+    draw(spriteCode, getSpriteSheet(), x, y, scale);
+}
+
+
 
 /**
  * Draws a text character from the sprite sheet at a given location with the given transformation.
@@ -94,7 +100,7 @@ static void drawTransformedCharacter(const char character, const u32 x, const u3
         offset = 0;
     }
 
-    drawSprite(offset, sheet, x, y, scale);
+    draw(offset, sheet, x, y, scale);
 }
 
 /**
@@ -154,7 +160,7 @@ static s32 drawImage(const string text, const u32 textIndex, const u32 length, c
         spriteCode = 0;
     }
 
-    drawSprite(spriteCode, sheet, x, y, ceil(scale));
+    draw(spriteCode, sheet, x, y, ceil(scale));
     i += 2;
     return i;
 }
@@ -212,7 +218,7 @@ static s32 drawTextLine(const string text, const u32 x, const u32 y, const float
  * @param y The y co-ordinate to start the string at.
  * @param scale size of the text sprites.
  */
-void drawText(const display_context_t frame, const string text, const u32 x, const u32 y, const float scale) {
+void drawText(const string text, const u32 x, const u32 y, const float scale) {
     if (!textInitted) {
         initText();
     }

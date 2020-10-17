@@ -1,10 +1,10 @@
 #include "line.h"
 #include "cloth.h"
 #include "weather.h"
+#include "config.h"
 #include <string.h>
 
-#define OUTSIDE_LINE_SIZE 16
-#define INSIDE_LINE_SIZE 8
+
 
 static Cloth* outsideLine[OUTSIDE_LINE_SIZE];
 static Cloth* insideLine[INSIDE_LINE_SIZE];

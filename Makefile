@@ -42,6 +42,7 @@ LD_OFILES += $(CURDIR)/obj/line.o
 LD_OFILES += $(CURDIR)/obj/clothManager.o
 LD_OFILES += $(CURDIR)/obj/resources.o
 LD_OFILES += $(CURDIR)/obj/text.o
+LD_OFILES += $(CURDIR)/obj/player.o
 
 # Produces the disassembly, with symbols included.
 $(PROG_NAME).dsm: $(PROG_NAME).elf
@@ -54,16 +55,20 @@ $(PROG_NAME).elf : $(PROG_NAME).o $(LD_FILE)
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/cloth.o $(CURDIR)/cloth.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/line.o $(CURDIR)/line.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/clothManager.o $(CURDIR)/clothManager.c
+	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/player.o $(CURDIR)/player.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/$(PROG_NAME).o $(CURDIR)/$(PROG_NAME).c
 
 	$(LD) -o $(PROG_NAME).elf $(CURDIR)/obj/$(PROG_NAME).o $(LD_OFILES) $(LINK_FLAGS)
 
-$(PROG_NAME).dfs: font.sprite
+$(PROG_NAME).dfs: font.sprite sprites.sprite
 	$(MKDFSPATH) $(PROG_NAME).dfs ./filesystem/
 
-font.sprite:
-	mksprite 16 32 3 ./assets/font.png ./filesystem/font.sprite
+%.sprite: ./assets/%.png
+	mksprite 16 32 3 $^ ./filesystem/$@
 
+# TODO
+./assets/%.png:
+	xcf2png $(basename $@).xcf -o $@
 
 clean:
 	rm -f *.v64 *.z64 *.elf *.o *.bin *.dfs

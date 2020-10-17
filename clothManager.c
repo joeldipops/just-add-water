@@ -71,6 +71,7 @@ bool enqueueCloth() {
 
     queueIndex++;
     clothQueue[queueIndex] = newCloth;
+
     return true;
 }
 

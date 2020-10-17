@@ -2,6 +2,7 @@
 #define TEXT_INCLUDED
 
 #include "core.h"
+#include "resources.h"
 #include <libdragon.h>
 
 /**
@@ -21,7 +22,12 @@ void freeText();
  * @param y The y co-ordinate to start the string at.
  * @param scale size of the text sprites.
  */
-void drawText(const display_context_t frame, const string text, const u32 x, const u32 y, const float scale);
+void drawText(const string text, const u32 x, const u32 y, const float scale);
+
+/**
+ *
+ */ 
+void drawSprite(const SpriteCode spriteCode, const u32 x, const u32 y, const float scale);
 
 /**
  * Draws a horizontal string of text starting at the given location.
