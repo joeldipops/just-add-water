@@ -4,11 +4,14 @@
 
 #include <stdlib.h>
 
-const Weather ForecastDie[6] = { 
+#define FORECAST_SIZE 6
+#define WEATHER_SIZE 8
+
+const Weather ForecastDie[FORECAST_SIZE] = { 
     WEATHER_RAIN, WEATHER_RAIN, WEATHER_RAIN,
     WEATHER_SUNNY, WEATHER_SUNNY, WEATHER_SUNNY
 };
-const Weather WeatherDie[8] = { 
+const Weather WeatherDie[WEATHER_SIZE] = { 
     WEATHER_STORM,
     WEATHER_RAIN, WEATHER_RAIN, WEATHER_RAIN,
     WEATHER_SUNNY, WEATHER_SUNNY, WEATHER_SUNNY, WEATHER_SUNNY
@@ -42,7 +45,7 @@ void drawWeather() {
     );
 
     drawSprite(
-        getWeatherSprite(weather),
+        getWeatherSprite(getCurrentWeather()),
         LEFT_MARGIN,
         STANDARD_MARGIN * 2 + TILE_WIDTH,
         1
@@ -84,6 +87,6 @@ Weather getForecast() {
 
 void newDayWeather() {
     forecast = nextForecast;
-    nextForecast = rand() % 6;
-    weather = rand() % 8;
+    nextForecast = ForecastDie[rand() % FORECAST_SIZE];
+    weather = WeatherDie[rand() % WEATHER_SIZE];
 }

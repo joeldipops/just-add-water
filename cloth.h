@@ -22,6 +22,7 @@ typedef enum {
 
 typedef struct {
     bool isFreeable;
+    char text[3]; // text that appears on the icon.
     u32 size;
     DryingState dryingState;
     GrowthType growthType;
@@ -32,6 +33,6 @@ void initCloths();
 
 void updateCloth();
 
-u32 getClothColour(Cloth* cloth);
+void buildClothText(Cloth* cloth);
 
 #endif

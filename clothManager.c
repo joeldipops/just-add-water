@@ -48,20 +48,25 @@ void drawQueue() {
 
     SpriteCode spriteId = getClothSprite(next);
 
+    u32 baseX = QUEUE_MARGIN;
+    u32 baseY = QUEUE_MARGIN + STANDARD_MARGIN;
+
     for (u32 i = 0; i < next->size; i++) {
         drawSprite(
             spriteId, 
-            QUEUE_MARGIN + i * TILE_WIDTH,
-            QUEUE_MARGIN + STANDARD_MARGIN,
+            baseX + i * TILE_WIDTH,
+            baseY,
             1
         );
         drawSprite(
             spriteId, 
-            QUEUE_MARGIN + i * TILE_WIDTH,
-            QUEUE_MARGIN + STANDARD_MARGIN + TILE_WIDTH,
+            baseX + i * TILE_WIDTH,
+            baseY + TILE_WIDTH,
             1
         );
     }
+
+    drawText(next->text, baseX, baseY, 1);
 }
 
 /**
@@ -86,6 +91,7 @@ static void initNewCloth(Cloth* cloth) {
     cloth->size = 2;
     cloth->growthFactor = 1;
     cloth->growthType = GROWTH_LINEAR;
+    buildClothText(cloth);
 }
 
 /**
