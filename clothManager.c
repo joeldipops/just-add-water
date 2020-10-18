@@ -19,6 +19,7 @@ static u32 clothListMaxLength = 32;
 void initClothManager() {
     masterClothList = calloc(sizeof(Cloth*), clothListMaxLength);
     clothListLength = 0;
+    enqueueCloth();
 }
 
 static SpriteCode getClothSprite(Cloth* cloth) {
@@ -53,13 +54,13 @@ void drawQueue() {
 
     for (u32 i = 0; i < next->size; i++) {
         drawSprite(
-            spriteId, 
+            spriteId,
             baseX + i * TILE_WIDTH,
             baseY,
             1
         );
         drawSprite(
-            spriteId, 
+            spriteId,
             baseX + i * TILE_WIDTH,
             baseY + TILE_WIDTH,
             1
@@ -80,6 +81,8 @@ Cloth* dequeueCloth() {
     }
 
     clothQueue[CLOTH_QUEUE_SIZE - 1] = 0;
+
+    queueIndex--;
 
     return result;
 }
@@ -120,8 +123,8 @@ bool enqueueCloth() {
         free(temp);
     }
 
-    queueIndex++;
     clothQueue[queueIndex] = newCloth;
+    queueIndex++;
 
     return true;
 }

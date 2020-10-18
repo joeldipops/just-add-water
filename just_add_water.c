@@ -35,15 +35,18 @@ void onNewDay() {
     if (getPlayer()->isPaused) {
         return;
     }
+
     newDayWeather();
     updateHangingCloths(getCurrentWeather());
-
     processFinishedCloths();
+
+    Cloth* heldCloth = dequeueCloth();
+
     if(!enqueueCloth()) {
         gameOver();
     }
 
-    Cloth* heldCloth = dequeueCloth();
+
 }
 
 void updateTimer(u32 interval) {
