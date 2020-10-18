@@ -1,7 +1,6 @@
-#define OUTSIDE_LINE_SIZE 16
-#define INSIDE_LINE_SIZE 8
-
 #define STANDARD_MARGIN 10
+
+#define TURN_SECONDS 0
 
 // Weather frame
 // TODO
@@ -14,7 +13,8 @@
 #define OUTSIDE_LINE_POSITION 40
 #define ROOF_POSITION 80
 #define INSIDE_LINE_POSITION 140
-
+#define OUTSIDE_LINE_SIZE 16
+#define INSIDE_LINE_SIZE 8
 
 
 #define TILE_WIDTH 8

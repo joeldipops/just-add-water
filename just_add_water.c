@@ -58,6 +58,10 @@ void inputStep() {
     N64ControllerState keysPressed = get_keys_pressed();
     N64ControllerState keysReleased = get_keys_up();
 
+    if (!TURN_SECONDS && keysReleased.c[0].A) {
+        onNewDay();
+    }
+
     handleController(&keysPressed, &keysReleased);
 };
 
@@ -90,7 +94,9 @@ int main(void) {
     initialiseSubsystems();
     resetScreen();
 
-    updateTimer(3 * TICKS_PER_SECOND);
+    if (TURN_SECONDS) {
+        updateTimer(TURN_SECONDS * TICKS_PER_SECOND);
+    }
 
     // Assure RDP is ready for new commands
     rdp_sync(SYNC_PIPE);
