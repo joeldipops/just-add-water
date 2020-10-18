@@ -1,4 +1,6 @@
 #include "player.h"
+#include "text.h"
+#include "resources.h"
 #include "config.h"
 
 static Player player;
@@ -58,11 +60,36 @@ void initPlayer() {
     player.isPaused = false;
 }
 
+void drawPlayer() {
+    drawSprite(
+        HANG_SPRITE,
+        LEFT_MARGIN + (TILE_WIDTH * player.hangX),
+        player.hangY 
+            ? INSIDE_LINE_POSITION
+            : OUTSIDE_LINE_POSITION
+        , 1
+    );
+
+    drawSprite(
+        TAKE_SPRITE,
+        LEFT_MARGIN + (TILE_WIDTH * player.takeX),
+        player.takeY 
+            ? INSIDE_LINE_POSITION
+            : OUTSIDE_LINE_POSITION
+        , 1
+    );
+}
+
 void handleController(N64ControllerState* pressed, N64ControllerState* released) {
     if (released->c[0].start) {
         player.isPaused = !player.isPaused;
         return;
     }
+
+    if (player.isPaused) {
+        return;
+    }
+
     if (released->c[0].L) {
         handleHang();
         return;

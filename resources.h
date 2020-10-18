@@ -6,21 +6,6 @@
 #include "core.h"
 
 typedef enum {
-    ROOF_SPRITE,
-    DRY_SPRITE,
-    DRENCHED_SPRITE,
-    SPUN_SPRITE,
-    DAMP_SPRITE,
-    RAIN_SPRITE,
-    SUN_SPRITE, 
-    CLOUD_SPRITE,
-    INSIDE_LINE,
-    OUTSIDE_LINE,
-    HANG_SPRITE,
-    TAKE_SPRITE
-} SpriteCode;
-
-typedef enum {
     ROTATE_90 = '>',
     ROTATE_180 = 'v',
     ROTATE_270 = '<',

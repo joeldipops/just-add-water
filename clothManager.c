@@ -1,5 +1,7 @@
 #include "clothManager.h"
 #include "cloth.h"
+#include "text.h"
+#include "config.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,6 +19,49 @@ static u32 clothListMaxLength = 32;
 void initClothManager() {
     masterClothList = calloc(sizeof(Cloth*), clothListMaxLength);
     clothListLength = 0;
+}
+
+static SpriteCode getClothSprite(Cloth* cloth) {
+    switch(cloth->dryingState) {
+        case DRYING_SPUN:
+            return SPUN_SPRITE;
+        case DRYING_DAMP:
+            return DAMP_SPRITE;
+        case DRYING_DRENCHED:
+            return DRENCHED_SPRITE;
+        case DRYING_DRY:
+        case DRYING_COMPLETE:
+            return DRY_SPRITE;
+        default:
+            // TODO throw error.
+            return ROOF_SPRITE;
+    }
+}
+
+void drawQueue() {
+    drawText("NEXT", QUEUE_MARGIN, QUEUE_MARGIN, 1);
+
+    Cloth* next = clothQueue[0];
+    if (!next) {
+        return;
+    }
+
+    SpriteCode spriteId = getClothSprite(next);
+
+    for (u32 i = 0; i < next->size; i++) {
+        drawSprite(
+            spriteId, 
+            QUEUE_MARGIN + i * TILE_WIDTH,
+            QUEUE_MARGIN + STANDARD_MARGIN,
+            1
+        );
+        drawSprite(
+            spriteId, 
+            QUEUE_MARGIN + i * TILE_WIDTH,
+            QUEUE_MARGIN + STANDARD_MARGIN + TILE_WIDTH,
+            1
+        );
+    }
 }
 
 /**

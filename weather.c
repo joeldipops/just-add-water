@@ -1,4 +1,7 @@
 #include "weather.h"
+#include "text.h"
+#include "config.h"
+
 #include <stdlib.h>
 
 const Weather ForecastDie[6] = { 
@@ -14,6 +17,52 @@ const Weather WeatherDie[8] = {
 static Weather nextForecast;
 static Weather forecast;
 static Weather weather;
+
+static SpriteCode getWeatherSprite(Weather weather) {
+    switch(weather) {
+        case WEATHER_SUNNY:
+            return SUN_SPRITE;
+        case WEATHER_CLOUDY:
+            return CLOUD_SPRITE;
+        case WEATHER_RAIN:
+            return RAIN_SPRITE;
+        case WEATHER_STORM:
+            return STORM_SPRITE;
+        default:
+            return DRENCHED_SPRITE;
+    }
+}
+
+void drawWeather() {
+    drawText(
+        "TODAY", 
+        LEFT_MARGIN,
+        STANDARD_MARGIN,
+        1
+    );
+
+    drawSprite(
+        getWeatherSprite(weather),
+        LEFT_MARGIN,
+        STANDARD_MARGIN * 2 + TILE_WIDTH,
+        1
+    );
+    
+
+    drawText(
+        "PREDICTION", 
+        LEFT_MARGIN + TILE_WIDTH * 5 + STANDARD_MARGIN * 2,
+        STANDARD_MARGIN,
+        1
+    );
+
+    drawSprite(
+        getWeatherSprite(nextForecast),
+        LEFT_MARGIN + TILE_WIDTH * 5 + STANDARD_MARGIN * 2,
+        STANDARD_MARGIN * 2 + TILE_WIDTH,
+        1
+    );
+}
 
 Weather getCurrentWeather() {
     switch (weather) {

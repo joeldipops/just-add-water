@@ -1,11 +1,21 @@
 #define OUTSIDE_LINE_SIZE 16
 #define INSIDE_LINE_SIZE 8
 
+#define STANDARD_MARGIN 10
+
+// Weather frame
+// TODO
+
+// Queue Frame
+#define QUEUE_MARGIN 10
+
+// Lines frame
+#define LEFT_MARGIN 64
 #define OUTSIDE_LINE_POSITION 40
 #define ROOF_POSITION 80
 #define INSIDE_LINE_POSITION 140
 
-#define LEFT_MARGIN 64
+
 
 #define TILE_WIDTH 8
 

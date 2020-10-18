@@ -2,14 +2,21 @@
 #include "cloth.h"
 #include "weather.h"
 #include "config.h"
+#include "text.h"
 #include <string.h>
-
-
 
 static Cloth* outsideLine[OUTSIDE_LINE_SIZE];
 static Cloth* insideLine[INSIDE_LINE_SIZE];
 
 void initLine() {}
+
+void drawLine() {
+    for (u32 i = LEFT_MARGIN; i < 320; i += 8) {
+        drawSprite(OUTSIDE_LINE, i, OUTSIDE_LINE_POSITION, 1);
+        drawSprite(ROOF_SPRITE, i, ROOF_POSITION, 1);
+        drawSprite(INSIDE_LINE, i, INSIDE_LINE_POSITION, 1);
+    }
+}
 
 void updateHangingCloths(Weather weather) {
     int i = 0;

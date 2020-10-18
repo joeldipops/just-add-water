@@ -17,6 +17,8 @@ void initPlayer();
 
 Player* getPlayer();
 
+void drawPlayer();
+
 void handleController(N64ControllerState* pressed, N64ControllerState* released);
 
 #endif

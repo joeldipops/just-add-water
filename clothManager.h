@@ -8,6 +8,6 @@ void initClothManager();
 bool enqueueCloth();
 Cloth* dequeueCloth();
 void processFinishedCloths();
-
+void drawQueue();
 
 #endif

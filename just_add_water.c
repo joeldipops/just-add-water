@@ -16,7 +16,7 @@ void initialiseSubsystems() {
     initClothManager();
 
     init_interrupts();
-    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_OFF);    
+    display_init(RESOLUTION, COLOUR_DEPTH, 2, GAMMA_NONE, ANTIALIAS_OFF);    
     dfs_init(DFS_DEFAULT_LOCATION);
     rdp_init();
     controller_init();
@@ -32,6 +32,9 @@ void gameOver() {
 }
 
 void onNewDay() {
+    if (getPlayer()->isPaused) {
+        return;
+    }
     newDayWeather();
     updateHangingCloths(getCurrentWeather());
 
@@ -58,35 +61,6 @@ void inputStep() {
     handleController(&keysPressed, &keysReleased);
 };
 
-void drawHud() {
-    for (u32 i = LEFT_MARGIN; i < 320; i += 8) {
-        drawSprite(OUTSIDE_LINE, i, OUTSIDE_LINE_POSITION, 1);
-        drawSprite(ROOF_SPRITE, i, ROOF_POSITION, 1);
-        drawSprite(INSIDE_LINE, i, INSIDE_LINE_POSITION, 1);
-    }
-}
-
-void drawCursors() {
-    Player* player = getPlayer();
-    drawSprite(
-        HANG_SPRITE,
-        LEFT_MARGIN + (TILE_WIDTH * player->hangX),
-        player->hangY 
-            ? INSIDE_LINE_POSITION
-            : OUTSIDE_LINE_POSITION
-        , 1
-    );
-
-    drawSprite(
-        TAKE_SPRITE,
-        LEFT_MARGIN + (TILE_WIDTH * player->takeX),
-        player->takeY 
-            ? INSIDE_LINE_POSITION
-            : OUTSIDE_LINE_POSITION
-        , 1
-    );
-}
-
 void renderStep() {
     display_context_t frameId;
     while(!(frameId = display_lock()));
@@ -97,8 +71,10 @@ void renderStep() {
     if (getPlayer()->isPaused) {
         drawText("PAUSE", 100, 100, 2);
     } else {
-        drawHud();
-        drawCursors();
+        drawLine();
+        drawQueue();
+        drawWeather();
+        drawPlayer();
     }
 
     rdp_detach_display();

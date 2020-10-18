@@ -10,7 +10,7 @@
 
 static bool textInitted = false;
 
-static const u32 CHARACTER_SIZE = 8;
+static const u32 CHARACTER_SIZE = 6;
 static const u32 SPRITE_SIZE = 32;
 
 /**

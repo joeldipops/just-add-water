@@ -5,6 +5,8 @@
 
 void initLine();
 
+void drawLine();
+
 void updateHangingCloths(Weather weather);
 
 
