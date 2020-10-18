@@ -10,6 +10,9 @@
 
 #include "resources.h"
 
+static u32 clothsPerDay = INIT_TURN_CLOTHS;
+static u32 secondsPerDay = INIT_TURN_SECONDS;
+
 void initialiseSubsystems() {
     initLine();
     initPlayer();
@@ -40,13 +43,12 @@ void onNewDay() {
     updateHangingCloths(getCurrentWeather());
     processFinishedCloths();
 
-    Cloth* heldCloth = dequeueCloth();
-
-    if(!enqueueCloth()) {
-        gameOver();
+    for (u32 i = 0; i < clothsPerDay; i++) {
+        if (!enqueueCloth()) {
+            gameOver();
+            return;
+        }
     }
-
-
 }
 
 void updateTimer(u32 interval) {
@@ -61,7 +63,7 @@ void inputStep() {
     N64ControllerState keysPressed = get_keys_pressed();
     N64ControllerState keysReleased = get_keys_up();
 
-    if (!TURN_SECONDS && keysReleased.c[0].A) {
+    if (!secondsPerDay && keysReleased.c[0].A) {
         onNewDay();
     }
 
@@ -97,8 +99,8 @@ int main(void) {
     initialiseSubsystems();
     resetScreen();
 
-    if (TURN_SECONDS) {
-        updateTimer(TURN_SECONDS * TICKS_PER_SECOND);
+    if (secondsPerDay) {
+        updateTimer(secondsPerDay * TICKS_PER_SECOND);
     }
 
     // Assure RDP is ready for new commands

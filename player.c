@@ -2,6 +2,9 @@
 #include "text.h"
 #include "resources.h"
 #include "config.h"
+#include "clothManager.h"
+#include "line.h"
+#include "stdio.h"
 
 static Player player;
 
@@ -49,18 +52,35 @@ static void handleTakeX(bool isLeft) {
     }
 }
 
-static void handleHang() {}
-static void handleTake() {}
+static void handleHang() {
+    if (!hangCloth(player.hangY, player.hangX, player.clothToHang)) {
+        // Ideally play a NOPE sound.
+        return;
+    }
+
+    player.clothToHang = dequeueCloth();
+}
+
+static void handleTake() {
+    if (!takeCloth(player.takeY, player.takeX)) {
+        // Ideally play a NOPE sound.
+        return;
+    }
+
+    player.score++;
+}
 
 void initPlayer() {
     player.hangX = 0;
     player.hangY = 0;
     player.takeX = 0;
     player.takeY = 0;
+    player.score = 0;
     player.isPaused = false;
 }
 
 void drawPlayer() {
+    // Hanger selector
     drawSprite(
         HANG_SPRITE,
         LEFT_MARGIN + (TILE_WIDTH * player.hangX),
@@ -70,6 +90,7 @@ void drawPlayer() {
         , 1
     );
 
+    // Cloth selector
     drawSprite(
         TAKE_SPRITE,
         LEFT_MARGIN + (TILE_WIDTH * player.takeX),
@@ -77,6 +98,23 @@ void drawPlayer() {
             ? INSIDE_LINE_POSITION
             : OUTSIDE_LINE_POSITION
         , 1
+    );
+
+    // Scoreboard
+    drawText(
+        "SCORE",
+        SCREEN_WIDTH - STANDARD_MARGIN - TILE_WIDTH * 5,
+        STANDARD_MARGIN,
+        1
+    );
+
+    string score = "";
+    sprintf(score, "%lu", player.score);
+    drawText(
+        score,
+        SCREEN_WIDTH - STANDARD_MARGIN - TILE_WIDTH * 5,
+        STANDARD_MARGIN * 2,
+        1
     );
 }
 

@@ -2,6 +2,7 @@
 #define PLAYER_INCLUDED
 
 #include "core.h"
+#include "cloth.h"
 
 typedef struct {
     u32 hangX;
@@ -11,6 +12,10 @@ typedef struct {
     u32 takeY;
 
     bool isPaused;
+
+    Cloth* clothToHang;
+
+    u32 score;
 } Player;
 
 void initPlayer();

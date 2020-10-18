@@ -1,8 +1,10 @@
 #include "line.h"
+#include "core.h"
 #include "cloth.h"
 #include "weather.h"
 #include "config.h"
 #include "text.h"
+#include <stdbool.h>
 #include <string.h>
 
 static Cloth* outsideLine[OUTSIDE_LINE_SIZE];
@@ -15,6 +17,44 @@ void drawLine() {
         drawSprite(OUTSIDE_LINE, i, OUTSIDE_LINE_POSITION, 1);
         drawSprite(ROOF_SPRITE, i, ROOF_POSITION, 1);
         drawSprite(INSIDE_LINE, i, INSIDE_LINE_POSITION, 1);
+    }
+}
+
+bool hangCloth(u32 lineId, u32 x, Cloth* cloth) {
+    Cloth** line;
+    if (lineId == 0) {
+        line = outsideLine;
+    } else {
+        line = insideLine;
+    }
+
+    // If there's already a cloth where we want to put this new one
+    for (u32 i = x; i < cloth->size; i++) {
+        if (line[i]) {
+            return false;
+        }
+    }
+
+    // Otherwise hang the new cloth
+    for (u32 i = x; i < cloth->size; i++) {
+        line[i] = cloth;
+    }
+
+    return true;
+}
+
+Cloth* takeCloth(u32 lineId, u32 x) {
+    Cloth** line;
+    if (lineId == 0) {
+        line = outsideLine;
+    } else {
+        line = insideLine;
+    }
+
+    if (line[x] && line[x]->dryingState <= DRYING_DRY) {
+        return line[x];
+    } else {
+        return 0;
     }
 }
 
