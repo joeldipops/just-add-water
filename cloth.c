@@ -1,4 +1,6 @@
 #include "cloth.h"
+#include "config.h"
+#include "text.h"
 #include "weather.h"
 #include <stdint.h>
 #include <stdlib.h>
@@ -48,6 +50,43 @@ void buildClothText(Cloth* cloth) {
 
     cloth->text[1] = charMap[abs(cloth->growthFactor)];
     cloth->text[2] = 0;
+}
+
+static SpriteCode getClothSprite(Cloth* cloth) {
+    switch(cloth->dryingState) {
+        case DRYING_SPUN:
+            return SPUN_SPRITE;
+        case DRYING_DAMP:
+            return DAMP_SPRITE;
+        case DRYING_DRENCHED:
+            return DRENCHED_SPRITE;
+        case DRYING_DRY:
+        case DRYING_COMPLETE:
+            return DRY_SPRITE;
+        default:
+            // TODO throw error.
+            return ROOF_SPRITE;
+    }
+}
+
+void drawCloth(Cloth* cloth, u32 x, u32 y) {
+    SpriteCode spriteId = getClothSprite(cloth);
+    for (u32 i = 0; i < cloth->size; i++) {
+        drawSprite(
+            spriteId,
+            x + i * TILE_WIDTH,
+            y,
+            1
+        );
+        drawSprite(
+            spriteId,
+            x + i * TILE_WIDTH,
+            y + TILE_WIDTH,
+            1
+        );
+    }
+
+    drawText(cloth->text, x, y, 1);
 }
 
 void updateCloth(Cloth* cloth, Weather weather) {

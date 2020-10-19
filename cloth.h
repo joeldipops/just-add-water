@@ -30,9 +30,8 @@ typedef struct {
 } Cloth;
 
 void initCloths();
-
+void drawCloth(Cloth* cloth, u32 x, u32 y);
 void updateCloth();
-
 void buildClothText(Cloth* cloth);
 
 #endif

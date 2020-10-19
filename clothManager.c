@@ -22,22 +22,7 @@ void initClothManager() {
     enqueueCloth();
 }
 
-static SpriteCode getClothSprite(Cloth* cloth) {
-    switch(cloth->dryingState) {
-        case DRYING_SPUN:
-            return SPUN_SPRITE;
-        case DRYING_DAMP:
-            return DAMP_SPRITE;
-        case DRYING_DRENCHED:
-            return DRENCHED_SPRITE;
-        case DRYING_DRY:
-        case DRYING_COMPLETE:
-            return DRY_SPRITE;
-        default:
-            // TODO throw error.
-            return ROOF_SPRITE;
-    }
-}
+
 
 void drawQueue() {
     drawText("NEXT", QUEUE_MARGIN, QUEUE_MARGIN, 1);
@@ -47,27 +32,7 @@ void drawQueue() {
         return;
     }
 
-    SpriteCode spriteId = getClothSprite(next);
-
-    u32 baseX = QUEUE_MARGIN;
-    u32 baseY = QUEUE_MARGIN + STANDARD_MARGIN;
-
-    for (u32 i = 0; i < next->size; i++) {
-        drawSprite(
-            spriteId,
-            baseX + i * TILE_WIDTH,
-            baseY,
-            1
-        );
-        drawSprite(
-            spriteId,
-            baseX + i * TILE_WIDTH,
-            baseY + TILE_WIDTH,
-            1
-        );
-    }
-
-    drawText(next->text, baseX, baseY, 1);
+    drawCloth(next, QUEUE_MARGIN, QUEUE_MARGIN + STANDARD_MARGIN);
 }
 
 /**
@@ -75,6 +40,11 @@ void drawQueue() {
  */
 Cloth* dequeueCloth() {
     Cloth* result = clothQueue[0];
+
+    // The queue is empty.
+    if (!result) {
+        return result;
+    }
 
     for (u32 i = 0; i < CLOTH_QUEUE_SIZE - 1; i++) {
         clothQueue[i] = clothQueue[i+1];

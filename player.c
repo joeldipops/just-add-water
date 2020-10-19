@@ -53,6 +53,14 @@ static void handleTakeX(bool isLeft) {
 }
 
 static void handleHang() {
+    if (!player.clothToHang) {
+        player.clothToHang = dequeueCloth();
+    }
+    // If nothing to dequeue, ignore the press.
+    if (!player.clothToHang) {
+        return;
+    }
+
     if (!hangCloth(player.hangY, player.hangX, player.clothToHang)) {
         // Ideally play a NOPE sound.
         return;

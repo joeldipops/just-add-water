@@ -13,6 +13,28 @@ static Cloth* insideLine[INSIDE_LINE_SIZE];
 void initLine() {}
 
 void drawLine() {
+    for (u32 i = 0; i < OUTSIDE_LINE_SIZE; i++) {
+        if (outsideLine[i]) {
+            drawCloth(
+                outsideLine[i], 
+                LEFT_MARGIN + i * TILE_WIDTH,
+                OUTSIDE_LINE_POSITION
+            );
+            i += outsideLine[i]->size;
+        }
+    }
+
+    for (u32 i = 0; i < INSIDE_LINE_SIZE; i++) {
+        if (insideLine[i]) {
+            drawCloth(
+                insideLine[i], 
+                LEFT_MARGIN + i * TILE_WIDTH,
+                INSIDE_LINE_SIZE
+            );
+            i += insideLine[i]->size;
+        }
+    }
+
     for (u32 i = LEFT_MARGIN; i < 320; i += 8) {
         drawSprite(OUTSIDE_LINE, i, OUTSIDE_LINE_POSITION, 1);
         drawSprite(ROOF_SPRITE, i, ROOF_POSITION, 1);
