@@ -40,8 +40,8 @@ void onNewDay() {
     }
 
     newDayWeather();
-    updateHangingCloths(getCurrentWeather());
-    processFinishedCloths();
+    //updateHangingCloths(getCurrentWeather());
+    //processFinishedCloths();
 
     for (u32 i = 0; i < clothsPerDay; i++) {
         if (!enqueueCloth()) {

@@ -1,7 +1,7 @@
 #define STANDARD_MARGIN 10
 
 #define INIT_TURN_SECONDS 0
-#define INIT_TURN_CLOTHS 1
+#define INIT_TURN_CLOTHS 2
 
 // Weather frame
 // TODO
@@ -17,6 +17,8 @@
 #define OUTSIDE_LINE_SIZE 16
 #define INSIDE_LINE_SIZE 8
 
+#define CLOTH_QUEUE_SIZE 15
+#define CLOTH_QUEUE_SHOWN 3
 
 #define TILE_WIDTH 8
 

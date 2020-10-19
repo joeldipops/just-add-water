@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define CLOTH_QUEUE_SIZE 15
 
 static Cloth** masterClothList;
 static u32 clothListLength;
@@ -19,20 +18,26 @@ static u32 clothListMaxLength = 32;
 void initClothManager() {
     masterClothList = calloc(sizeof(Cloth*), clothListMaxLength);
     clothListLength = 0;
-    enqueueCloth();
+    for (u32 i = 0; i < INIT_TURN_CLOTHS; i++) {
+        enqueueCloth();
+    }
 }
 
-
-
 void drawQueue() {
-    drawText("NEXT", QUEUE_MARGIN, QUEUE_MARGIN, 1);
+    for (u32 i = 0; i < CLOTH_QUEUE_SHOWN; i++) {
+        drawText("NEXT", QUEUE_MARGIN, QUEUE_MARGIN, 1);
 
-    Cloth* next = clothQueue[0];
-    if (!next) {
-        return;
+        Cloth* next = clothQueue[i];
+        if (!next) {
+            return;
+        }
+
+        drawCloth(
+            next,
+            QUEUE_MARGIN,
+            QUEUE_MARGIN + STANDARD_MARGIN + ((TILE_WIDTH + STANDARD_MARGIN) * i) 
+        );
     }
-
-    drawCloth(next, QUEUE_MARGIN, QUEUE_MARGIN + STANDARD_MARGIN);
 }
 
 /**

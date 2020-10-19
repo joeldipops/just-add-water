@@ -16,22 +16,22 @@ void drawLine() {
     for (u32 i = 0; i < OUTSIDE_LINE_SIZE; i++) {
         if (outsideLine[i]) {
             drawCloth(
-                outsideLine[i], 
+                outsideLine[i],
                 LEFT_MARGIN + i * TILE_WIDTH,
                 OUTSIDE_LINE_POSITION
             );
-            i += outsideLine[i]->size;
+            i += outsideLine[i]->size - 1;
         }
     }
 
     for (u32 i = 0; i < INSIDE_LINE_SIZE; i++) {
         if (insideLine[i]) {
             drawCloth(
-                insideLine[i], 
+                insideLine[i],
                 LEFT_MARGIN + i * TILE_WIDTH,
-                INSIDE_LINE_SIZE
+                INSIDE_LINE_POSITION
             );
-            i += insideLine[i]->size;
+            i += insideLine[i]->size - 1;
         }
     }
 
@@ -51,14 +51,14 @@ bool hangCloth(u32 lineId, u32 x, Cloth* cloth) {
     }
 
     // If there's already a cloth where we want to put this new one
-    for (u32 i = x; i < cloth->size; i++) {
+    for (u32 i = x; i < x + cloth->size; i++) {
         if (line[i]) {
             return false;
         }
     }
 
     // Otherwise hang the new cloth
-    for (u32 i = x; i < cloth->size; i++) {
+    for (u32 i = x; i < x + cloth->size; i++) {
         line[i] = cloth;
     }
 
