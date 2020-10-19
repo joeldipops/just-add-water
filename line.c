@@ -81,7 +81,7 @@ Cloth* takeCloth(u32 lineId, u32 x) {
 }
 
 void updateHangingCloths(Weather weather) {
-    int i = 0;
+    u32 i = 0;
 
     // First pass - resize the cloths.
     while (i < OUTSIDE_LINE_SIZE) {
@@ -95,9 +95,9 @@ void updateHangingCloths(Weather weather) {
     }
 
     i = 0;
-    while (i < OUTSIDE_LINE_SIZE) {
+    while (i < INSIDE_LINE_SIZE) {
         if (insideLine[i]) {
-            u32 oldSize = outsideLine[i]->size;
+            u32 oldSize = insideLine[i]->size;
             // Inside is always considered 'cloudy'
             updateCloth(insideLine[i], WEATHER_CLOUDY);
             i += oldSize;
@@ -105,6 +105,8 @@ void updateHangingCloths(Weather weather) {
             i++;
         }
     }
+
+    /*
 
     // Second pass - shuffle them along with the change in size and dump any that fell off.
 
@@ -160,4 +162,5 @@ void updateHangingCloths(Weather weather) {
 
         iSource++;
     }
+    */
 }

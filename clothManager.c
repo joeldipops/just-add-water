@@ -62,13 +62,61 @@ Cloth* dequeueCloth() {
     return result;
 }
 
+#define DRYING_SIZE 6
+const DryingState DryingDie[DRYING_SIZE] = {
+    DRYING_SPUN, DRYING_SPUN, DRYING_SPUN, DRYING_SPUN, DRYING_SPUN,
+    DRYING_DRENCHED
+};
+
+#define SIZE_SIZE 8
+const u32 SizeDie[SIZE_SIZE] = {
+    1,
+    2, 2, 2,
+    3, 3,
+    4
+};
+
+
+#define GROWTH_TYPE_SIZE 4
+// No growth quadratic until I can be arsed sorting out the algorithm for it.
+const u32 GrowthTypeDie[GROWTH_TYPE_SIZE]= {
+    GROWTH_NONE,
+    GROWTH_LINEAR, GROWTH_LINEAR, GROWTH_LINEAR
+};
+
+#define FACTOR_SIZE 8
+const s32 LinearFactorDie[FACTOR_SIZE] = {
+    -2,
+    -1, -1,
+    +1, +1, +1,
+    +2, +2
+};
+
+const s32 QuadraticFactorDie[FACTOR_SIZE] = {
+    -2, -2,
+    +2, +2, +2, +2
+};
+
+
 static void initNewCloth(Cloth* cloth) {
-    cloth->dryingState = DRYING_SPUN;
+    cloth->dryingState = DryingDie[rand() % DRYING_SIZE];
 
     // Will be randomised - increasing in complexity as time goes on.
-    cloth->size = 2;
-    cloth->growthFactor = 1;
-    cloth->growthType = GROWTH_LINEAR;
+    cloth->growthType = GrowthTypeDie[rand() % GROWTH_TYPE_SIZE];
+    cloth->size = SizeDie[rand() % SIZE_SIZE];
+
+    switch(cloth->growthType) {
+        case GROWTH_LINEAR:
+            cloth->growthFactor = LinearFactorDie[rand() % FACTOR_SIZE];
+            break;
+        case GROWTH_QUADRATIC:
+            cloth->growthFactor = QuadraticFactorDie[rand() % FACTOR_SIZE];        
+            break;
+        case GROWTH_NONE:
+            cloth->growthFactor = 0;
+            break;
+    }
+
     buildClothText(cloth);
 }
 

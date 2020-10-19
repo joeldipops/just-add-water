@@ -14,16 +14,21 @@ static void changeClothState(Cloth* cloth, DryingState newState) {
     s32 diff = newState - cloth->dryingState;
 
     switch(cloth->growthType) {
-        case GROWTH_QUADRATIC:
-            cloth->size = cloth->size * diff * cloth->growthFactor;
-        break;
         case GROWTH_LINEAR:
             cloth->size += diff * cloth->growthFactor;
         break;
+        case GROWTH_QUADRATIC:
+            // TODO
+            //cloth->size = cloth->size * diff * cloth->growthFactor;
+            break;
         case GROWTH_NONE:
-        break;
+            break;
         default: ;
             // throw;
+    }
+
+    if (cloth->size <= 0) {
+        cloth->size = 1;
     }
 
     cloth->dryingState = newState;
@@ -34,12 +39,16 @@ static char charMap[10] = {
 };
 
 void buildClothText(Cloth* cloth) {
+    
     if (cloth->growthFactor < 0) {
         if (cloth->growthType == GROWTH_LINEAR) {
             cloth->text[0] = '-';
         } else {
             cloth->text[0] = '/';
         }
+    } else if (cloth->growthFactor == 0) {
+        cloth->text[0] = ' ';
+        cloth->text[1] = '0';
     } else {
         if (cloth->growthType == GROWTH_LINEAR) {
             cloth->text[0] = '+';
