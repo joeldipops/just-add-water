@@ -5,6 +5,8 @@
 #include "text.h"
 #include "config.h"
 #include "player.h"
+#include "day.h"
+#include "fps.h"
 #include <stdio.h>
 #include <libdragon.h>
 
@@ -41,7 +43,7 @@ void onNewDay() {
 
     newDayWeather();
     updateHangingCloths(getCurrentWeather());
-    //processFinishedCloths();
+    processFinishedCloths();
 
     for (u32 i = 0; i < clothsPerDay; i++) {
         if (!enqueueCloth()) {
@@ -74,12 +76,20 @@ void renderStep() {
     display_context_t frameId;
     while(!(frameId = display_lock()));
 
-    graphics_fill_screen(frameId, 0xffffffff);
     rdp_attach_display(frameId);
+    drawBox(DRY_SPRITE, 0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
+
+#ifdef SHOW_FRAME_COUNT
+    fps_frame();
+    string text;
+    sprintf(text, "FPS: %d", fps_get());        
+    drawText(text, 0, 230, 1);
+#endif    
 
     if (getPlayer()->isPaused) {
         drawText("PAUSE", 100, 100, 2);
     } else {
+        drawDay();
         drawLine();
         drawQueue();
         drawWeather();
@@ -99,7 +109,11 @@ int main(void) {
     initialiseSubsystems();
     resetScreen();
 
-    if (secondsPerDay) {
+    #ifdef SHOW_FRAME_COUNT
+        new_timer(TIMER_TICKS(1000000), TF_CONTINUOUS, fps_timer);
+    #endif
+
+    if (INIT_TURN_SECONDS) {
         updateTimer(secondsPerDay * TICKS_PER_SECOND);
     }
 

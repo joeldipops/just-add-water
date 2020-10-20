@@ -99,6 +99,7 @@ const s32 QuadraticFactorDie[FACTOR_SIZE] = {
 
 
 static void initNewCloth(Cloth* cloth) {
+#ifdef RANDOMISE_CLOTHS
     cloth->dryingState = DryingDie[rand() % DRYING_SIZE];
 
     // Will be randomised - increasing in complexity as time goes on.
@@ -116,6 +117,12 @@ static void initNewCloth(Cloth* cloth) {
             cloth->growthFactor = 0;
             break;
     }
+#else
+    cloth->dryingState = DRYING_SPUN;
+    cloth->growthType = GROWTH_LINEAR;
+    cloth->growthFactor = +1;
+    cloth->size = 2;
+#endif
 
     buildClothText(cloth);
 }

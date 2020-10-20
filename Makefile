@@ -43,6 +43,8 @@ LD_OFILES += $(CURDIR)/obj/clothManager.o
 LD_OFILES += $(CURDIR)/obj/resources.o
 LD_OFILES += $(CURDIR)/obj/text.o
 LD_OFILES += $(CURDIR)/obj/player.o
+LD_OFILES += $(CURDIR)/obj/day.o
+LD_OFILES += $(CURDIR)/obj/fps.o
 
 # Produces the disassembly, with symbols included.
 $(PROG_NAME).dsm: $(PROG_NAME).elf
@@ -56,6 +58,8 @@ $(PROG_NAME).elf : $(PROG_NAME).o $(LD_FILE)
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/line.o $(CURDIR)/line.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/clothManager.o $(CURDIR)/clothManager.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/player.o $(CURDIR)/player.c
+	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/day.o $(CURDIR)/day.c
+	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/fps.o $(CURDIR)/fps.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/$(PROG_NAME).o $(CURDIR)/$(PROG_NAME).c
 
 	$(LD) -o $(PROG_NAME).elf $(CURDIR)/obj/$(PROG_NAME).o $(LD_OFILES) $(LINK_FLAGS)

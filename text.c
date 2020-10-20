@@ -298,12 +298,7 @@ void drawTextParagraph(
     }
 }
 
-/**
- * Calculates the length in pixels of a given string, including any sprites.
- * @param text the string.
- * @return the length in pixels.
- */
-u32 getStringWidth(const string text) {
-    // TODO Sprites.
-    return strlen(text) * CHARACTER_SIZE;
+void drawBox(SpriteCode texture, u32 x, u32 y, u32 width, u32 height) {
+    rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), texture);
+    rdp_draw_textured_rectangle(0, x, y, width, height, MIRROR_DISABLED);    
 }

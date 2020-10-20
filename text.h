@@ -62,11 +62,7 @@ void drawTextParagraph(
     const u32 width
 );
 
-/**
- * Calculates the length in pixels of a given string, including any sprites.
- * @param text the string.
- * @return the length in pixels.
- */
-u32 getStringWidth(const string text);
+void drawBox(SpriteCode texture, u32 x, u32 y, u32 width, u32 height);
+
 
 #endif
