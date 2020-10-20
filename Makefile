@@ -11,7 +11,7 @@ PROG_NAME = just_add_water
 LD_FILE = $(PROG_NAME).ld
 LINK_FLAGS = -L$(ROOTDIR)/mips64-elf/lib -ldragon -lm -lc -ldragonsys -T./$(LD_FILE)
 
-OPTIMISATION_FLAGS = -O3
+OPTIMISATION_FLAGS = -O2
 CFLAGS = -std=gnu99 -march=vr4300 -mtune=vr4300 $(OPTIMISATION_FLAGS) -Wall -Wno-unused -Werror -I$(CURDIR) -I$(ROOTDIR)/mips64-elf/include 
 ASFLAGS = -mtune=vr4300 -march=vr4300
 CC = $(GCCN64PREFIX)gcc
@@ -45,6 +45,7 @@ LD_OFILES += $(CURDIR)/obj/text.o
 LD_OFILES += $(CURDIR)/obj/player.o
 LD_OFILES += $(CURDIR)/obj/day.o
 LD_OFILES += $(CURDIR)/obj/fps.o
+LD_OFILES += $(CURDIR)/obj/core.o
 
 # Produces the disassembly, with symbols included.
 $(PROG_NAME).dsm: $(PROG_NAME).elf
@@ -60,6 +61,7 @@ $(PROG_NAME).elf : $(PROG_NAME).o $(LD_FILE)
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/player.o $(CURDIR)/player.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/day.o $(CURDIR)/day.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/fps.o $(CURDIR)/fps.c
+	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/core.o $(CURDIR)/core.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/$(PROG_NAME).o $(CURDIR)/$(PROG_NAME).c
 
 	$(LD) -o $(PROG_NAME).elf $(CURDIR)/obj/$(PROG_NAME).o $(LD_OFILES) $(LINK_FLAGS)

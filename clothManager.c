@@ -25,7 +25,7 @@ void initClothManager() {
 
 void drawQueue() {
     for (u32 i = 0; i < CLOTH_QUEUE_SHOWN; i++) {
-        drawText("NEXT", QUEUE_MARGIN, QUEUE_MARGIN, 1);
+        drawText("NEXT", QUEUE_MARGIN, QUEUE_MARGIN_TOP, 1);
 
         Cloth* next = clothQueue[i];
         if (!next) {
@@ -35,7 +35,7 @@ void drawQueue() {
         drawCloth(
             next,
             QUEUE_MARGIN,
-            QUEUE_MARGIN + STANDARD_MARGIN + ((TILE_WIDTH + STANDARD_MARGIN) * i) 
+            QUEUE_MARGIN_TOP + STANDARD_MARGIN + ((TILE_WIDTH + STANDARD_MARGIN) * i) 
         );
     }
 }

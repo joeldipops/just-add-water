@@ -22,5 +22,9 @@ typedef struct {
 
 typedef struct controller_data N64ControllerState;
 
+bool isRenderRequired();
+void onRendered();
+void onStateChanged();
+
 #define TICKS_PER_SECOND 1000000
 #endif

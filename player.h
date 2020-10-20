@@ -24,6 +24,6 @@ Player* getPlayer();
 
 void drawPlayer();
 
-void handleController(N64ControllerState* pressed, N64ControllerState* released);
+bool handleController(N64ControllerState* pressed, N64ControllerState* released);
 
 #endif

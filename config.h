@@ -1,6 +1,6 @@
 #define STANDARD_MARGIN 10
 
-#define INIT_TURN_SECONDS 0
+#define INIT_TURN_SECONDS 9
 #define INIT_TURN_CLOTHS 2
 
 // Weather frame
@@ -8,6 +8,7 @@
 
 // Queue Frame
 #define QUEUE_MARGIN 10
+#define QUEUE_MARGIN_TOP 50
 
 // Lines frame
 #define LEFT_MARGIN 64

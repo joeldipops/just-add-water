@@ -126,39 +126,51 @@ void drawPlayer() {
     );
 }
 
-void handleController(N64ControllerState* pressed, N64ControllerState* released) {
+/**
+ * 
+ * @returns true if action was taken, false otherwise.
+ */
+bool handleController(N64ControllerState* pressed, N64ControllerState* released) {
     if (released->c[0].start) {
         player.isPaused = !player.isPaused;
-        return;
+        return true;
     }
 
     if (player.isPaused) {
-        return;
+        return false;
     }
 
     if (released->c[0].L) {
         handleHang();
-        return;
+        return true;
     }
     if (released->c[0].R) {
         handleTake();
-        return;
+        return true;
     }
+
+    bool result = false;
 
     if (pressed->c[0].up || pressed->c[0].down) {
         player.hangY = !player.hangY;
+        result = true;
     }
     if (pressed->c[0].C_up || pressed->c[0].C_down) {
         player.takeY = !player.takeY;
+        result = true;
     }
 
     if (pressed->c[0].left || pressed->c[0].right) {
         handleHangX(pressed->c[0].left);
+        result = true;
     }
 
     if (pressed->c[0].C_left || pressed->c[0].C_right) {
         handleTakeX(pressed->c[0].C_left);
+        result = true;
     }
+
+    return result;
 }
 
 Player* getPlayer() {
