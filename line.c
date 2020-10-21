@@ -74,18 +74,28 @@ bool hangCloth(u32 lineId, u32 x, Cloth* cloth) {
     return true;
 }
 
+static Cloth* takeClothFromLine(Line* line, u32 x) {
+    if (line->line[x] && line->line[x]->dryingState <= DRYING_DRY) {
+        Cloth* result = line->line[x];
+        // Remove from the line.
+        for (u32 i = 0; i < line->length; i++) {
+            if (line->line[i] == result) {
+                line->line[i] = 0;
+            }
+        }
+
+        return result;
+    } else {
+        return 0;
+    }
+}
+
 Cloth* takeCloth(u32 lineId, u32 x) {
     Cloth** line;
     if (lineId == 0) {
-        line = outsideLine.line;
+        return takeClothFromLine(&outsideLine, x);
     } else {
-        line = insideLine.line;
-    }
-
-    if (line[x] && line[x]->dryingState <= DRYING_DRY) {
-        return line[x];
-    } else {
-        return 0;
+        return takeClothFromLine(&insideLine, x);
     }
 }
 
