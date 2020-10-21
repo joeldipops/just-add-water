@@ -18,6 +18,8 @@ typedef struct {
     u32 score;
 } Player;
 
+void gameOver();
+
 void initPlayer();
 
 Player* getPlayer();

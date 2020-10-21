@@ -27,8 +27,10 @@ static void changeClothState(Cloth* cloth, DryingState newState) {
             // throw;
     }
 
-    if (cloth->size <= 0) {
-        cloth->size = 1;
+    if (cloth->size <= 1) {
+        cloth->size = 2;
+    } else if (cloth->size > 16) {
+        cloth->size = 16;
     }
 
     cloth->dryingState = newState;
@@ -39,8 +41,7 @@ static char charMap[10] = {
 };
 
 void buildClothText(Cloth* cloth) {
-    
-    if (cloth->growthFactor < 0) {
+    if (cloth->growthFactor < 0) {\
         if (cloth->growthType == GROWTH_LINEAR) {
             cloth->text[0] = '-';
         } else {
@@ -72,8 +73,9 @@ static SpriteCode getClothSprite(Cloth* cloth) {
         case DRYING_DRY:
         case DRYING_COMPLETE:
             return DRY_SPRITE;
+        case DRYING_DIRTY:
+            return SUN_SPRITE;
         default:
-            // TODO throw error.
             return ROOF_SPRITE;
     }
 }
@@ -95,14 +97,14 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
         );
     }
 
-    drawText(cloth->text, x, y, 1);
+    drawText(cloth->text, x, y + (TILE_WIDTH / 2) , 1);
 }
 
 void updateCloth(Cloth* cloth, Weather weather) {
     switch(weather) {
         case WEATHER_STORM:
             cloth->dryingState = DRYING_DIRTY;
-            break;
+            return;
         case WEATHER_RAIN:
             changeClothState(cloth, DRYING_DRENCHED);
             break;
@@ -113,6 +115,4 @@ void updateCloth(Cloth* cloth, Weather weather) {
             changeClothState(cloth, cloth->dryingState - 2);
             break;
     }
-
-
 }

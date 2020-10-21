@@ -8,7 +8,7 @@
 
 void initLine();
 
-void drawLine();
+void drawLines();
 
 bool hangCloth(u32 lineId, u32 x, Cloth* cloth);
 Cloth* takeCloth(u32 lineId, u32 x);

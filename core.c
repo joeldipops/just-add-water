@@ -7,7 +7,7 @@ bool isRenderRequired() {
 }
 
 void onRendered() {
-    _isRenderRequired = false;
+    //_isRenderRequired = false;
 }
 
 void onStateChanged() {

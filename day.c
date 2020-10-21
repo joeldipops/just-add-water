@@ -4,12 +4,17 @@
 #include "text.h"
 #include "weather.h"
 #include "player.h"
+#include "line.h"
+#include "clothManager.h"
 
 #include <stdio.h>
 #include <libdragon.h>
 
 static u32 secondsLeft = 0;
 timer_link_t* secondsTimer;
+
+static u32 secondsPerDay = INIT_TURN_SECONDS;
+static u32 clothsPerDay = INIT_TURN_CLOTHS;
 
 static void onSecondTick() {
     if (getPlayer()->isPaused) {
@@ -30,12 +35,13 @@ void startNewDay() {
         delete_timer(secondsTimer);
     }
 
-    secondsLeft = INIT_TURN_SECONDS;
-    secondsTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND), TF_CONTINUOUS, onSecondTick);
+    if (secondsPerDay) {
+        secondsLeft = secondsPerDay;
+        secondsTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND), TF_CONTINUOUS, onSecondTick);
+    }
 
     newDayWeather();
 
-    /*
     updateHangingCloths(getCurrentWeather());
     processFinishedCloths();
 
@@ -45,7 +51,6 @@ void startNewDay() {
             return;
         }
     }
-    */
 }
 
 void drawDay() {

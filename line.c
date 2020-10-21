@@ -7,33 +7,42 @@
 #include <stdbool.h>
 #include <string.h>
 
-static Cloth* outsideLine[OUTSIDE_LINE_SIZE];
-static Cloth* insideLine[INSIDE_LINE_SIZE];
 
-void initLine() {}
+typedef struct {
+    Cloth** line;
+    u32 length;
+} Line;
 
-void drawLine() {
-    for (u32 i = 0; i < OUTSIDE_LINE_SIZE; i++) {
-        if (outsideLine[i]) {
+static Cloth* _outsideLine[OUTSIDE_LINE_SIZE];
+static Cloth* _insideLine[INSIDE_LINE_SIZE];
+
+static Line outsideLine;
+static Line insideLine;
+
+void initLine() {
+    outsideLine.line = _outsideLine;
+    outsideLine.length = OUTSIDE_LINE_SIZE;
+
+    insideLine.line = _insideLine;
+    insideLine.length = INSIDE_LINE_SIZE;
+}
+
+static void drawLine(Line* line, u32 x, u32 y) {
+    for (u32 i = 0; i < line->length; i++) {
+        if (line->line[i]) {
             drawCloth(
-                outsideLine[i],
-                LEFT_MARGIN + i * TILE_WIDTH,
-                OUTSIDE_LINE_POSITION
+                line->line[i],
+                x + i * TILE_WIDTH, 
+                y
             );
-            i += outsideLine[i]->size - 1;
+            i += line->line[i]->size - 1;
         }
     }
+}
 
-    for (u32 i = 0; i < INSIDE_LINE_SIZE; i++) {
-        if (insideLine[i]) {
-            drawCloth(
-                insideLine[i],
-                LEFT_MARGIN + i * TILE_WIDTH,
-                INSIDE_LINE_POSITION
-            );
-            i += insideLine[i]->size - 1;
-        }
-    }
+void drawLines() {
+    drawLine(&outsideLine, LEFT_MARGIN, OUTSIDE_LINE_POSITION);
+    drawLine(&insideLine, LEFT_MARGIN, INSIDE_LINE_POSITION);
 
     for (u32 i = LEFT_MARGIN; i < 320; i += 8) {
         drawSprite(OUTSIDE_LINE, i, OUTSIDE_LINE_POSITION, 1);
@@ -45,9 +54,9 @@ void drawLine() {
 bool hangCloth(u32 lineId, u32 x, Cloth* cloth) {
     Cloth** line;
     if (lineId == 0) {
-        line = outsideLine;
+        line = outsideLine.line;
     } else {
-        line = insideLine;
+        line = insideLine.line;
     }
 
     // If there's already a cloth where we want to put this new one
@@ -68,9 +77,9 @@ bool hangCloth(u32 lineId, u32 x, Cloth* cloth) {
 Cloth* takeCloth(u32 lineId, u32 x) {
     Cloth** line;
     if (lineId == 0) {
-        line = outsideLine;
+        line = outsideLine.line;
     } else {
-        line = insideLine;
+        line = insideLine.line;
     }
 
     if (line[x] && line[x]->dryingState <= DRYING_DRY) {
@@ -80,87 +89,56 @@ Cloth* takeCloth(u32 lineId, u32 x) {
     }
 }
 
-void updateHangingCloths(Weather weather) {
+static void updateClothsOnLine(Line* line, Weather weather) {
     u32 i = 0;
-
     // First pass - resize the cloths.
-    while (i < OUTSIDE_LINE_SIZE) {
-        if (outsideLine[i]) {
-            u32 oldSize = outsideLine[i]->size;
-            updateCloth(outsideLine[i], weather);
+    while (i < line->length) {
+        if (line->line[i]) {
+            u32 oldSize = line->line[i]->size;
+            updateCloth(line->line[i], weather);
             i += oldSize;
         } else {
             i++;
         }
     }
-
-    i = 0;
-    while (i < INSIDE_LINE_SIZE) {
-        if (insideLine[i]) {
-            u32 oldSize = insideLine[i]->size;
-            // Inside is always considered 'cloudy'
-            updateCloth(insideLine[i], WEATHER_CLOUDY);
-            i += oldSize;
-        } else {
-            i++;
-        }
-    }
-
-    /*
 
     // Second pass - shuffle them along with the change in size and dump any that fell off.
-
-    Cloth* outsideTemp[OUTSIDE_LINE_SIZE];
-    memcpy(outsideTemp, outsideLine, sizeof(Cloth*) * OUTSIDE_LINE_SIZE);
-
     u32 iSource = 0;
     u32 iDest = 0;
-
     Cloth* lastCloth = 0;
 
-    while (iSource < OUTSIDE_LINE_SIZE) {
+    Cloth* temp[line->length];
+    memcpy(temp, line->line, sizeof(Cloth*) * line->length);
+    memset(line->line, 0x00, sizeof(Cloth*) * line->length);
+
+    while (iSource < line->length) {
         // Copy the cloths back to the line, but at the new size.
-        if (outsideTemp[iSource] && lastCloth != outsideTemp[iSource]) {
-            lastCloth = outsideTemp[iSource];
+        if (temp[iSource] && lastCloth != temp[iSource]) {
+            lastCloth = temp[iSource];
 
             // If cloth can't fit on the line, it falls and becomes dirty.
-            if (iDest + lastCloth->size > OUTSIDE_LINE_SIZE) {
+            if ((iDest + lastCloth->size) > line->length) {
                 lastCloth->dryingState = DRYING_DIRTY;
             } else {
                 for (u32 j = 0; j < lastCloth->size; j++) {
-                    outsideLine[iDest] = lastCloth;
+                    line->line[iDest] = lastCloth;
                     iDest++;
                 }
             }
+        } else {
+            iDest++;
         }
 
         iSource++;
     }
 
-    // Do the same for the inside line.
-    iSource = 0;
-    iDest = 0;
 
-    Cloth* insideTemp[INSIDE_LINE_SIZE];
-    memcpy(insideTemp, insideLine, sizeof(Cloth*) * INSIDE_LINE_SIZE);
 
-    while (iSource < INSIDE_LINE_SIZE) {
-        // Copy the cloths back to the line, but at the new size.
-        if (insideTemp[iSource] && lastCloth != insideTemp[iSource]) {
-            lastCloth = insideTemp[iSource];
+}
 
-            // If cloth can't fit on the line, it falls and becomes dirty.
-            if (iDest + lastCloth->size > INSIDE_LINE_SIZE) {
-                lastCloth->dryingState = DRYING_DIRTY;
-            } else {
-                for (u32 j = 0; j < lastCloth->size; j++) {
-                    insideTemp[iDest] = lastCloth;
-                    iDest++;
-                }
-            }
-        }
+void updateHangingCloths(Weather weather) {
+    updateClothsOnLine(&outsideLine, weather);
 
-        iSource++;
-    }
-    */
+    // Inside is always considered 'cloudy'
+    updateClothsOnLine(&insideLine, WEATHER_CLOUDY);
 }

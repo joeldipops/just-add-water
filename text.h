@@ -18,7 +18,8 @@ typedef enum {
     OUTSIDE_LINE,
     HANG_SPRITE,
     TAKE_SPRITE,
-    STORM_SPRITE
+    STORM_SPRITE,
+    BG_SPRITE
 } SpriteCode;
 
 /**

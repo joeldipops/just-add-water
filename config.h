@@ -1,7 +1,10 @@
 #define STANDARD_MARGIN 10
 
-#define INIT_TURN_SECONDS 9
+#define INIT_TURN_SECONDS 0
 #define INIT_TURN_CLOTHS 2
+
+// Cos we need to fit a '+' and a '1'
+#define MIN_CLOTH_SIZE 2
 
 // Weather frame
 // TODO
@@ -35,5 +38,5 @@
 
 #define COLOUR_DEPTH DEPTH_16_BPP
 
-#define RANDOMISE_CLOTHS 1
+//#define RANDOMISE_CLOTHS 1
 #define SHOW_FRAME_COUNT 1

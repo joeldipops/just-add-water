@@ -120,7 +120,7 @@ static void initNewCloth(Cloth* cloth) {
 #else
     cloth->dryingState = DRYING_SPUN;
     cloth->growthType = GROWTH_LINEAR;
-    cloth->growthFactor = +1;
+    cloth->growthFactor = -1;
     cloth->size = 2;
 #endif
 

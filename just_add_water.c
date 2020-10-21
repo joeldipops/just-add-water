@@ -13,10 +13,6 @@
 #include <libdragon.h>
 
 
-
-static u32 clothsPerDay = INIT_TURN_CLOTHS;
-static u32 secondsPerDay = INIT_TURN_SECONDS;
-
 void initialiseSubsystems() {
     initLine();
     initPlayer();
@@ -37,7 +33,7 @@ void inputStep() {
     N64ControllerState keysPressed = get_keys_pressed();
     N64ControllerState keysReleased = get_keys_up();
 
-    if (!secondsPerDay && keysReleased.c[0].A) {
+    if (!INIT_TURN_SECONDS && keysReleased.c[0].A) {
         startNewDay();
     }
 
@@ -55,19 +51,18 @@ void renderStep() {
 
     rdp_attach_display(frameId);
 
-    if (!isRenderRequired()) {
-        drawBox(DRY_SPRITE, 0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
+    if (isRenderRequired()) {
+        drawBox(BG_SPRITE, 0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
 
         if (getPlayer()->isPaused) {
             drawText("PAUSE", 100, 100, 2);
         } else {
             drawDay();
-            drawLine();
+            drawLines();
             drawQueue();
             drawWeather();
             drawPlayer();
         }
-    } else {
         onRendered();
     }
 

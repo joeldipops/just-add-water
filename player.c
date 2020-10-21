@@ -87,6 +87,10 @@ void initPlayer() {
     player.isPaused = false;
 }
 
+void gameOver() {
+    player.isPaused = true;
+}
+
 void drawPlayer() {
     // Hanger selector
     drawSprite(
