@@ -32,7 +32,7 @@ static void drawLine(Line* line, u32 x, u32 y) {
         if (line->line[i]) {
             drawCloth(
                 line->line[i],
-                x + i * TILE_WIDTH, 
+                x + i * TILE_WIDTH,
                 y
             );
             i += line->line[i]->size - 1;
@@ -44,10 +44,14 @@ void drawLines() {
     drawLine(&outsideLine, LEFT_MARGIN, OUTSIDE_LINE_POSITION);
     drawLine(&insideLine, LEFT_MARGIN, INSIDE_LINE_POSITION);
 
-    for (u32 i = LEFT_MARGIN; i < 320; i += 8) {
+    for (u32 i = LEFT_MARGIN; i < LEFT_MARGIN + OUTSIDE_LINE_SIZE * TILE_WIDTH; i += TILE_WIDTH) {
         drawSprite(OUTSIDE_LINE, i, OUTSIDE_LINE_POSITION, 1);
-        drawSprite(ROOF_SPRITE, i, ROOF_POSITION, 1);
+    }
+    for (u32 i = LEFT_MARGIN; i < LEFT_MARGIN + INSIDE_LINE_SIZE * TILE_WIDTH; i += TILE_WIDTH) {
         drawSprite(INSIDE_LINE, i, INSIDE_LINE_POSITION, 1);
+    }
+    for (u32 i = LEFT_MARGIN; i < LEFT_MARGIN + SCREEN_WIDTH - LEFT_MARGIN; i += TILE_WIDTH) {
+        drawSprite(ROOF_SPRITE, i, ROOF_POSITION, 1);
     }
 }
 
