@@ -100,6 +100,10 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
     drawText(cloth->text, x, y + (TILE_WIDTH / 2) , 1);
 }
 
+bool isClothDry(Cloth* cloth) {
+    return cloth->dryingState <= DRYING_DRY;
+}
+
 void updateCloth(Cloth* cloth, Weather weather) {
     switch(weather) {
         case WEATHER_STORM:

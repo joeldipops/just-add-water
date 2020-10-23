@@ -30,6 +30,7 @@ typedef struct {
 } Cloth;
 
 void initCloths();
+bool isClothDry(Cloth* cloth);
 void drawCloth(Cloth* cloth, u32 x, u32 y);
 void updateCloth();
 void buildClothText(Cloth* cloth);

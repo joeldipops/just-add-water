@@ -70,12 +70,23 @@ static void handleHang() {
 }
 
 static void handleTake() {
-    if (!takeCloth(player.takeY, player.takeX)) {
+    Cloth* taken = takeCloth(player.takeY, player.takeX);
+    // Not able to take a cloth.
+    if (!taken) {
         // Ideally play a NOPE sound.
         return;
     }
 
-    player.score++;
+    if (isClothDry(taken)) {
+        player.score++;
+        taken->isFreeable = true;
+    } else if (taken->dryingState != DRYING_DIRTY) {
+        // TODO - allow moving
+        ; 
+    } else {
+        // It's dirty, we're done with it.  Mark it for cleanup.
+        taken->isFreeable = true;
+    }
 }
 
 void initPlayer() {

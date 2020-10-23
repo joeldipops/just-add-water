@@ -9,7 +9,7 @@
 
 
 typedef struct {
-    Cloth** line;
+    Cloth** cloths;
     u32 length;
 } Line;
 
@@ -20,22 +20,22 @@ static Line outsideLine;
 static Line insideLine;
 
 void initLine() {
-    outsideLine.line = _outsideLine;
+    outsideLine.cloths = _outsideLine;
     outsideLine.length = OUTSIDE_LINE_SIZE;
 
-    insideLine.line = _insideLine;
+    insideLine.cloths = _insideLine;
     insideLine.length = INSIDE_LINE_SIZE;
 }
 
 static void drawLine(Line* line, u32 x, u32 y) {
     for (u32 i = 0; i < line->length; i++) {
-        if (line->line[i]) {
+        if (line->cloths[i]) {
             drawCloth(
-                line->line[i],
+                line->cloths[i],
                 x + i * TILE_WIDTH,
                 y
             );
-            i += line->line[i]->size - 1;
+            i += line->cloths[i]->size - 1;
         }
     }
 }
@@ -56,35 +56,41 @@ void drawLines() {
 }
 
 bool hangCloth(u32 lineId, u32 x, Cloth* cloth) {
-    Cloth** line;
+    Cloth** cloths;
     if (lineId == 0) {
-        line = outsideLine.line;
+        cloths = outsideLine.cloths;
     } else {
-        line = insideLine.line;
+        cloths = insideLine.cloths;
     }
 
     // If there's already a cloth where we want to put this new one
     for (u32 i = x; i < x + cloth->size; i++) {
-        if (line[i]) {
+        if (cloths[i]) {
             return false;
         }
     }
 
     // Otherwise hang the new cloth
     for (u32 i = x; i < x + cloth->size; i++) {
-        line[i] = cloth;
+        cloths[i] = cloth;
     }
 
     return true;
 }
 
 static Cloth* takeClothFromLine(Line* line, u32 x) {
-    if (line->line[x] && line->line[x]->dryingState <= DRYING_DRY) {
-        Cloth* result = line->line[x];
+    if (line->cloths[x]) {
+        Cloth* result = line->cloths[x];
+
+        // Later I will allow any cloth to be taken and held, but for now, only cloths that need to come down.
+        if (!isClothDry(result) && result->dryingState != DRYING_DIRTY) {
+            return 0;
+        }
+
         // Remove from the line.
         for (u32 i = 0; i < line->length; i++) {
-            if (line->line[i] == result) {
-                line->line[i] = 0;
+            if (line->cloths[i] == result) {
+                line->cloths[i] = 0;
             }
         }
 
@@ -107,9 +113,9 @@ static void updateClothsOnLine(Line* line, Weather weather) {
     u32 i = 0;
     // First pass - resize the cloths.
     while (i < line->length) {
-        if (line->line[i]) {
-            u32 oldSize = line->line[i]->size;
-            updateCloth(line->line[i], weather);
+        if (line->cloths[i]) {
+            u32 oldSize = line->cloths[i]->size;
+            updateCloth(line->cloths[i], weather);
             i += oldSize;
         } else {
             i++;
@@ -122,8 +128,8 @@ static void updateClothsOnLine(Line* line, Weather weather) {
     Cloth* lastCloth = 0;
 
     Cloth* temp[line->length];
-    memcpy(temp, line->line, sizeof(Cloth*) * line->length);
-    memset(line->line, 0x00, sizeof(Cloth*) * line->length);
+    memcpy(temp, line->cloths, sizeof(Cloth*) * line->length);
+    memset(line->cloths, 0x00, sizeof(Cloth*) * line->length);
 
     while (iSource < line->length) {
         // Copy the cloths back to the line, but at the new size.
@@ -135,7 +141,7 @@ static void updateClothsOnLine(Line* line, Weather weather) {
                 lastCloth->dryingState = DRYING_DIRTY;
             } else {
                 for (u32 j = 0; j < lastCloth->size; j++) {
-                    line->line[iDest] = lastCloth;
+                    line->cloths[iDest] = lastCloth;
                     iDest++;
                 }
             }
