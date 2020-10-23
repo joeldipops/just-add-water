@@ -89,6 +89,30 @@ static void handleTake() {
     }
 }
 
+static void handleHangY() {
+    player.hangY = !player.hangY;
+
+    if (player.hangY && player.hangX >= INSIDE_LINE_SIZE) {
+        player.hangX = INSIDE_LINE_SIZE - 1;
+    }
+
+    if (!player.hangY && player.hangX >= OUTSIDE_LINE_SIZE) {
+        player.hangX = OUTSIDE_LINE_SIZE - 1;
+    }
+}
+static void handleTakeY() {
+    player.takeY = !player.takeY;
+
+    if (player.takeY && player.takeX >= INSIDE_LINE_SIZE) {
+        player.takeX = INSIDE_LINE_SIZE - 1;
+    }
+
+    if (!player.takeY && player.takeX >= OUTSIDE_LINE_SIZE) {
+        player.takeX = OUTSIDE_LINE_SIZE - 1;
+    }
+}
+
+
 void initPlayer() {
     player.hangX = 0;
     player.hangY = 0;
@@ -167,11 +191,11 @@ bool handleController(N64ControllerState* pressed, N64ControllerState* released)
     bool result = false;
 
     if (pressed->c[0].up || pressed->c[0].down) {
-        player.hangY = !player.hangY;
+        handleHangY();
         result = true;
     }
     if (pressed->c[0].C_up || pressed->c[0].C_down) {
-        player.takeY = !player.takeY;
+        handleTakeY();
         result = true;
     }
 
