@@ -1,6 +1,7 @@
 #include "core.h"
 #include "text.h"
 #include "resources.h"
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +11,6 @@
 
 static bool textInitted = false;
 
-static const u32 CHARACTER_SIZE = 6;
 static const u32 SPRITE_SIZE = 32;
 
 /**

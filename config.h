@@ -12,10 +12,12 @@
 //    #define SCREEN_WIDTH 320
 //  #define SCREEN_HEIGHT 240
 //    #define TILE_WIDTH 8
+//    #define CHARACTER_SIZE 6
 //#else
     #define SCREEN_WIDTH 640
     #define SCREEN_HEIGHT 480
     #define TILE_WIDTH 16
+    #define CHARACTER_SIZE 11
 //#endif
 
 #define STANDARD_MARGIN TILE_WIDTH
