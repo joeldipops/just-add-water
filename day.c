@@ -26,8 +26,6 @@ static void onSecondTick() {
     } else {
         startNewDay();
     }
-
-    onStateChanged();
 }
 
 void startNewDay() {

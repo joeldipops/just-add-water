@@ -37,33 +37,28 @@ void inputStep() {
         startNewDay();
     }
 
-    if (handleController(&keysPressed, &keysReleased)) {
-        onStateChanged();
-    };
+    handleController(&keysPressed, &keysReleased);
 };
 
-void renderStep() {
-    display_context_t frameId;
+display_context_t nextFrame = 0;
 
+void renderStep() {
     fps_frame();
 
-    while(!(frameId = display_lock()));
+    // while(!(nextFrame = display_lock()))
 
-    rdp_attach_display(frameId);
+    rdp_attach_display(nextFrame);
 
-    if (isRenderRequired()) {
-        drawBox(BG_SPRITE, 0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
+    drawBox(BG_SPRITE, 0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
 
-        if (getPlayer()->state == STATE_PAUSE) {
-            drawText("PAUSE", 100, 100, 2);
-        } else {
-            drawDay();
-            drawLines();
-            drawQueue();
-            drawWeather();
-            drawPlayer();
-        }
-        onRendered();
+    if (getPlayer()->state == STATE_PAUSE) {
+        drawText("PAUSE", 100, 100, 2);
+    } else {
+        drawDay();
+        drawLines();
+        drawQueue();
+        drawWeather();
+        drawPlayer();
     }
 
 #ifdef SHOW_FRAME_COUNT
@@ -73,12 +68,23 @@ void renderStep() {
 #endif
 
     rdp_detach_display();
-    display_show(frameId);
+    display_show(nextFrame);
 }
 
 void resetScreen() {
     graphics_fill_screen(1, 0xffffffff);
     graphics_fill_screen(2, 0xffffffff);
+}
+
+void mainLoop() {
+    nextFrame = display_lock();
+    if (!nextFrame) { return; }
+
+    disable_interrupts();
+    rdp_sync(SYNC_PIPE);
+    inputStep();
+    renderStep();
+    enable_interrupts();
 }
 
 int main(void) {
@@ -98,8 +104,6 @@ int main(void) {
 
     startNewDay();
 
-    while(true) {
-        inputStep();
-        renderStep();
-    }
+    // Render a frame 30 times a second.
+    new_timer(TIMER_TICKS(TICKS_PER_SECOND) / 30, TF_CONTINUOUS, mainLoop);
 }
