@@ -49,11 +49,17 @@ static void handleHang() {
     hand->cloth = dequeueCloth();
 }
 
+static void handleDrop() {
+    Hand* hand = &player.hands[HAND_TAKE];
+    if (hand->cloth) {
+        hand->cloth->isFreeable = true;
+        hand->cloth = 0;
+        player.dropped++;
+    }
+}
+
 static void handleTake() {
     Hand* hand = &player.hands[HAND_TAKE];
-
-    // TODO need a way to discard cloth
-    // Probably just by pressing A or B
 
     // If we're already holding something, put it back on the line.
     if (hand->cloth) {
@@ -79,6 +85,7 @@ static void handleTake() {
         hand->cloth = taken;
     } else {
         // It's dirty, we're done with it.  Mark it for cleanup.
+        player.dropped++;
         taken->isFreeable = true;
     }
 }
@@ -101,6 +108,7 @@ void initPlayer() {
     player.hands[HAND_HANG].cloth = 0;
     player.hands[HAND_TAKE].cloth = 0;
     player.score = 0;
+    player.dropped = 0;
     player.state= STATE_PLAY;
 }
 
@@ -145,6 +153,21 @@ void drawPlayer() {
         STANDARD_MARGIN * 2,
         1
     );
+
+    drawText(
+        "DROPPED",
+        SCREEN_WIDTH - STANDARD_MARGIN - TILE_WIDTH * 5,
+        STANDARD_MARGIN * 3,
+        1
+    );
+
+    sprintf(score, "%lu", player.dropped);
+    drawText(
+        score,
+        SCREEN_WIDTH - STANDARD_MARGIN - TILE_WIDTH * 5,
+        STANDARD_MARGIN * 4,
+        1
+    );
 }
 
 /**
@@ -153,7 +176,11 @@ void drawPlayer() {
  */
 bool handleController(N64ControllerState* pressed, N64ControllerState* released) {
     if (released->c[0].start) {
-        player.state = STATE_PAUSE ? STATE_PLAY : STATE_PAUSE;
+        player.state = player.state == STATE_PAUSE 
+            ? STATE_PLAY 
+            : STATE_PAUSE
+        ;
+
         return true;
     }
 
@@ -165,6 +192,12 @@ bool handleController(N64ControllerState* pressed, N64ControllerState* released)
         handleHang();
         return true;
     }
+
+    // Discard whatever you're holding in your right hand so you can pick up something else.
+    if (released->c[0].A || released->c[0].B) {
+        handleDrop();
+    }
+
     if (released->c[0].R) {
         handleTake();
         return true;

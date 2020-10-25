@@ -33,7 +33,7 @@ void inputStep() {
     N64ControllerState keysPressed = get_keys_pressed();
     N64ControllerState keysReleased = get_keys_up();
 
-    if (!INIT_TURN_SECONDS && keysReleased.c[0].A) {
+    if (!INIT_TURN_SECONDS && keysReleased.c[0].Z) {
         startNewDay();
     }
 

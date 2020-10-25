@@ -31,6 +31,7 @@ typedef struct {
     Cloth* clothToHang;
 
     u32 score;
+    u32 dropped;
 } Player;
 
 void gameOver();
