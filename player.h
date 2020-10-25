@@ -4,14 +4,29 @@
 #include "core.h"
 #include "cloth.h"
 
+
 typedef struct {
-    u32 hangX;
-    u32 hangY;
+    u32 x;
+    u32 y;
+    Cloth* cloth;
+} Hand;
 
-    u32 takeX;
-    u32 takeY;
+typedef enum {
+    HAND_HANG = 0,
+    HAND_TAKE = 1
+} HandType;
 
-    bool isPaused;
+typedef enum {
+    STATE_TITLE,
+    STATE_PLAY,
+    STATE_PAUSE,
+    STATE_GAMEOVER
+} State;
+
+typedef struct {
+    Hand hands[2];
+
+    State state;
 
     Cloth* clothToHang;
 

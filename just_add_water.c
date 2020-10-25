@@ -54,7 +54,7 @@ void renderStep() {
     if (isRenderRequired()) {
         drawBox(BG_SPRITE, 0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
 
-        if (getPlayer()->isPaused) {
+        if (getPlayer()->state == STATE_PAUSE) {
             drawText("PAUSE", 100, 100, 2);
         } else {
             drawDay();

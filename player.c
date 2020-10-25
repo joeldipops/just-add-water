@@ -8,69 +8,50 @@
 
 static Player player;
 
-static void handleHangX(bool isLeft) {
-    u32 max = player.hangY 
+static void handleMoveX(Hand* hand, bool isLeft) {
+    u32 max = hand->y 
         ? INSIDE_LINE_SIZE - 1 
         : OUTSIDE_LINE_SIZE - 1
     ;
 
     if (isLeft) {
-        if (player.hangX > 0) {
-            player.hangX--;
+        if (hand->x > 0) {
+            hand->x--;
         } else {
-            player.hangX = max;
+            hand->x = max;
             ;
         }
     } else {
-        if (player.hangX < max) {
-            player.hangX++;
+        if (hand->x < max) {
+            hand->x++;
         } else {
-            player.hangX = 0;
-        }
-    }
-}
-
-static void handleTakeX(bool isLeft) {
-    u32 max = player.takeY 
-        ? INSIDE_LINE_SIZE - 1 
-        : OUTSIDE_LINE_SIZE - 1
-    ;
-
-    if (isLeft) {
-        if (player.takeX > 0) {
-            player.takeX--;
-        } else {
-            player.takeX = max;
-            ;
-        }
-    } else {
-        if (player.takeX < max) {
-            player.takeX++;
-        } else {
-            player.takeX = 0;
+            hand->x = 0;
         }
     }
 }
 
 static void handleHang() {
-    if (!player.clothToHang) {
-        player.clothToHang = dequeueCloth();
+    Hand* hand = &player.hands[HAND_HANG];
+    Cloth* cloth = hand->cloth;
+    if (!cloth) {
+        hand->cloth = dequeueCloth();
     }
     // If nothing to dequeue, ignore the press.
-    if (!player.clothToHang) {
+    if (!cloth) {
         return;
     }
 
-    if (!hangCloth(player.hangY, player.hangX, player.clothToHang)) {
+    if (!hangCloth(hand->y, hand->x, cloth)) {
         // Ideally play a NOPE sound.
         return;
     }
 
-    player.clothToHang = dequeueCloth();
+    hand->cloth = dequeueCloth();
 }
 
 static void handleTake() {
-    Cloth* taken = takeCloth(player.takeY, player.takeX);
+    Hand* hand = &player.hands[HAND_TAKE];
+    Cloth* taken = takeCloth(hand->y, hand->x);
     // Not able to take a cloth.
     if (!taken) {
         // Ideally play a NOPE sound.
@@ -89,49 +70,35 @@ static void handleTake() {
     }
 }
 
-static void handleHangY() {
-    player.hangY = !player.hangY;
+static void handleMoveY(Hand* hand) {
+    hand->y = !hand->y;
 
-    if (player.hangY && player.hangX >= INSIDE_LINE_SIZE) {
-        player.hangX = INSIDE_LINE_SIZE - 1;
-    }
-
-    if (!player.hangY && player.hangX >= OUTSIDE_LINE_SIZE) {
-        player.hangX = OUTSIDE_LINE_SIZE - 1;
+    if (hand->y && hand->x >= INSIDE_LINE_SIZE) {
+        hand->x = INSIDE_LINE_SIZE - 1;
+    } else if (!hand->y && hand->x >= OUTSIDE_LINE_SIZE) {
+        hand->x = OUTSIDE_LINE_SIZE - 1;
     }
 }
-static void handleTakeY() {
-    player.takeY = !player.takeY;
-
-    if (player.takeY && player.takeX >= INSIDE_LINE_SIZE) {
-        player.takeX = INSIDE_LINE_SIZE - 1;
-    }
-
-    if (!player.takeY && player.takeX >= OUTSIDE_LINE_SIZE) {
-        player.takeX = OUTSIDE_LINE_SIZE - 1;
-    }
-}
-
 
 void initPlayer() {
-    player.hangX = 0;
-    player.hangY = 0;
-    player.takeX = 0;
-    player.takeY = 0;
+    player.hands[HAND_HANG].x = 0;
+    player.hands[HAND_HANG].y = 0;
+    player.hands[HAND_TAKE].x = 0;
+    player.hands[HAND_TAKE].y = 0;
     player.score = 0;
-    player.isPaused = false;
+    player.state= STATE_PLAY;
 }
 
 void gameOver() {
-    player.isPaused = true;
+    player.state = STATE_GAMEOVER;
 }
 
 void drawPlayer() {
     // Hanger selector
     drawSprite(
         HANG_SPRITE,
-        LEFT_MARGIN + (TILE_WIDTH * player.hangX),
-        player.hangY 
+        LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_HANG].x),
+        player.hands[HAND_HANG].y
             ? INSIDE_LINE_POSITION
             : OUTSIDE_LINE_POSITION
         , 1
@@ -140,8 +107,8 @@ void drawPlayer() {
     // Cloth selector
     drawSprite(
         TAKE_SPRITE,
-        LEFT_MARGIN + (TILE_WIDTH * player.takeX),
-        player.takeY 
+        LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_TAKE].x),
+        player.hands[HAND_TAKE].y
             ? INSIDE_LINE_POSITION
             : OUTSIDE_LINE_POSITION
         , 1
@@ -171,11 +138,11 @@ void drawPlayer() {
  */
 bool handleController(N64ControllerState* pressed, N64ControllerState* released) {
     if (released->c[0].start) {
-        player.isPaused = !player.isPaused;
+        player.state = STATE_PAUSE ? STATE_PLAY : STATE_PAUSE;
         return true;
     }
 
-    if (player.isPaused) {
+    if (player.state == STATE_PAUSE) {
         return false;
     }
 
@@ -191,21 +158,21 @@ bool handleController(N64ControllerState* pressed, N64ControllerState* released)
     bool result = false;
 
     if (pressed->c[0].up || pressed->c[0].down) {
-        handleHangY();
+        handleMoveY(&player.hands[HAND_HANG]);
         result = true;
     }
     if (pressed->c[0].C_up || pressed->c[0].C_down) {
-        handleTakeY();
+        handleMoveY(&player.hands[HAND_TAKE]);
         result = true;
     }
 
     if (pressed->c[0].left || pressed->c[0].right) {
-        handleHangX(pressed->c[0].left);
+        handleMoveX(&player.hands[HAND_HANG], pressed->c[0].left);
         result = true;
     }
 
     if (pressed->c[0].C_left || pressed->c[0].C_right) {
-        handleTakeX(pressed->c[0].C_left);
+        handleMoveX(&player.hands[HAND_TAKE], pressed->c[0].C_left);
         result = true;
     }
 

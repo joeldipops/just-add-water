@@ -17,7 +17,7 @@ static u32 secondsPerDay = INIT_TURN_SECONDS;
 static u32 clothsPerDay = INIT_TURN_CLOTHS;
 
 static void onSecondTick() {
-    if (getPlayer()->isPaused) {
+    if (getPlayer()->state == STATE_PAUSE) {
         return;
     }
 
