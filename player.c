@@ -51,6 +51,18 @@ static void handleHang() {
 
 static void handleTake() {
     Hand* hand = &player.hands[HAND_TAKE];
+
+    // TODO need a way to discard cloth
+    // Probably just by pressing A or B
+
+    // If we're already holding something, put it back on the line.
+    if (hand->cloth) {
+        if (hangCloth(hand->y, hand->x, hand->cloth)) {
+            hand->cloth = 0;
+        }
+        return;
+    }
+
     Cloth* taken = takeCloth(hand->y, hand->x);
     // Not able to take a cloth.
     if (!taken) {
@@ -59,11 +71,12 @@ static void handleTake() {
     }
 
     if (isClothDry(taken)) {
+        // If it's dry, chuck it in the basket.
         player.score++;
         taken->isFreeable = true;
     } else if (taken->dryingState != DRYING_DIRTY) {
-        // TODO - allow moving
-        ; 
+        // If it's not, take it to be hung somewhere else.
+        hand->cloth = taken;
     } else {
         // It's dirty, we're done with it.  Mark it for cleanup.
         taken->isFreeable = true;
@@ -85,6 +98,8 @@ void initPlayer() {
     player.hands[HAND_HANG].y = 0;
     player.hands[HAND_TAKE].x = 0;
     player.hands[HAND_TAKE].y = 0;
+    player.hands[HAND_HANG].cloth = 0;
+    player.hands[HAND_TAKE].cloth = 0;
     player.score = 0;
     player.state= STATE_PLAY;
 }

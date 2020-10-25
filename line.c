@@ -82,11 +82,6 @@ static Cloth* takeClothFromLine(Line* line, u32 x) {
     if (line->cloths[x]) {
         Cloth* result = line->cloths[x];
 
-        // Later I will allow any cloth to be taken and held, but for now, only cloths that need to come down.
-        if (!isClothDry(result) && result->dryingState != DRYING_DIRTY) {
-            return 0;
-        }
-
         // Remove from the line.
         for (u32 i = 0; i < line->length; i++) {
             if (line->cloths[i] == result) {
