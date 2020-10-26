@@ -13,7 +13,7 @@
 #include <libdragon.h>
 
 
-void initialiseSubsystems() {
+static void initialiseSubsystems() {
     initLine();
     initPlayer();
     initClothManager();
@@ -28,7 +28,7 @@ void initialiseSubsystems() {
     initResources();
 }
 
-void inputStep() {
+static void inputStep() {
     controller_scan();
     N64ControllerState keysPressed = get_keys_pressed();
     N64ControllerState keysReleased = get_keys_up();
@@ -40,9 +40,14 @@ void inputStep() {
     handleController(&keysPressed, &keysReleased);
 };
 
+static void drawPause() {
+    drawText("PAUSED", 128, 128, 2);
+    drawWeatherGuide(224);
+}
+
 display_context_t nextFrame = 0;
 
-void renderStep() {
+static void renderStep() {
     fps_frame();
 
     // while(!(nextFrame = display_lock()))
@@ -51,15 +56,29 @@ void renderStep() {
 
     drawBox(BG_SPRITE, 0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
 
-    if (getPlayer()->state == STATE_PAUSE) {
-        drawText("PAUSE", 100, 100, 2);
-    } else {
-        drawDay();
-        drawLines();
-        drawQueue();
-        drawWeather();
-        drawPlayer();
+    switch (getPlayer()->state) {
+        case STATE_TITLE:
+            //drawTitle();
+            break;
+        case STATE_PAUSE:
+            drawPause();
+            //drawText("Pause", 100, 100, 2);
+            break;
+        case STATE_PLAY:
+            drawDay();
+            drawLines();
+            drawQueue();
+            drawWeather();
+            drawPlayer();
+            break;
+        case STATE_GAMEOVER:
+            drawText("Game Over", 100, 100, 2);
+            break;
+        default:
+            drawText("Error", 100, 100, 2);
+            break;
     }
+
 
 #ifdef SHOW_FRAME_COUNT
     string text;
@@ -71,7 +90,7 @@ void renderStep() {
     display_show(nextFrame);
 }
 
-void resetScreen() {
+static void resetScreen() {
     graphics_fill_screen(1, 0xffffffff);
     graphics_fill_screen(2, 0xffffffff);
 }

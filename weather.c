@@ -3,6 +3,7 @@
 #include "config.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #define FORECAST_SIZE 6
 #define WEATHER_SIZE 8
@@ -33,6 +34,33 @@ static SpriteCode getWeatherSprite(Weather weather) {
             return STORM_SPRITE;
         default:
             return DRENCHED_SPRITE;
+    }
+}
+
+void drawWeatherGuide(u32 position) {
+    drawText(           "Forecast       Weather     Chance", LEFT_MARGIN, position, 1);
+    position += STANDARD_MARGIN * 2;
+    string text[4];
+    sprintf(text[0],    "$%02x             $%02x           50%%",  SUN_SPRITE, SUN_SPRITE);
+    sprintf(text[1],    "               $%02x           40%%",  CLOUD_SPRITE);
+    sprintf(text[2],    "               $%02x           10%%",  RAIN_SPRITE);
+    sprintf(text[3],    "               $%02x           0%%",  STORM_SPRITE);
+
+    for (u32 i = 0; i < 4; i++) {
+        drawText(text[i], LEFT_MARGIN, position, 1);
+        position += STANDARD_MARGIN;
+    }
+
+    position += STANDARD_MARGIN;
+
+    sprintf(text[0],    "$%02x             $%02x           0%%",  RAIN_SPRITE, SUN_SPRITE);
+    sprintf(text[1],    "               $%02x           50%%",  CLOUD_SPRITE);
+    sprintf(text[2],    "               $%02x           40%%",  RAIN_SPRITE);
+    sprintf(text[3],    "               $%02x           10%%",  STORM_SPRITE);
+
+    for (u32 i = 0; i < 4; i++) {
+        drawText(text[i], LEFT_MARGIN, position, 1);
+        position += STANDARD_MARGIN;
     }
 }
 

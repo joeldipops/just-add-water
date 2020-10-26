@@ -11,7 +11,7 @@
 
 static bool textInitted = false;
 
-static const u32 SPRITE_SIZE = 32;
+static const u32 SPRITE_SIZE = 16;
 
 /**
  * Initialises text subsystem by loading sprites etc.
