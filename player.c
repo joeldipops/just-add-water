@@ -5,6 +5,8 @@
 #include "clothManager.h"
 #include "line.h"
 #include "stdio.h"
+#include "title.h"
+#include "day.h"
 
 static Player player;
 
@@ -109,7 +111,7 @@ void initPlayer() {
     player.hands[HAND_TAKE].cloth = 0;
     player.score = 0;
     player.dropped = 0;
-    player.state= STATE_PLAY;
+    player.state = STATE_TITLE;
 }
 
 void gameOver() {
@@ -176,10 +178,27 @@ void drawPlayer() {
  */
 bool handleController(N64ControllerState* pressed, N64ControllerState* released) {
     if (released->c[0].start) {
-        player.state = player.state == STATE_PAUSE 
-            ? STATE_PLAY 
-            : STATE_PAUSE
-        ;
+        switch (player.state) {
+            case STATE_TITLE: 
+                player.state = STATE_PLAY;
+                closeTitle();
+                startNewDay();
+                break;
+            case STATE_PLAY:
+                player.state = STATE_PAUSE;
+                break;
+            case STATE_PAUSE:
+                player.state = STATE_PLAY;
+                break;
+            case STATE_GAMEOVER:
+                player.score = 0;
+                player.dropped = 0;
+                player.state = STATE_PLAY;
+                break;
+            default:
+                player.state = STATE_ERROR;
+                return false;
+        }
 
         return true;
     }

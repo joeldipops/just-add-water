@@ -45,6 +45,7 @@ LD_OFILES += $(CURDIR)/obj/text.o
 LD_OFILES += $(CURDIR)/obj/player.o
 LD_OFILES += $(CURDIR)/obj/day.o
 LD_OFILES += $(CURDIR)/obj/fps.o
+LD_OFILES += $(CURDIR)/obj/title.o
 LD_OFILES += $(CURDIR)/obj/core.o
 
 # Produces the disassembly, with symbols included.
@@ -61,6 +62,7 @@ $(PROG_NAME).elf : $(PROG_NAME).o $(LD_FILE)
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/player.o $(CURDIR)/player.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/day.o $(CURDIR)/day.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/fps.o $(CURDIR)/fps.c
+	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/title.o $(CURDIR)/title.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/core.o $(CURDIR)/core.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/$(PROG_NAME).o $(CURDIR)/$(PROG_NAME).c
 

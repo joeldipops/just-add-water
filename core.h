@@ -20,6 +20,16 @@ typedef struct {
     u8* data;
 } Buffer;
 
+typedef enum {
+    STATE_TITLE,
+    STATE_PLAY,
+    STATE_PAUSE,
+    STATE_GAMEOVER,
+    STATE_ERROR
+} State;
+
+//extern State gameState;
+
 typedef struct controller_data N64ControllerState;
 
 #define TICKS_PER_SECOND 1000000

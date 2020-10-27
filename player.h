@@ -16,13 +16,6 @@ typedef enum {
     HAND_TAKE = 1
 } HandType;
 
-typedef enum {
-    STATE_TITLE,
-    STATE_PLAY,
-    STATE_PAUSE,
-    STATE_GAMEOVER
-} State;
-
 typedef struct {
     Hand hands[2];
 

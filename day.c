@@ -11,12 +11,16 @@
 #include <libdragon.h>
 
 static u32 secondsLeft = 0;
-timer_link_t* secondsTimer;
+timer_link_t* secondsTimer = 0;
 
 static u32 secondsPerDay = INIT_TURN_SECONDS;
 static u32 clothsPerDay = INIT_TURN_CLOTHS;
 
-static void onSecondTick() {
+void initDay() {
+
+}
+
+void onSecondTick() {
     if (getPlayer()->state == STATE_PAUSE) {
         return;
     }

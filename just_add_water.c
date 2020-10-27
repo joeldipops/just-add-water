@@ -8,6 +8,7 @@
 #include "day.h"
 #include "fps.h"
 #include "resources.h"
+#include "title.h"
 
 #include <stdio.h>
 #include <libdragon.h>
@@ -45,9 +46,20 @@ static void drawPause() {
     drawWeatherGuide(224);
 }
 
+static void resetScreen() {
+    graphics_fill_screen(1, 0xffffffff);
+    graphics_fill_screen(2, 0xffffffff);
+}
+
 display_context_t nextFrame = 0;
 
-static void renderStep() {
+void renderFrame() {
+    nextFrame = display_lock();
+    if (!nextFrame) { return; }
+
+    disable_interrupts();
+    rdp_sync(SYNC_PIPE);
+
     fps_frame();
 
     // while(!(nextFrame = display_lock()))
@@ -58,11 +70,10 @@ static void renderStep() {
 
     switch (getPlayer()->state) {
         case STATE_TITLE:
-            //drawTitle();
+            drawTitle();
             break;
         case STATE_PAUSE:
             drawPause();
-            //drawText("Pause", 100, 100, 2);
             break;
         case STATE_PLAY:
             drawDay();
@@ -83,26 +94,12 @@ static void renderStep() {
 #ifdef SHOW_FRAME_COUNT
     string text;
     sprintf(text, "FPS: %d", fps_get());
-    drawText(text, 0, 230, 1);
+    drawText(text, 0, 460, 1);
 #endif
 
     rdp_detach_display();
     display_show(nextFrame);
-}
 
-static void resetScreen() {
-    graphics_fill_screen(1, 0xffffffff);
-    graphics_fill_screen(2, 0xffffffff);
-}
-
-void mainLoop() {
-    nextFrame = display_lock();
-    if (!nextFrame) { return; }
-
-    disable_interrupts();
-    rdp_sync(SYNC_PIPE);
-    inputStep();
-    renderStep();
     enable_interrupts();
 }
 
@@ -121,8 +118,12 @@ int main(void) {
     // Enable sprite display instead of solid color fill
     rdp_enable_texture_copy();
 
-    startNewDay();
+    initTitle();
 
     // Render a frame 30 times a second.
-    new_timer(TIMER_TICKS(TICKS_PER_SECOND) / 30, TF_CONTINUOUS, mainLoop);
+    new_timer(TIMER_TICKS(TICKS_PER_SECOND) / 30, TF_CONTINUOUS, renderFrame);
+
+    while(true) {
+        inputStep();
+    }
 }

@@ -55,7 +55,6 @@ void drawSprite(const SpriteCode spriteCode, const u32 x, const u32 y, const flo
  * @param width width of the area available for text.
  */
 void drawTextParagraph(
-    const display_context_t frame,
     const string text,
     const u32 x,
     const u32 y,
