@@ -68,8 +68,11 @@ $(PROG_NAME).elf : $(PROG_NAME).o $(LD_FILE)
 
 	$(LD) -o $(PROG_NAME).elf $(CURDIR)/obj/$(PROG_NAME).o $(LD_OFILES) $(LINK_FLAGS)
 
-$(PROG_NAME).dfs: font.sprite sprites.sprite
+$(PROG_NAME).dfs: timer.sprite font.sprite sprites.sprite
 	$(MKDFSPATH) $(PROG_NAME).dfs ./filesystem/
+
+timer.sprite:
+	mksprite 16 8 2 ./assets/timer.png ./filesystem/timer.sprite
 
 %.sprite: ./assets/%.png
 	mksprite 16 32 3 $^ ./filesystem/$@

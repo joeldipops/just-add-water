@@ -71,7 +71,15 @@ static void draw(const u32 spriteCode, sprite_t* spriteSheet, const u32 x, const
 }
 
 void drawSprite(const SpriteCode spriteCode, const u32 x, const u32 y, const float scale) {
-    draw(spriteCode, getSpriteSheet(), x, y, scale);
+    sprite_t* sheet;
+    u32 code = spriteCode;
+    if (spriteCode >= TIMER_SPRITE_1) {
+        sheet = getTimerSheet();
+        code = spriteCode - TIMER_SPRITE_1;
+    } else {
+        sheet = getSpriteSheet();
+    }
+    draw(code, sheet, x, y, scale);
 }
 
 

@@ -56,9 +56,7 @@ void startNewDay() {
 }
 
 void drawDay() {
-    string text = "";
-    sprintf(text, "%lu", secondsLeft);
-    drawText(text, STANDARD_MARGIN, STANDARD_MARGIN, 1);
+    drawSprite(TIMER_SPRITE_1 + secondsLeft - 1, STANDARD_MARGIN, STANDARD_MARGIN, 1);
 }
 
 

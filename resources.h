@@ -45,6 +45,8 @@ sprite_t* getCharacterSheet();
  */
 sprite_t* getSpriteSheet();
 
+sprite_t* getTimerSheet();
+
 /**
  * Takes an existing sprite, transforms it, and stashes it in a cache for next time it's needed.
  * @param sheet Source sprite sheet.

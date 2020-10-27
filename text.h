@@ -19,7 +19,17 @@ typedef enum {
     HANG_SPRITE,
     TAKE_SPRITE,
     STORM_SPRITE,
-    BG_SPRITE
+    BG_SPRITE,
+
+    TIMER_SPRITE_1 = 32,
+    TIMER_SPRITE_2,
+    TIMER_SPRITE_3,
+    TIMER_SPRITE_4,
+    TIMER_SPRITE_5,
+    TIMER_SPRITE_6,
+    TIMER_SPRITE_7,
+    TIMER_SPRITE_8,
+    TIMER_SPRITE_9
 } SpriteCode;
 
 /**

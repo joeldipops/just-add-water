@@ -8,6 +8,7 @@ static const u32 FADE_FACTOR = 0x0A;
 
 static sprite_t* _textMap = 0;
 static sprite_t* _spriteSheet = 0;
+static sprite_t* _timerSheet = 0;
 static bool resourcesInitted = false;
 
 typedef struct {
@@ -122,6 +123,19 @@ static void cacheSprite(SpriteLookup* lookup) {
     }
 }
 
+static sprite_t* loadSheet(char* fileName) {
+    // Read in character sprite sheet.
+    s32 filePointer = dfs_open(fileName);
+    if (!filePointer) {
+        return 0;
+    }
+    sprite_t* result = malloc(dfs_size(filePointer));
+    dfs_read(result, 1, dfs_size(filePointer), filePointer);
+    dfs_close(filePointer);
+
+    return result;
+}
+
 /**
  * Loads oft-used resources in to memory.
  * @return success/error code
@@ -133,23 +147,9 @@ s32 initResources() {
         return 0;
     }
 
-    // Read in character sprite sheet.
-    s32 textMapPointer = dfs_open("/font.sprite");
-    if (!textMapPointer) {
-        return -1;
-    }
-    _textMap = malloc(dfs_size(textMapPointer));
-    dfs_read(_textMap, 1, dfs_size(textMapPointer), textMapPointer);
-    dfs_close(textMapPointer);
-
-    // Read in other sprites.
-    s32 spriteSheetPointer = dfs_open("/sprites.sprite");
-    if (!spriteSheetPointer) {
-        return -1;
-    }
-    _spriteSheet = malloc(dfs_size(spriteSheetPointer));
-    dfs_read(_spriteSheet, 1, dfs_size(spriteSheetPointer), spriteSheetPointer);
-    dfs_close(spriteSheetPointer);
+    _textMap = loadSheet("/font.sprite");
+    _spriteSheet = loadSheet("/sprites.sprite");
+    _timerSheet = loadSheet("/timer.sprite");
 
     for (u32 i = 0; i < TRANSFORM_CACHE_SIZE; i++) {
         _transformCache[i].Sprite = 0;
@@ -165,6 +165,10 @@ s32 initResources() {
  */
 sprite_t* getCharacterSheet() {
     return _textMap;
+}
+
+sprite_t* getTimerSheet() {
+    return _timerSheet;
 }
 
 /**
