@@ -31,14 +31,13 @@ static void initialiseSubsystems() {
 
 static void inputStep() {
     controller_scan();
-    N64ControllerState keysPressed = get_keys_pressed();
     N64ControllerState keysReleased = get_keys_up();
+
+    handleController(0, &keysReleased);
 
     if (!INIT_TURN_SECONDS && keysReleased.c[0].Z) {
         startNewDay();
     }
-
-    handleController(&keysPressed, &keysReleased);
 };
 
 static void drawPause() {

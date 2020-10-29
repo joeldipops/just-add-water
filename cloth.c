@@ -7,6 +7,11 @@
 #include <libdragon.h>
 
 static void changeClothState(Cloth* cloth, DryingState newState) {
+    // There's no coming back from dirty.
+    if (cloth->dryingState == DRYING_DIRTY) {
+        return;
+    }
+
     if (newState <= DRYING_DRY) {
         newState = DRYING_DRY;
     }
@@ -74,7 +79,7 @@ static SpriteCode getClothSprite(Cloth* cloth) {
         case DRYING_COMPLETE:
             return DRY_SPRITE;
         case DRYING_DIRTY:
-            return SUN_SPRITE;
+            return DIRTY_SPRITE;
         default:
             return ROOF_SPRITE;
     }
@@ -83,6 +88,18 @@ static SpriteCode getClothSprite(Cloth* cloth) {
 void drawCloth(Cloth* cloth, u32 x, u32 y) {
     SpriteCode spriteId = getClothSprite(cloth);
     for (u32 i = 0; i < cloth->size; i++) {
+        drawSprite(
+            BASE_CLOTH_SPRITE,
+            x + i * TILE_WIDTH,
+            y,
+            1
+        );
+        drawSprite(
+            BASE_CLOTH_SPRITE,
+            x + i * TILE_WIDTH,
+            y + TILE_WIDTH,
+            1
+        );
         drawSprite(
             spriteId,
             x + i * TILE_WIDTH,
@@ -97,7 +114,7 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
         );
     }
 
-    drawText(cloth->text, x, y + (TILE_WIDTH / 2) , 1);
+    drawText(cloth->text, x, y + (TILE_WIDTH / 2) , 1.2);
 }
 
 bool isClothDry(Cloth* cloth) {

@@ -21,7 +21,6 @@ static void handleMoveX(Hand* hand, bool isLeft) {
             hand->x--;
         } else {
             hand->x = max;
-            ;
         }
     } else {
         if (hand->x < max) {
@@ -105,7 +104,7 @@ static void handleMoveY(Hand* hand) {
 void initPlayer() {
     player.hands[HAND_HANG].x = 0;
     player.hands[HAND_HANG].y = 0;
-    player.hands[HAND_TAKE].x = 0;
+    player.hands[HAND_TAKE].x = OUTSIDE_LINE_SIZE -1;
     player.hands[HAND_TAKE].y = 0;
     player.hands[HAND_HANG].cloth = 0;
     player.hands[HAND_TAKE].cloth = 0;
@@ -119,6 +118,16 @@ void gameOver() {
 }
 
 void drawPlayer() {
+    if (player.hands[HAND_HANG].cloth) {
+        drawCloth(
+            player.hands[HAND_HANG].cloth,
+            LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_HANG].x),
+            player.hands[HAND_HANG].y
+                ? INSIDE_LINE_POSITION
+                : OUTSIDE_LINE_POSITION
+        );
+    }
+
     // Hanger selector
     drawSprite(
         HANG_SPRITE,
@@ -128,6 +137,16 @@ void drawPlayer() {
             : OUTSIDE_LINE_POSITION
         , 1
     );
+
+    if (player.hands[HAND_TAKE].cloth) {
+        drawCloth(
+            player.hands[HAND_TAKE].cloth,
+            LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_TAKE].x),
+            player.hands[HAND_TAKE].y
+                ? INSIDE_LINE_POSITION
+                : OUTSIDE_LINE_POSITION
+        );
+    }
 
     // Cloth selector
     drawSprite(
@@ -183,6 +202,7 @@ bool handleController(N64ControllerState* pressed, N64ControllerState* released)
                 player.state = STATE_PLAY;
                 closeTitle();
                 startNewDay();
+                player.hands[HAND_HANG].cloth = dequeueCloth();
                 break;
             case STATE_PLAY:
                 player.state = STATE_PAUSE;
@@ -224,22 +244,22 @@ bool handleController(N64ControllerState* pressed, N64ControllerState* released)
 
     bool result = false;
 
-    if (pressed->c[0].up || pressed->c[0].down) {
+    if (released->c[0].up || released->c[0].down) {
         handleMoveY(&player.hands[HAND_HANG]);
         result = true;
     }
-    if (pressed->c[0].C_up || pressed->c[0].C_down) {
+    if (released->c[0].C_up || released->c[0].C_down) {
         handleMoveY(&player.hands[HAND_TAKE]);
         result = true;
     }
 
-    if (pressed->c[0].left || pressed->c[0].right) {
-        handleMoveX(&player.hands[HAND_HANG], pressed->c[0].left);
+    if (released->c[0].left || released->c[0].right) {
+        handleMoveX(&player.hands[HAND_HANG], released->c[0].left);
         result = true;
     }
 
-    if (pressed->c[0].C_left || pressed->c[0].C_right) {
-        handleMoveX(&player.hands[HAND_TAKE], pressed->c[0].C_left);
+    if (released->c[0].C_left || released->c[0].C_right) {
+        handleMoveX(&player.hands[HAND_TAKE], released->c[0].C_left);
         result = true;
     }
 
