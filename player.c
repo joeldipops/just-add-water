@@ -79,7 +79,7 @@ static void handleTake() {
 
     if (isClothDry(taken)) {
         // If it's dry, chuck it in the basket.
-        player.score++;
+        player.score += taken->size;
         taken->isFreeable = true;
     } else if (taken->dryingState != DRYING_DIRTY) {
         // If it's not, take it to be hung somewhere else.

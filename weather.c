@@ -76,7 +76,7 @@ void drawWeather() {
         getWeatherSprite(getCurrentWeather()),
         LEFT_MARGIN,
         STANDARD_MARGIN * 2 + TILE_WIDTH,
-        1
+        2
     );
     
 
@@ -91,7 +91,7 @@ void drawWeather() {
         getWeatherSprite(nextForecast),
         LEFT_MARGIN + TILE_WIDTH * 5 + STANDARD_MARGIN * 2,
         STANDARD_MARGIN * 2 + TILE_WIDTH,
-        1
+        2
     );
 }
 

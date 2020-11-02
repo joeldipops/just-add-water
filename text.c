@@ -70,6 +70,7 @@ static void draw(const u32 spriteCode, sprite_t* spriteSheet, const u32 x, const
     rdp_draw_sprite_scaled(0, x, y, scale, scale, MIRROR_DISABLED);
 }
 
+
 void drawSprite(const SpriteCode spriteCode, const u32 x, const u32 y, const float scale) {
     sprite_t* sheet;
     u32 code = spriteCode;
@@ -307,5 +308,5 @@ void drawTextParagraph(
 
 void drawBox(SpriteCode texture, u32 x, u32 y, u32 width, u32 height) {
     rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), texture);
-    rdp_draw_textured_rectangle(0, x, y, width, height, MIRROR_DISABLED);    
+    rdp_draw_textured_rectangle(0, x, y, x + width, y + height - 1, MIRROR_DISABLED);
 }

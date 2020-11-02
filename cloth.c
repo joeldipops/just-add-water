@@ -87,33 +87,9 @@ static SpriteCode getClothSprite(Cloth* cloth) {
 
 void drawCloth(Cloth* cloth, u32 x, u32 y) {
     SpriteCode spriteId = getClothSprite(cloth);
-    for (u32 i = 0; i < cloth->size; i++) {
-        drawSprite(
-            BASE_CLOTH_SPRITE,
-            x + i * TILE_WIDTH,
-            y,
-            1
-        );
-        drawSprite(
-            BASE_CLOTH_SPRITE,
-            x + i * TILE_WIDTH,
-            y + TILE_WIDTH,
-            1
-        );
-        drawSprite(
-            spriteId,
-            x + i * TILE_WIDTH,
-            y,
-            1
-        );
-        drawSprite(
-            spriteId,
-            x + i * TILE_WIDTH,
-            y + TILE_WIDTH,
-            1
-        );
-    }
 
+    drawBox(BASE_CLOTH_SPRITE, x, y, TILE_WIDTH * cloth->size, TILE_WIDTH * 2);
+    drawBox(spriteId, x, y, TILE_WIDTH * cloth->size, TILE_WIDTH * 2);
     drawText(cloth->text, x, y + (TILE_WIDTH / 2) , 1.2);
 }
 
