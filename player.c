@@ -31,6 +31,14 @@ static void handleMoveX(Hand* hand, bool isLeft) {
     }
 }
 
+static timer_link_t* clothRequestTimer;
+
+static void handleClothRequest() {
+    player.hands[HAND_HANG].cloth = dequeueCloth();
+
+    delete_timer(clothRequestTimer);
+}
+
 static void handleHang() {
     Hand* hand = &player.hands[HAND_HANG];
     Cloth* cloth = hand->cloth;
@@ -47,7 +55,9 @@ static void handleHang() {
         return;
     }
 
-    hand->cloth = dequeueCloth();
+    // Release this cloth but have to wait a bit to get the next one so an "animation" can play.
+    hand->cloth = 0;
+    clothRequestTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND) / 2, TF_ONE_SHOT, handleClothRequest);
 }
 
 static void handleDrop() {
@@ -125,6 +135,15 @@ void drawPlayer() {
             player.hands[HAND_HANG].y
                 ? INSIDE_LINE_POSITION
                 : OUTSIDE_LINE_POSITION
+        );
+        drawBox(
+            CURSOR_OVERLAY,
+            LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_HANG].x),
+            player.hands[HAND_HANG].y
+                ? INSIDE_LINE_POSITION
+                : OUTSIDE_LINE_POSITION,
+            player.hands[HAND_HANG].cloth->size * TILE_WIDTH,
+            2 * TILE_WIDTH
         );
     }
 
