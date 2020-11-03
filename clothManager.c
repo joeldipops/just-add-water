@@ -24,19 +24,43 @@ void initClothManager() {
 }
 
 void drawQueue() {
-    for (u32 i = 0; i < CLOTH_QUEUE_SHOWN; i++) {
-        drawText("NEXT", QUEUE_MARGIN, QUEUE_MARGIN_TOP, 1);
+    u32 y = QUEUE_MARGIN_TOP;
+    drawText("NEXT", QUEUE_MARGIN, y, 1);
 
-        Cloth* next = clothQueue[i];
-        if (!next) {
-            return;
-        }
+    y += STANDARD_MARGIN;
+    // Draw the full details of the next cloth
+    Cloth* next = clothQueue[0];
+    if (next) {
 
-        drawCloth(
-            next,
-            QUEUE_MARGIN,
-            QUEUE_MARGIN_TOP + STANDARD_MARGIN + ((TILE_WIDTH + STANDARD_MARGIN) * i) 
-        );
+        drawCloth(next, QUEUE_MARGIN, y);
+    }
+
+    // And then the glowing pile of pending cloths.
+
+    // The outline of the pile.
+    y += STANDARD_MARGIN * 3;
+    drawSprite(CURSOR_TOP_LEFT_SPRITE, QUEUE_MARGIN, y, 1);
+    drawSprite(CURSOR_TOP_SPRITE, QUEUE_MARGIN + (TILE_WIDTH / 2), y, 1);
+    drawSprite(CURSOR_TOP_RIGHT_SPRITE, QUEUE_MARGIN + TILE_WIDTH, y, 1);
+
+    y += TILE_WIDTH / 2;
+    for (u32 i = 1; i < CLOTH_QUEUE_SIZE / 3; i++) {
+        drawSprite(CURSOR_LEFT_SPRITE, QUEUE_MARGIN, y, 1);
+        drawSprite(CURSOR_RIGHT_SPRITE, QUEUE_MARGIN + TILE_WIDTH, y, 1);
+        y += TILE_WIDTH;
+    }
+
+    y -= TILE_WIDTH / 2;
+    drawSprite(CURSOR_BOTTOM_LEFT_SPRITE, QUEUE_MARGIN, y, 1);
+    drawSprite(CURSOR_BOTTOM_SPRITE, QUEUE_MARGIN + (TILE_WIDTH / 2), y, 1);
+    drawSprite(CURSOR_BOTTOM_RIGHT_SPRITE, QUEUE_MARGIN + TILE_WIDTH, y, 1);
+
+    // Then fill it up with cloths from the bottom up.
+    y -= TILE_WIDTH / 4;
+    rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), QUEUED_GREEN_SPRITE);
+    for (u32 i = 0; i < queueIndex; i++) {
+        rdp_draw_sprite_scaled(0, QUEUE_MARGIN + 2, y, 2, 1, MIRROR_DISABLED);
+        y -= TILE_WIDTH / 4;
     }
 }
 

@@ -89,7 +89,8 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
     SpriteCode spriteId = getClothSprite(cloth);
 
     drawBox(BASE_CLOTH_SPRITE, x, y, TILE_WIDTH * cloth->size, TILE_WIDTH * 2);
-    drawBox(spriteId, x, y, TILE_WIDTH * cloth->size, TILE_WIDTH * 2);
+    rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), spriteId);
+    rdp_draw_sprite_scaled(0, x, y, 1, 2, MIRROR_DISABLED);
     drawText(cloth->text, x, y + (TILE_WIDTH / 2) , 1.2);
 }
 
