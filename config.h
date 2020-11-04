@@ -1,4 +1,4 @@
-#define INIT_TURN_SECONDS 5
+#define INIT_TURN_SECONDS 0
 #define INIT_TURN_CLOTHS 2
 // Cos we need to fit a '+' and a '1'
 #define MIN_CLOTH_SIZE 2
@@ -35,7 +35,7 @@
 #define ROOF_POSITION (10 * TILE_WIDTH)
 #define INSIDE_LINE_POSITION (15 * TILE_WIDTH)
 
-#define CLOTH_QUEUE_SIZE 16
+#define CLOTH_QUEUE_SIZE 18
 #define CLOTH_QUEUE_SHOWN 1
 
 #define COLOUR_DEPTH DEPTH_16_BPP

@@ -20,7 +20,8 @@ static void changeClothState(Cloth* cloth, DryingState newState) {
 
     switch(cloth->growthType) {
         case GROWTH_LINEAR:
-            cloth->size += diff * cloth->growthFactor;
+            // -1: Grow under sun, shrink in rain.
+            cloth->size += diff * cloth->growthFactor * -1;
         break;
         case GROWTH_QUADRATIC:
             // TODO

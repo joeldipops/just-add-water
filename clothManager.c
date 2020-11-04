@@ -44,7 +44,8 @@ void drawQueue() {
     drawSprite(CURSOR_TOP_RIGHT_SPRITE, QUEUE_MARGIN + TILE_WIDTH, y, 1);
 
     y += TILE_WIDTH / 2;
-    for (u32 i = 1; i < CLOTH_QUEUE_SIZE / 3; i++) {
+
+    for (u32 i = 1; i < (CLOTH_QUEUE_SIZE - 3) / 3; i++) {
         drawSprite(CURSOR_LEFT_SPRITE, QUEUE_MARGIN, y, 1);
         drawSprite(CURSOR_RIGHT_SPRITE, QUEUE_MARGIN + TILE_WIDTH, y, 1);
         y += TILE_WIDTH;
@@ -59,6 +60,11 @@ void drawQueue() {
     y -= TILE_WIDTH / 4;
     rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), QUEUED_GREEN_SPRITE);
     for (u32 i = 0; i < queueIndex; i++) {
+        if (i == CLOTH_QUEUE_SIZE / 6 * 5) {
+            rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), QUEUED_RED_SPRITE);
+        } else if (i == CLOTH_QUEUE_SIZE / 2) {
+            rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), QUEUED_AMBER_SPRITE);
+        }
         rdp_draw_sprite_scaled(0, QUEUE_MARGIN + 2, y, 2, 1, MIRROR_DISABLED);
         y -= TILE_WIDTH / 4;
     }
@@ -156,7 +162,7 @@ static void initNewCloth(Cloth* cloth) {
  * @return true if successful, false if the queue has overflowed.
  */
 bool enqueueCloth() {
-    if (queueIndex >= CLOTH_QUEUE_SIZE) {
+    if (queueIndex > CLOTH_QUEUE_SIZE) {
         return false;
     }
 
