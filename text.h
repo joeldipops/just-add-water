@@ -43,7 +43,14 @@ typedef enum {
     QUEUED_AMBER_SPRITE,
     QUEUED_RED_SPRITE,
 
-    TIMER_SPRITE_1 = 32,
+    SUN_BG,
+    CLOUD_BG,
+    RAIN_BG,
+    STORM_BG,
+    INSIDE_BG,
+    INSIDE_SPRITE,
+
+    TIMER_SPRITE_1 = 64,
     TIMER_SPRITE_2,
     TIMER_SPRITE_3,
     TIMER_SPRITE_4,

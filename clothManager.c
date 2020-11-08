@@ -100,9 +100,8 @@ const DryingState DryingDie[DRYING_SIZE] = {
 
 #define SIZE_SIZE 8
 const u32 SizeDie[SIZE_SIZE] = {
-    1,
-    2, 2, 2,
-    3, 3,
+    2, 2, 2, 2,
+    3, 3, 3,
     4
 };
 
@@ -117,9 +116,10 @@ const u32 GrowthTypeDie[GROWTH_TYPE_SIZE]= {
 #define FACTOR_SIZE 8
 const s32 LinearFactorDie[FACTOR_SIZE] = {
     -2,
-    -1, -1,
+    -1,
     +1, +1, +1,
-    +2, +2
+    +2, +2,
+    +3
 };
 
 const s32 QuadraticFactorDie[FACTOR_SIZE] = {
@@ -141,7 +141,7 @@ static void initNewCloth(Cloth* cloth) {
             cloth->growthFactor = LinearFactorDie[rand() % FACTOR_SIZE];
             break;
         case GROWTH_QUADRATIC:
-            cloth->growthFactor = QuadraticFactorDie[rand() % FACTOR_SIZE];        
+            cloth->growthFactor = QuadraticFactorDie[rand() % FACTOR_SIZE];
             break;
         case GROWTH_NONE:
             cloth->growthFactor = 0;

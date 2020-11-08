@@ -8,8 +8,8 @@
 #define FORECAST_SIZE 6
 #define WEATHER_SIZE 8
 
-const Weather ForecastDie[FORECAST_SIZE] = { 
-    WEATHER_RAIN, WEATHER_RAIN, WEATHER_RAIN,
+const Weather ForecastDie[FORECAST_SIZE] = {
+    WEATHER_RAIN, WEATHER_RAIN, WEATHER_SUNNY,
     WEATHER_SUNNY, WEATHER_SUNNY, WEATHER_SUNNY
 };
 const Weather WeatherDie[WEATHER_SIZE] = { 
@@ -36,6 +36,23 @@ static SpriteCode getWeatherSprite(Weather weather) {
             return DRENCHED_SPRITE;
     }
 }
+
+static SpriteCode getWeatherBackground(Weather weather) {
+    switch(weather) {
+        case WEATHER_SUNNY:
+            return SUN_BG;
+        case WEATHER_CLOUDY:
+            return CLOUD_BG;
+        case WEATHER_RAIN:
+            return RAIN_BG;
+        case WEATHER_STORM:
+            return STORM_BG;
+        default:
+            return DIRTY_SPRITE;
+    }
+}
+
+
 
 void drawWeatherGuide(u32 position) {
     drawText(           "Forecast       Weather     Chance", LEFT_MARGIN, position, 1);
@@ -65,32 +82,34 @@ void drawWeatherGuide(u32 position) {
 }
 
 void drawWeather() {
-    drawText(
-        "TODAY", 
-        LEFT_MARGIN,
-        STANDARD_MARGIN,
-        1
+    Weather current = getCurrentWeather();
+    drawBox(getWeatherBackground(current), LEFT_MARGIN, 0, OUTSIDE_LINE_SIZE * TILE_WIDTH, ROOF_POSITION);
+    drawBox(INSIDE_BG, LEFT_MARGIN, ROOF_POSITION, OUTSIDE_LINE_SIZE * TILE_WIDTH, SCREEN_HEIGHT - ROOF_POSITION);
+    drawSprite(
+        INSIDE_SPRITE,
+        LEFT_MARGIN + 4,
+        ROOF_POSITION + 20,
+        2
     );
 
     drawSprite(
         getWeatherSprite(getCurrentWeather()),
-        LEFT_MARGIN,
-        STANDARD_MARGIN * 2 + TILE_WIDTH,
+        LEFT_MARGIN + 4,
+        4,
         2
     );
-    
 
     drawText(
-        "PREDICTION", 
-        LEFT_MARGIN + TILE_WIDTH * 5 + STANDARD_MARGIN * 2,
-        STANDARD_MARGIN,
+        "FORECAST: ",
+        LEFT_MARGIN + TILE_WIDTH * 5,
+        8,
         1
     );
 
     drawSprite(
         getWeatherSprite(nextForecast),
-        LEFT_MARGIN + TILE_WIDTH * 5 + STANDARD_MARGIN * 2,
-        STANDARD_MARGIN * 2 + TILE_WIDTH,
+        LEFT_MARGIN + TILE_WIDTH * 12,
+        4,
         2
     );
 }
@@ -102,7 +121,7 @@ Weather getCurrentWeather() {
         case WEATHER_RAIN:
             return forecast == WEATHER_RAIN ? WEATHER_RAIN : WEATHER_CLOUDY;
         case WEATHER_SUNNY:
-            return WEATHER_SUNNY;
+            return forecast == WEATHER_RAIN ? WEATHER_CLOUDY : WEATHER_SUNNY;
         default:
             // Should throw an error but that takes effort.
             return WEATHER_STORM;

@@ -77,9 +77,9 @@ void renderFrame() {
         case STATE_GAMEOVER:
         case STATE_PLAY:
             drawDay();
+            drawWeather();
             drawLines();
             drawQueue();
-            drawWeather();
             drawPlayer();
             break;
         default:
