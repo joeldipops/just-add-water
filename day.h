@@ -2,6 +2,7 @@
 #define DAY_INCLUDED
 
 void startNewDay();
+void cancelDayTimers();
 void drawDay() ;
 
 #endif

@@ -32,6 +32,10 @@ void onSecondTick() {
     }
 }
 
+void cancelDayTimers() {
+    delete_timer(secondsTimer);
+}
+
 void startNewDay() {
     if (secondsTimer) {
         delete_timer(secondsTimer);

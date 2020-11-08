@@ -74,6 +74,7 @@ void renderFrame() {
         case STATE_PAUSE:
             drawPause();
             break;
+        case STATE_GAMEOVER:
         case STATE_PLAY:
             drawDay();
             drawLines();
@@ -81,14 +82,18 @@ void renderFrame() {
             drawWeather();
             drawPlayer();
             break;
-        case STATE_GAMEOVER:
-            drawText("Game Over", 100, 100, 2);
-            break;
         default:
             drawText("Error", 100, 100, 2);
             break;
     }
 
+    // If gameover, keep drawing the background, but just plop gameover over the top of it.
+    if (getPlayer()->state == STATE_GAMEOVER) {
+
+        drawBox(BG_SPRITE, 0, 112, SCREEN_WIDTH, TILE_WIDTH * 3);
+        drawText("Game Over", 200, 112, 2);
+        drawText("Press Start", 200, 142, 1);
+    }
 
 #ifdef SHOW_FRAME_COUNT
     string text;

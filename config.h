@@ -1,10 +1,10 @@
 #define INIT_TURN_SECONDS 5
-#define INIT_TURN_CLOTHS 2
+#define INIT_TURN_CLOTHS 3
 // Cos we need to fit a '+' and a '1'
 #define MIN_CLOTH_SIZE 2
 
-#define OUTSIDE_LINE_SIZE 16
-#define INSIDE_LINE_SIZE 10
+#define OUTSIDE_LINE_SIZE 24
+#define INSIDE_LINE_SIZE 24
 
 //#define RESOLUTION RESOLUTION_320x240
 #define RESOLUTION RESOLUTION_640x480

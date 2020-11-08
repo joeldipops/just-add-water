@@ -125,6 +125,7 @@ void initPlayer() {
 
 void gameOver() {
     player.state = STATE_GAMEOVER;
+    cancelDayTimers();
 }
 
 void drawPlayer() {
