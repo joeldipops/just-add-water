@@ -33,8 +33,8 @@ static void changeClothState(Cloth* cloth, DryingState newState) {
             // throw;
     }
 
-    if (cloth->size <= 1) {
-        cloth->size = 2;
+    if (cloth->size < 1) {
+        cloth->size = 1;
     } else if (cloth->size > 16) {
         cloth->size = 16;
     }

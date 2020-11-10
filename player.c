@@ -55,9 +55,11 @@ static void handleHang() {
         return;
     }
 
+    hand->cloth = dequeueCloth();
+
     // Release this cloth but have to wait a bit to get the next one so an "animation" can play.
-    hand->cloth = 0;
-    clothRequestTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND) / 2, TF_ONE_SHOT, handleClothRequest);
+    //hand->cloth = 0;
+    //clothRequestTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND) / 2, TF_ONE_SHOT, handleClothRequest);
 }
 
 static void handleDrop() {

@@ -19,8 +19,8 @@ typedef enum {
     STORM_SPRITE,
 
     ROOF_SPRITE,
-    INSIDE_LINE,
-    OUTSIDE_LINE,
+    tbc_SPRITE,
+    LINE_SPRITE,
     BG_SPRITE,
 
     HANG_SPRITE,

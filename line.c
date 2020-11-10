@@ -4,6 +4,7 @@
 #include "weather.h"
 #include "config.h"
 #include "text.h"
+#include "player.h"
 #include <stdbool.h>
 #include <string.h>
 
@@ -44,8 +45,8 @@ void drawLines() {
     drawLine(&outsideLine, LEFT_MARGIN, OUTSIDE_LINE_POSITION);
     drawLine(&insideLine, LEFT_MARGIN, INSIDE_LINE_POSITION);
 
-    drawBox(OUTSIDE_LINE, LEFT_MARGIN, OUTSIDE_LINE_POSITION, OUTSIDE_LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
-    drawBox(INSIDE_LINE, LEFT_MARGIN, INSIDE_LINE_POSITION, INSIDE_LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
+    drawBox(LINE_SPRITE, LEFT_MARGIN, OUTSIDE_LINE_POSITION, OUTSIDE_LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
+    drawBox(LINE_SPRITE, LEFT_MARGIN, INSIDE_LINE_POSITION, INSIDE_LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
     drawBox(ROOF_SPRITE, LEFT_MARGIN, ROOF_POSITION, OUTSIDE_LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
 }
 
@@ -98,6 +99,11 @@ Cloth* takeCloth(u32 lineId, u32 x) {
     }
 }
 
+static void dropCloth(Cloth* cloth) {
+    cloth->isFreeable = true;
+    getPlayer()->dropped++;
+}
+
 static void updateClothsOnLine(Line* line, Weather weather) {
     u32 i = 0;
     // First pass - resize the cloths.
@@ -125,14 +131,19 @@ static void updateClothsOnLine(Line* line, Weather weather) {
         if (temp[iSource] && lastCloth != temp[iSource]) {
             lastCloth = temp[iSource];
 
+            while(line->cloths[iDest]) {
+                iDest++;
+            }
+
             // If cloth can't fit on the line, it falls and becomes dirty.
             if ((iDest + lastCloth->size) > line->length) {
-                lastCloth->dryingState = DRYING_DIRTY;
+                dropCloth(lastCloth);
             } else {
                 for (u32 j = 0; j < lastCloth->size; j++) {
                     line->cloths[iDest] = lastCloth;
                     iDest++;
                 }
+                iDest = iSource + 1;
             }
         } else {
             iDest++;
@@ -140,9 +151,6 @@ static void updateClothsOnLine(Line* line, Weather weather) {
 
         iSource++;
     }
-
-
-
 }
 
 void updateHangingCloths(Weather weather) {

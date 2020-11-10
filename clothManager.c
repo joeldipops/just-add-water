@@ -151,7 +151,7 @@ static void initNewCloth(Cloth* cloth) {
     cloth->dryingState = DRYING_SPUN;
     cloth->growthType = GROWTH_LINEAR;
     cloth->growthFactor = +1;
-    cloth->size = 2;
+    cloth->size = 1;
 #endif
 
     buildClothText(cloth);
