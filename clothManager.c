@@ -31,7 +31,7 @@ void drawQueue() {
     // Draw the full details of the next cloth
     Cloth* next = clothQueue[0];
     if (next) {
-        drawCloth(next, QUEUE_MARGIN, y);
+        drawCloth(next, QUEUE_MARGIN + TILE_WIDTH * 2.5, y);
     }
 
     // And then the glowing pile of pending cloths.
