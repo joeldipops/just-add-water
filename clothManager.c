@@ -31,7 +31,6 @@ void drawQueue() {
     // Draw the full details of the next cloth
     Cloth* next = clothQueue[0];
     if (next) {
-
         drawCloth(next, QUEUE_MARGIN, y);
     }
 

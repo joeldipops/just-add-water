@@ -99,17 +99,11 @@ void drawWeather() {
         2
     );
 
-    drawText(
-        "FORECAST: ",
-        LEFT_MARGIN + TILE_WIDTH * 5,
-        8,
-        1
-    );
-
+    // Goes over in the left-side "QUEUE" column
     drawSprite(
         getWeatherSprite(nextForecast),
-        LEFT_MARGIN + TILE_WIDTH * 12,
-        4,
+        QUEUE_MARGIN + (TILE_WIDTH * 2.5),
+        QUEUE_MARGIN_TOP + STANDARD_MARGIN,
         2
     );
 }
