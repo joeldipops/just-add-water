@@ -86,13 +86,42 @@ static SpriteCode getClothSprite(Cloth* cloth) {
     }
 }
 
+static SpriteCode getGrowthSprite(Cloth* cloth) {
+    // TODO- quadratic
+    if (cloth->growthFactor > 0) {
+        return LINEAR_GROW_SPRITE;
+    } else if (cloth->growthFactor < 0) {
+        return LINEAR_SHRINK_SPRITE;
+    } else {
+        return 0;
+    }
+}
+
+static SpriteCode getFactorSprite(Cloth* cloth) {
+    // TODO- quadratic
+    u32 factor = abs(cloth->growthFactor);
+    return GROWTH_0_SPRITE + factor;
+}
+
 void drawCloth(Cloth* cloth, u32 x, u32 y) {
-    SpriteCode spriteId = getClothSprite(cloth);
+    SpriteCode spriteId;
 
     drawBox(BASE_CLOTH_SPRITE, x, y, TILE_WIDTH * cloth->size, TILE_WIDTH * 2);
+
+    if (cloth->growthFactor && cloth->dryingState > DRYING_DRY) {
+        spriteId = getGrowthSprite(cloth);
+        rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), spriteId);
+        rdp_draw_sprite_scaled(0, x, y, 1, 2, MIRROR_DISABLED);
+
+        spriteId = getFactorSprite(cloth);
+        rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), spriteId);
+        rdp_draw_sprite_scaled(0, x + 3, y + TILE_WIDTH / 2, 1.5, 1.5, MIRROR_DISABLED);
+    }
+
+    spriteId = getClothSprite(cloth);
+
     rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), spriteId);
     rdp_draw_sprite_scaled(0, x, y, 1, 2, MIRROR_DISABLED);
-    drawText(cloth->text, x, y + (TILE_WIDTH / 2) , 1.2);
 }
 
 bool isClothDry(Cloth* cloth) {
