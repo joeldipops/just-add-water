@@ -56,8 +56,11 @@ static SpriteCode getWeatherBackground(Weather weather) {
 }
 
 
-
+/**
+ * Commented out while I settle on what the actual percentages should be
+ */
 void drawWeatherGuide(u32 position) {
+    /*
     drawText(           "Forecast       Weather     Chance", LEFT_MARGIN, position, 1);
     position += STANDARD_MARGIN * 2;
     string text[4];
@@ -82,6 +85,7 @@ void drawWeatherGuide(u32 position) {
         drawText(text[i], LEFT_MARGIN, position, 1);
         position += STANDARD_MARGIN;
     }
+    */
 }
 
 void drawWeather() {
