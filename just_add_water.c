@@ -11,10 +11,13 @@
 #include "title.h"
 
 #include <stdio.h>
+#include <stdlib.h> 
+#include<time.h> 
 #include <libdragon.h>
 
 
 static void initialiseSubsystems() {
+    srand(time(0));
     initLine();
     initPlayer();
     initClothManager();
@@ -98,7 +101,7 @@ void renderFrame() {
 #ifdef SHOW_FRAME_COUNT
     string text;
     sprintf(text, "FPS: %d", fps_get());
-    drawText(text, 0, 460, 1);
+    drawText(text, 0, 454, 1);
 #endif
 
     rdp_detach_display();

@@ -6,20 +6,23 @@
 #include <stdio.h>
 
 #define FORECAST_SIZE 6
-#define WEATHER_SIZE 8
+#define WEATHER_SIZE 10
 
+/*
 const Weather ForecastDie[FORECAST_SIZE] = {
     WEATHER_RAIN, WEATHER_RAIN, WEATHER_SUNNY,
     WEATHER_SUNNY, WEATHER_SUNNY, WEATHER_SUNNY
-};
+};*/
+
 const Weather WeatherDie[WEATHER_SIZE] = { 
     WEATHER_STORM,
     WEATHER_RAIN, WEATHER_RAIN, WEATHER_RAIN,
-    WEATHER_SUNNY, WEATHER_SUNNY, WEATHER_SUNNY, WEATHER_SUNNY
+    WEATHER_SUNNY, WEATHER_SUNNY, WEATHER_SUNNY,
+    WEATHER_SUNNY, WEATHER_SUNNY, WEATHER_SUNNY
 };
 
-static Weather nextForecast;
-static Weather forecast;
+static Weather nextForecast = WEATHER_SUNNY;
+//static Weather forecast;
 static Weather weather;
 
 static SpriteCode getWeatherSprite(Weather weather) {
@@ -109,6 +112,8 @@ void drawWeather() {
 }
 
 Weather getCurrentWeather() {
+    return weather;
+    /*
     switch (weather) {
         case WEATHER_STORM:
             return forecast == WEATHER_RAIN ? WEATHER_STORM : WEATHER_RAIN;
@@ -120,6 +125,7 @@ Weather getCurrentWeather() {
             // Should throw an error but that takes effort.
             return WEATHER_STORM;
     }
+    */
 }
 
 Weather getForecast() {
@@ -127,7 +133,12 @@ Weather getForecast() {
 }
 
 void newDayWeather() {
+    weather = nextForecast;
+    nextForecast = WeatherDie[rand() % WEATHER_SIZE];
+
+    /*
     forecast = nextForecast;
     nextForecast = ForecastDie[rand() % FORECAST_SIZE];
     weather = WeatherDie[rand() % WEATHER_SIZE];
+    */
 }
