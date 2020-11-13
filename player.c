@@ -135,18 +135,10 @@ void drawPlayer() {
         drawCloth(
             player.hands[HAND_HANG].cloth,
             LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_HANG].x),
-            player.hands[HAND_HANG].y
+            (player.hands[HAND_HANG].y
                 ? INSIDE_LINE_POSITION
                 : OUTSIDE_LINE_POSITION
-        );
-        drawBox(
-            CURSOR_OVERLAY,
-            LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_HANG].x),
-            player.hands[HAND_HANG].y
-                ? INSIDE_LINE_POSITION
-                : OUTSIDE_LINE_POSITION,
-            player.hands[HAND_HANG].cloth->size * TILE_WIDTH,
-            2 * TILE_WIDTH
+            ) + HELD_OFFSET
         );
     }
 
@@ -154,9 +146,10 @@ void drawPlayer() {
     drawSprite(
         HANG_SPRITE,
         LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_HANG].x),
-        player.hands[HAND_HANG].y
+        (player.hands[HAND_HANG].y
             ? INSIDE_LINE_POSITION
             : OUTSIDE_LINE_POSITION
+        ) + HELD_OFFSET + (TILE_WIDTH * 1.8)
         , 1
     );
 
@@ -164,21 +157,34 @@ void drawPlayer() {
         drawCloth(
             player.hands[HAND_TAKE].cloth,
             LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_TAKE].x),
-            player.hands[HAND_TAKE].y
+            (player.hands[HAND_TAKE].y
                 ? INSIDE_LINE_POSITION
                 : OUTSIDE_LINE_POSITION
+            ) + HELD_OFFSET
+        );
+
+        // Cloth selector
+        drawSprite(
+            TAKE_SPRITE,
+            LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_TAKE].x),
+            (player.hands[HAND_TAKE].y
+                ? INSIDE_LINE_POSITION
+                : OUTSIDE_LINE_POSITION
+            ) + HELD_OFFSET + TILE_WIDTH * 1.8
+            , 1
+        );
+    } else {
+        // Cloth selector
+        drawSprite(
+            TAKE_SPRITE,
+            LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_TAKE].x),
+            (player.hands[HAND_TAKE].y
+                ? INSIDE_LINE_POSITION
+                : OUTSIDE_LINE_POSITION
+            ) + TILE_WIDTH * 1.8
+            , 1
         );
     }
-
-    // Cloth selector
-    drawSprite(
-        TAKE_SPRITE,
-        LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_TAKE].x),
-        player.hands[HAND_TAKE].y
-            ? INSIDE_LINE_POSITION
-            : OUTSIDE_LINE_POSITION
-        , 1
-    );
 
     // Scoreboard
     drawText(
