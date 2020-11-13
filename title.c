@@ -31,7 +31,7 @@ void drawTitle() {
     sprintf(text, "Take down or move clothes with your right. ( $%02x $%02x )", R_SPRITE, C_SPRITE);
     drawText(text, STANDARD_MARGIN, STANDARD_MARGIN * 6, scale);
 
-    sprintf(text, "Let go something you picked up with $%02x", A_SPRITE);
+    sprintf(text, "Discard something you picked up with $%02x", A_SPRITE);
     drawText(text,STANDARD_MARGIN, STANDARD_MARGIN * 8, scale);
 
     drawText("Clothes will change size as they dry.", STANDARD_MARGIN, STANDARD_MARGIN * 10, scale);

@@ -68,7 +68,7 @@ void buildClothText(Cloth* cloth) {
     cloth->text[2] = 0;
 }
 
-static SpriteCode getClothSprite(Cloth* cloth) {
+static SpriteCode getDampGaugeSprite(Cloth* cloth) {
     switch(cloth->dryingState) {
         case DRYING_SPUN:
             return SPUN_SPRITE;
@@ -110,15 +110,26 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
 
     if (cloth->growthFactor && cloth->dryingState > DRYING_DRY) {
         spriteId = getGrowthSprite(cloth);
+
         rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), spriteId);
-        rdp_draw_sprite_scaled(0, x, y, 1, 2, MIRROR_DISABLED);
+        rdp_draw_sprite_scaled(
+            0, x, y,
+            cloth->size <= 1 ? 1 : 2,
+            2, MIRROR_DISABLED
+        );
 
         spriteId = getFactorSprite(cloth);
         rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), spriteId);
-        rdp_draw_sprite_scaled(0, x + 3, y + TILE_WIDTH / 2, 1.5, 1.5, MIRROR_DISABLED);
+        rdp_draw_sprite_scaled(
+            0,
+            x + (cloth->size * TILE_WIDTH) - 13,
+            y + TILE_WIDTH / 2,
+            1.5, 1.5,
+            MIRROR_DISABLED
+        );
     }
 
-    spriteId = getClothSprite(cloth);
+    spriteId = getDampGaugeSprite(cloth);
 
     rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), spriteId);
     rdp_draw_sprite_scaled(0, x, y, 1, 2, MIRROR_DISABLED);
