@@ -6,6 +6,9 @@
 
 
 typedef enum {
+    // Force this enum to be signed.
+    DRYING_INVALID = -1,
+
     DRYING_COMPLETE = 0,
     DRYING_DRY = 1,
     DRYING_DAMP = 2,

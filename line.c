@@ -42,12 +42,12 @@ static void drawLine(Line* line, u32 x, u32 y) {
 }
 
 void drawLines() {
-    drawLine(&outsideLine, LEFT_MARGIN, OUTSIDE_LINE_POSITION);
-    drawLine(&insideLine, LEFT_MARGIN, INSIDE_LINE_POSITION);
-
     drawBox(LINE_SPRITE, LEFT_MARGIN, OUTSIDE_LINE_POSITION, OUTSIDE_LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
     drawBox(LINE_SPRITE, LEFT_MARGIN, INSIDE_LINE_POSITION, INSIDE_LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
     drawBox(ROOF_SPRITE, LEFT_MARGIN, ROOF_POSITION, OUTSIDE_LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
+
+    drawLine(&outsideLine, LEFT_MARGIN, OUTSIDE_LINE_POSITION);
+    drawLine(&insideLine, LEFT_MARGIN, INSIDE_LINE_POSITION);
 }
 
 bool hangCloth(u32 lineId, u32 x, Cloth* cloth) {

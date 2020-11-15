@@ -78,7 +78,7 @@ static SpriteCode getDampGaugeSprite(Cloth* cloth) {
             return DRENCHED_SPRITE;
         case DRYING_DRY:
         case DRYING_COMPLETE:
-            return DRY_SPRITE;
+            return 0;
         case DRYING_DIRTY:
             return DIRTY_SPRITE;
         default:
@@ -111,6 +111,7 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
     if (cloth->growthFactor && cloth->dryingState > DRYING_DRY) {
         spriteId = getGrowthSprite(cloth);
 
+
         rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), spriteId);
         rdp_draw_sprite_scaled(
             0, x, y,
@@ -130,9 +131,48 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
     }
 
     spriteId = getDampGaugeSprite(cloth);
+    if (spriteId) {
+        rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), spriteId);
+        rdp_draw_sprite_scaled(0, x, y, 1, 2, MIRROR_DISABLED);
+    }
 
-    rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), spriteId);
-    rdp_draw_sprite_scaled(0, x, y, 1, 2, MIRROR_DISABLED);
+    // Draw border.
+
+    if (cloth->dryingState > DRYING_DRY) {
+        // Normal border.
+        drawSprite(CURSOR_TOP_LEFT_SPRITE, x, y, 1);
+        drawSprite(CURSOR_BOTTOM_LEFT_SPRITE, x, y + TILE_WIDTH, 1);
+
+        for (u32 i = 0; i < cloth->size; i++) {
+            u32 xPos = x + TILE_WIDTH * i;
+
+            if (i + 1 == cloth->size) {
+                drawSprite(CURSOR_TOP_RIGHT_SPRITE, xPos, y, 1);
+                drawSprite(CURSOR_BOTTOM_RIGHT_SPRITE, xPos, y + TILE_WIDTH, 1);
+            } else {
+                drawSprite(CURSOR_TOP_SPRITE, xPos, y, 1);
+                drawSprite(CURSOR_BOTTOM_SPRITE, xPos, y + TILE_WIDTH, 1);
+            }
+        }
+    } else {
+        // Gilded border to show we're done.
+        drawSprite(GILDED_TOP_LEFT_SPRITE, x, y, 1);
+        drawSprite(GILDED_BOTTOM_LEFT_SPRITE, x, y + TILE_WIDTH, 1);
+
+        for (u32 i = 0; i < cloth->size; i++) {
+            u32 xPos = x + TILE_WIDTH * i;
+
+            if (i + 1 == cloth->size) {
+                drawSprite(GILDED_TOP_RIGHT_SPRITE, xPos, y, 1);
+                drawSprite(GILDED_BOTTOM_RIGHT_SPRITE, xPos, y + TILE_WIDTH, 1);
+            } else {
+                drawSprite(GILDED_TOP_SPRITE, xPos, y, 1);
+                drawSprite(GILDED_BOTTOM_SPRITE, xPos, y + TILE_WIDTH, 1);
+            }
+        }
+    }
+
+
 }
 
 bool isClothDry(Cloth* cloth) {
