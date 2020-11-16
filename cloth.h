@@ -12,9 +12,10 @@ typedef enum {
     DRYING_COMPLETE = 0,
     DRYING_DRY = 1,
     DRYING_DAMP = 2,
-    DRYING_SPUN = 3,
-    DRYING_DRENCHED = 4,
-    DRYING_DIRTY = 5
+    DRYING_MOIST = 3,
+    DRYING_SPUN = 4,
+    DRYING_DRENCHED = 5,
+    DRYING_DIRTY = 6
 } DryingState;
 
 typedef enum {

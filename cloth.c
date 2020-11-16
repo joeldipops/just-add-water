@@ -68,24 +68,6 @@ void buildClothText(Cloth* cloth) {
     cloth->text[2] = 0;
 }
 
-static SpriteCode getDampGaugeSprite(Cloth* cloth) {
-    switch(cloth->dryingState) {
-        case DRYING_SPUN:
-            return SPUN_SPRITE;
-        case DRYING_DAMP:
-            return DAMP_SPRITE;
-        case DRYING_DRENCHED:
-            return DRENCHED_SPRITE;
-        case DRYING_DRY:
-        case DRYING_COMPLETE:
-            return 0;
-        case DRYING_DIRTY:
-            return DIRTY_SPRITE;
-        default:
-            return ROOF_SPRITE;
-    }
-}
-
 static SpriteCode getGrowthSprite(Cloth* cloth) {
     // TODO- quadratic
     if (cloth->growthFactor > 0) {
@@ -130,12 +112,6 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
         );
     }
 
-    spriteId = getDampGaugeSprite(cloth);
-    if (spriteId) {
-        rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), spriteId);
-        rdp_draw_sprite_scaled(0, x, y, 1, 2, MIRROR_DISABLED);
-    }
-
     // Draw border.
 
     if (cloth->dryingState > DRYING_DRY) {
@@ -172,7 +148,35 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
         }
     }
 
-
+    // Draw water guage.
+    switch(cloth->dryingState) {
+        case DRYING_DRENCHED:
+            drawSprite(FULL_WATER_SPRITE, x, y, 1);
+            drawSprite(FULL_WATER_SPRITE, x, y + TILE_WIDTH, 1);
+            break;
+        case DRYING_SPUN:
+            drawSprite(HALF_WATER_SPRITE, x, y, 1);
+            drawSprite(FULL_WATER_SPRITE, x, y + TILE_WIDTH, 1);
+            break;
+        case DRYING_MOIST:
+            drawSprite(NO_WATER_SPRITE, x, y, 1);
+            drawSprite(FULL_WATER_SPRITE, x, y + TILE_WIDTH, 1);
+            break;
+        case DRYING_DAMP:
+            drawSprite(NO_WATER_SPRITE, x, y, 1);
+            drawSprite(HALF_WATER_SPRITE, x, y + TILE_WIDTH, 1);
+            break;
+        case DRYING_DRY:
+        case DRYING_COMPLETE:
+            drawSprite(NO_WATER_SPRITE, x, y, 1);
+            drawSprite(NO_WATER_SPRITE, x, y + TILE_WIDTH, 1);
+            break;
+        case DRYING_DIRTY:
+            drawSprite(DIRTY_WATER_SPRITE, x, y, 1);
+            drawSprite(DIRTY_WATER_SPRITE, x, y + TILE_WIDTH, 1);
+            break;
+        default: break;
+    }
 }
 
 bool isClothDry(Cloth* cloth) {

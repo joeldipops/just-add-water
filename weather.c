@@ -36,7 +36,7 @@ static SpriteCode getWeatherSprite(Weather weather) {
         case WEATHER_STORM:
             return STORM_SPRITE;
         default:
-            return DRENCHED_SPRITE;
+            return 0;
     }
 }
 
@@ -51,7 +51,7 @@ static SpriteCode getWeatherBackground(Weather weather) {
         case WEATHER_STORM:
             return STORM_BG;
         default:
-            return DIRTY_SPRITE;
+            return 0;
     }
 }
 
