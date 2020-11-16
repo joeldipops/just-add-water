@@ -68,49 +68,10 @@ void buildClothText(Cloth* cloth) {
     cloth->text[2] = 0;
 }
 
-static SpriteCode getGrowthSprite(Cloth* cloth) {
-    // TODO- quadratic
-    if (cloth->growthFactor > 0) {
-        return LINEAR_GROW_SPRITE;
-    } else if (cloth->growthFactor < 0) {
-        return LINEAR_SHRINK_SPRITE;
-    } else {
-        return 0;
-    }
-}
-
-static SpriteCode getFactorSprite(Cloth* cloth) {
-    // TODO- quadratic
-    u32 factor = abs(cloth->growthFactor);
-    return GROWTH_0_SPRITE + factor;
-}
-
 void drawCloth(Cloth* cloth, u32 x, u32 y) {
     SpriteCode spriteId;
 
     drawBox(BASE_CLOTH_SPRITE, x, y, TILE_WIDTH * cloth->size, TILE_WIDTH * 2);
-
-    if (cloth->growthFactor && cloth->dryingState > DRYING_DRY) {
-        spriteId = getGrowthSprite(cloth);
-
-
-        rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), spriteId);
-        rdp_draw_sprite_scaled(
-            0, x, y,
-            cloth->size <= 1 ? 1 : 2,
-            2, MIRROR_DISABLED
-        );
-
-        spriteId = getFactorSprite(cloth);
-        rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), spriteId);
-        rdp_draw_sprite_scaled(
-            0,
-            x + (cloth->size * TILE_WIDTH) - 13,
-            y + TILE_WIDTH / 2,
-            1.5, 1.5,
-            MIRROR_DISABLED
-        );
-    }
 
     // Draw border.
 
@@ -148,7 +109,7 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
         }
     }
 
-    // Draw water guage.
+    // Draw water gauge.
     switch(cloth->dryingState) {
         case DRYING_DRENCHED:
             drawSprite(FULL_WATER_SPRITE, x, y, 1);
@@ -176,6 +137,18 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
             drawSprite(DIRTY_WATER_SPRITE, x, y + TILE_WIDTH, 1);
             break;
         default: break;
+    }
+
+    if (cloth->growthFactor > 0) {
+        drawSprite(BIG_DRY_SPRITE, x + TILE_WIDTH * (cloth->size - 1), y, 1);
+        drawSprite(SMALL_WET_SPRITE, x + TILE_WIDTH * (cloth->size - 1), y + TILE_WIDTH, 1);
+    } else if (cloth->growthFactor < 0) {
+        drawSprite(BIG_WET_SPRITE, x + TILE_WIDTH * (cloth->size - 1), y, 1);
+        drawSprite(SMALL_DRY_SPRITE, x + TILE_WIDTH * (cloth->size - 1), y + TILE_WIDTH, 1);
+    }
+
+    if (cloth->growthFactor) {
+        drawSprite(GROWTH_1_SPRITE + abs(cloth->growthFactor) - 1, x + TILE_WIDTH * (cloth->size - 1) + 6, y  + 6, 1);
     }
 }
 
