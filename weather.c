@@ -1,5 +1,6 @@
 #include "weather.h"
 #include "text.h"
+#include "renderer.h"
 #include "config.h"
 
 #include <stdlib.h>

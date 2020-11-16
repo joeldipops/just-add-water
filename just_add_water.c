@@ -9,6 +9,7 @@
 #include "fps.h"
 #include "resources.h"
 #include "title.h"
+#include "renderer.h"
 
 #include <stdio.h>
 #include <stdlib.h> 
@@ -30,6 +31,7 @@ static void initialiseSubsystems() {
     timer_init();
     initText();
     initResources();
+    resetRenderer();
 }
 
 static void inputStep() {
@@ -89,6 +91,8 @@ void renderFrame() {
             drawText("Error", 100, 100, 2);
             break;
     }
+
+    renderSprites();
 
     // If gameover, keep drawing the background, but just plop gameover over the top of it.
     if (getPlayer()->state == STATE_GAMEOVER) {

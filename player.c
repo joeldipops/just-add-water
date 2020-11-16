@@ -7,6 +7,7 @@
 #include "stdio.h"
 #include "title.h"
 #include "day.h"
+#include "renderer.h"
 
 static Player player;
 

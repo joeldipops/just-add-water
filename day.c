@@ -6,6 +6,7 @@
 #include "player.h"
 #include "line.h"
 #include "clothManager.h"
+#include "renderer.h"
 
 #include <stdio.h>
 #include <libdragon.h>

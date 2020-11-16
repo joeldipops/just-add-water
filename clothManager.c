@@ -2,6 +2,7 @@
 #include "cloth.h"
 #include "text.h"
 #include "config.h"
+#include "renderer.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>

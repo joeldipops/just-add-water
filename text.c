@@ -71,6 +71,7 @@ static void draw(const u32 spriteCode, sprite_t* spriteSheet, const u32 x, const
 }
 
 
+/*
 void drawSprite(const SpriteCode spriteCode, const u32 x, const u32 y, const float scale) {
     sprite_t* sheet;
     u32 code = spriteCode;
@@ -81,7 +82,7 @@ void drawSprite(const SpriteCode spriteCode, const u32 x, const u32 y, const flo
         sheet = getSpriteSheet();
     }
     draw(code, sheet, x, y, scale);
-}
+}*/
 
 
 

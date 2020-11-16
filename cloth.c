@@ -2,6 +2,7 @@
 #include "config.h"
 #include "text.h"
 #include "weather.h"
+#include "renderer.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <libdragon.h>

@@ -86,7 +86,9 @@ typedef enum {
     TIMER_SPRITE_6,
     TIMER_SPRITE_7,
     TIMER_SPRITE_8,
-    TIMER_SPRITE_9
+    TIMER_SPRITE_9,
+
+    SPRITE_COUNT
 } SpriteCode;
 
 /**
@@ -111,7 +113,7 @@ void drawText(const string text, const u32 x, const u32 y, const float scale);
 /**
  *
  */ 
-void drawSprite(const SpriteCode spriteCode, const u32 x, const u32 y, const float scale);
+//void drawSprite(const SpriteCode spriteCode, const u32 x, const u32 y, const float scale);
 
 /**
  * Draws a horizontal string of text starting at the given location.
