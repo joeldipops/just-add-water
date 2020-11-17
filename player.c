@@ -151,7 +151,7 @@ void drawPlayer() {
             ? INSIDE_LINE_POSITION
             : OUTSIDE_LINE_POSITION
         ) + HELD_OFFSET + (TILE_WIDTH * 1.8)
-        , 1
+        , 3, 1
     );
 
     if (player.hands[HAND_TAKE].cloth) {
@@ -172,7 +172,7 @@ void drawPlayer() {
                 ? INSIDE_LINE_POSITION
                 : OUTSIDE_LINE_POSITION
             ) + HELD_OFFSET + TILE_WIDTH * 1.8
-            , 1
+            , 3, 1
         );
     } else {
         // Cloth selector
@@ -183,7 +183,7 @@ void drawPlayer() {
                 ? INSIDE_LINE_POSITION
                 : OUTSIDE_LINE_POSITION
             ) + TILE_WIDTH * 1.8
-            , 1
+            , 3, 1
         );
     }
 

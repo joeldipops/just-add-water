@@ -76,80 +76,85 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
 
     // Draw border.
 
+    u32 drawPriority = 1;
     if (cloth->dryingState > DRYING_DRY) {
+
+
         // Normal border.
-        drawSprite(CURSOR_TOP_LEFT_SPRITE, x, y, 1);
-        drawSprite(CURSOR_BOTTOM_LEFT_SPRITE, x, y + TILE_WIDTH, 1);
+        drawSprite(CURSOR_TOP_LEFT_SPRITE, x, y, drawPriority, 1);
+        drawSprite(CURSOR_BOTTOM_LEFT_SPRITE, x, y + TILE_WIDTH, drawPriority, 1);
 
         for (u32 i = 0; i < cloth->size; i++) {
             u32 xPos = x + TILE_WIDTH * i;
 
             if (i + 1 == cloth->size) {
-                drawSprite(CURSOR_TOP_RIGHT_SPRITE, xPos, y, 1);
-                drawSprite(CURSOR_BOTTOM_RIGHT_SPRITE, xPos, y + TILE_WIDTH, 1);
+                drawSprite(CURSOR_TOP_RIGHT_SPRITE, xPos, y, drawPriority, 1);
+                drawSprite(CURSOR_BOTTOM_RIGHT_SPRITE, xPos, y + TILE_WIDTH, drawPriority, 1);
             } else {
-                drawSprite(CURSOR_TOP_SPRITE, xPos, y, 1);
-                drawSprite(CURSOR_BOTTOM_SPRITE, xPos, y + TILE_WIDTH, 1);
+                drawSprite(CURSOR_TOP_SPRITE, xPos, y, drawPriority, 1);
+                drawSprite(CURSOR_BOTTOM_SPRITE, xPos, y + TILE_WIDTH, drawPriority, 1);
             }
         }
     } else {
         // Gilded border to show we're done.
-        drawSprite(GILDED_TOP_LEFT_SPRITE, x, y, 1);
-        drawSprite(GILDED_BOTTOM_LEFT_SPRITE, x, y + TILE_WIDTH, 1);
+        drawSprite(GILDED_TOP_LEFT_SPRITE, x, y, drawPriority, 1);
+        drawSprite(GILDED_BOTTOM_LEFT_SPRITE, x, y + TILE_WIDTH, drawPriority, 1);
 
         for (u32 i = 0; i < cloth->size; i++) {
             u32 xPos = x + TILE_WIDTH * i;
 
             if (i + 1 == cloth->size) {
-                drawSprite(GILDED_TOP_RIGHT_SPRITE, xPos, y, 1);
-                drawSprite(GILDED_BOTTOM_RIGHT_SPRITE, xPos, y + TILE_WIDTH, 1);
+                drawSprite(GILDED_TOP_RIGHT_SPRITE, xPos, y, drawPriority, 1);
+                drawSprite(GILDED_BOTTOM_RIGHT_SPRITE, xPos, y + TILE_WIDTH, drawPriority, 1);
             } else {
-                drawSprite(GILDED_TOP_SPRITE, xPos, y, 1);
-                drawSprite(GILDED_BOTTOM_SPRITE, xPos, y + TILE_WIDTH, 1);
+                drawSprite(GILDED_TOP_SPRITE, xPos, y, drawPriority, 1);
+                drawSprite(GILDED_BOTTOM_SPRITE, xPos, y + TILE_WIDTH, drawPriority, 1);
             }
         }
     }
 
+    drawPriority = 2;
+
     // Draw water gauge.
     switch(cloth->dryingState) {
         case DRYING_DRENCHED:
-            drawSprite(FULL_WATER_SPRITE, x, y, 1);
-            drawSprite(FULL_WATER_SPRITE, x, y + TILE_WIDTH, 1);
+            drawSprite(FULL_WATER_SPRITE, x, y, drawPriority, 1);
+            drawSprite(FULL_WATER_SPRITE, x, y + TILE_WIDTH, drawPriority, 1);
             break;
         case DRYING_SPUN:
-            drawSprite(HALF_WATER_SPRITE, x, y, 1);
-            drawSprite(FULL_WATER_SPRITE, x, y + TILE_WIDTH, 1);
+            drawSprite(HALF_WATER_SPRITE, x, y, drawPriority, 1);
+            drawSprite(FULL_WATER_SPRITE, x, y + TILE_WIDTH, drawPriority, 1);
             break;
         case DRYING_MOIST:
-            drawSprite(NO_WATER_SPRITE, x, y, 1);
-            drawSprite(FULL_WATER_SPRITE, x, y + TILE_WIDTH, 1);
+            drawSprite(NO_WATER_SPRITE, x, y, drawPriority, 1);
+            drawSprite(FULL_WATER_SPRITE, x, y + TILE_WIDTH, drawPriority, 1);
             break;
         case DRYING_DAMP:
-            drawSprite(NO_WATER_SPRITE, x, y, 1);
-            drawSprite(HALF_WATER_SPRITE, x, y + TILE_WIDTH, 1);
+            drawSprite(NO_WATER_SPRITE, x, y, drawPriority, 1);
+            drawSprite(HALF_WATER_SPRITE, x, y + TILE_WIDTH, drawPriority, 1);
             break;
         case DRYING_DRY:
         case DRYING_COMPLETE:
-            drawSprite(NO_WATER_SPRITE, x, y, 1);
-            drawSprite(NO_WATER_SPRITE, x, y + TILE_WIDTH, 1);
+            drawSprite(NO_WATER_SPRITE, x, y, drawPriority, 1);
+            drawSprite(NO_WATER_SPRITE, x, y + TILE_WIDTH, drawPriority, 1);
             break;
         case DRYING_DIRTY:
-            drawSprite(DIRTY_WATER_SPRITE, x, y, 1);
-            drawSprite(DIRTY_WATER_SPRITE, x, y + TILE_WIDTH, 1);
+            drawSprite(DIRTY_WATER_SPRITE, x, y, drawPriority, 1);
+            drawSprite(DIRTY_WATER_SPRITE, x, y + TILE_WIDTH, drawPriority, 1);
             break;
         default: break;
     }
 
     if (cloth->growthFactor > 0) {
-        drawSprite(BIG_DRY_SPRITE, x + TILE_WIDTH * (cloth->size - 1), y, 1);
-        drawSprite(SMALL_WET_SPRITE, x + TILE_WIDTH * (cloth->size - 1), y + TILE_WIDTH, 1);
+        drawSprite(BIG_DRY_SPRITE, x + TILE_WIDTH * (cloth->size - 1), y, drawPriority, 1);
+        drawSprite(SMALL_WET_SPRITE, x + TILE_WIDTH * (cloth->size - 1), y + TILE_WIDTH, drawPriority, 1);
     } else if (cloth->growthFactor < 0) {
-        drawSprite(BIG_WET_SPRITE, x + TILE_WIDTH * (cloth->size - 1), y, 1);
-        drawSprite(SMALL_DRY_SPRITE, x + TILE_WIDTH * (cloth->size - 1), y + TILE_WIDTH, 1);
+        drawSprite(BIG_WET_SPRITE, x + TILE_WIDTH * (cloth->size - 1), y, drawPriority, 1);
+        drawSprite(SMALL_DRY_SPRITE, x + TILE_WIDTH * (cloth->size - 1), y + TILE_WIDTH, drawPriority, 1);
     }
 
     if (cloth->growthFactor) {
-        drawSprite(GROWTH_1_SPRITE + abs(cloth->growthFactor) - 1, x + TILE_WIDTH * (cloth->size - 1) + 6, y  + 6, 1);
+        drawSprite(GROWTH_1_SPRITE + abs(cloth->growthFactor) - 1, x + TILE_WIDTH * (cloth->size - 1) + 6, y  + 6, drawPriority, 1);
     }
 }
 

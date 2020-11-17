@@ -25,10 +25,9 @@ void resetRenderer() {
 }
 
 /**
- * @param z priority 0 - 3
+ * @param z priority 0 - MAX_PRIORITY
  */
-void drawSprite(SpriteCode spriteId, u32 x, u32 y, float scale) {
-    u32 z = 0;
+void drawSprite(SpriteCode spriteId, u32 x, u32 y, u32 z, float scale) {
     u32 index = drawLists[z].index[spriteId];
     Sprite* sprite = &drawLists[z].list[spriteId][index];
     sprite->x = x;
