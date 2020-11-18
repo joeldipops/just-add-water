@@ -6,7 +6,8 @@ typedef struct {
     u32 x;
     u32 y;
     SpriteCode spriteId;
-    float scale;
+    float xScale;
+    float yScale;
 } Sprite;
 
 typedef struct {
@@ -24,17 +25,22 @@ void resetRenderer() {
     }
 }
 
-/**
- * @param z priority 0 - MAX_PRIORITY
- */
-void drawSprite(SpriteCode spriteId, u32 x, u32 y, u32 z, float scale) {
+void drawScaledSprite(SpriteCode spriteId, u32 x, u32 y, u32 z, float xScale, float yScale) {
     u32 index = drawLists[z].index[spriteId];
     Sprite* sprite = &drawLists[z].list[spriteId][index];
     sprite->x = x;
     sprite->y = y;
-    sprite->scale = scale;
+    sprite->xScale = xScale;
+    sprite->yScale = yScale;
 
     drawLists[z].index[spriteId]++;
+};
+
+/**
+ * @param z priority 0 - MAX_PRIORITY
+ */
+void drawSprite(SpriteCode spriteId, u32 x, u32 y, u32 z, float scale) {
+    drawScaledSprite(spriteId, x, y, z, scale, scale);
 }
 
 void renderSprites() {
@@ -55,7 +61,7 @@ void renderSprites() {
 
             for (u32 i = 0; i < drawLists[z].index[spriteId]; i++) {
                 Sprite* sprite = &drawLists[z].list[spriteId][i];
-                rdp_draw_sprite_scaled(0, sprite->x, sprite->y, sprite->scale, sprite->scale, MIRROR_DISABLED);
+                rdp_draw_sprite_scaled(0, sprite->x, sprite->y, sprite->xScale, sprite->yScale, MIRROR_DISABLED);
             }
         }
     }

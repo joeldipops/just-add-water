@@ -72,7 +72,7 @@ void buildClothText(Cloth* cloth) {
 void drawCloth(Cloth* cloth, u32 x, u32 y) {
     SpriteCode spriteId;
 
-    drawBox(BASE_CLOTH_SPRITE, x, y, TILE_WIDTH * cloth->size, TILE_WIDTH * 2);
+    drawScaledSprite(BASE_CLOTH_SPRITE, x, y, 0, cloth->size, 2);
 
     // Draw border.
 

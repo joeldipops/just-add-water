@@ -58,14 +58,16 @@ void drawQueue() {
 
     // Then fill it up with cloths from the bottom up.
     y -= TILE_WIDTH / 4;
-    rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), QUEUED_GREEN_SPRITE);
+
+    SpriteCode spriteId = QUEUED_GREEN_SPRITE;
     for (u32 i = 0; i < queueIndex; i++) {
         if (i == CLOTH_QUEUE_SIZE / 6 * 5) {
-            rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), QUEUED_RED_SPRITE);
+            spriteId = QUEUED_RED_SPRITE;;
         } else if (i == CLOTH_QUEUE_SIZE / 2) {
-            rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), QUEUED_AMBER_SPRITE);
+            spriteId = QUEUED_AMBER_SPRITE;
         }
-        rdp_draw_sprite_scaled(0, QUEUE_MARGIN + 2, y, 2, 1, MIRROR_DISABLED);
+
+        drawScaledSprite(spriteId, QUEUE_MARGIN + 2, y, 0, 2, 1);
         y -= TILE_WIDTH / 4;
     }
 }
