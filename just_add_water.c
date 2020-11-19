@@ -56,17 +56,20 @@ static void resetScreen() {
 }
 
 display_context_t nextFrame = 0;
+bool isRenderAllowed = true;
 
 void renderFrame() {
-    nextFrame = display_lock();
-    if (!nextFrame) { return; }
+    if (!isRenderAllowed) {
+        return;
+    }
 
-    disable_interrupts();
+    isRenderAllowed = false;
+
+    while(!(nextFrame = display_lock()))
+
     rdp_sync(SYNC_PIPE);
 
     fps_frame();
-
-    // while(!(nextFrame = display_lock()))
 
     rdp_attach_display(nextFrame);
 
@@ -109,9 +112,12 @@ void renderFrame() {
 #endif
 
     rdp_detach_display();
-    display_show(nextFrame);
 
-    enable_interrupts();
+    display_show(nextFrame);
+}
+
+void allowRender() {
+    isRenderAllowed = true;
 }
 
 int main(void) {
@@ -132,9 +138,10 @@ int main(void) {
     initTitle();
 
     // Render a frame 30 times a second.
-    new_timer(TIMER_TICKS(TICKS_PER_SECOND) / 30, TF_CONTINUOUS, renderFrame);
+    new_timer(TIMER_TICKS(TICKS_PER_SECOND) / 30, TF_CONTINUOUS, allowRender);
 
     while(true) {
         inputStep();
+        renderFrame();
     }
 }
