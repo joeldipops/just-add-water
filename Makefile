@@ -47,7 +47,6 @@ LD_OFILES += $(CURDIR)/obj/day.o
 LD_OFILES += $(CURDIR)/obj/fps.o
 LD_OFILES += $(CURDIR)/obj/title.o
 LD_OFILES += $(CURDIR)/obj/renderer.o
-LD_OFILES += $(CURDIR)/obj/core.o
 
 # Produces the disassembly, with symbols included.
 $(PROG_NAME).dsm: $(PROG_NAME).elf
@@ -65,7 +64,6 @@ $(PROG_NAME).elf : $(PROG_NAME).o $(LD_FILE)
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/fps.o $(CURDIR)/fps.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/renderer.o $(CURDIR)/renderer.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/title.o $(CURDIR)/title.c
-	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/core.o $(CURDIR)/core.c
 	$(CC) $(CFLAGS) -c -o $(CURDIR)/obj/$(PROG_NAME).o $(CURDIR)/$(PROG_NAME).c
 
 	$(LD) -o $(PROG_NAME).elf $(CURDIR)/obj/$(PROG_NAME).o $(LD_OFILES) $(LINK_FLAGS)

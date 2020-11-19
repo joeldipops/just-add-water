@@ -37,7 +37,7 @@ void drawTitle() {
     drawText("Clothes will change size as they dry.", QUEUE_MARGIN_LEFT, STANDARD_MARGIN * 10, scale);
     drawText("(Don't run out of space!)", QUEUE_MARGIN_LEFT, STANDARD_MARGIN * 11, scale);
 
-    drawText("Keep an eye on the weather forecast.", STANDARD_MARGIN, STANDARD_MARGIN * 12, scale);
+    drawText("Keep an eye on the weather forecast.", QUEUE_MARGIN_LEFT, STANDARD_MARGIN * 12, scale);
     drawText("(Watch out for rain!)", QUEUE_MARGIN_LEFT, STANDARD_MARGIN * 13, scale);
 
     if (flashStart) {
