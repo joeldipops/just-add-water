@@ -135,7 +135,7 @@ void drawPlayer() {
     if (player.hands[HAND_HANG].cloth) {
         drawCloth(
             player.hands[HAND_HANG].cloth,
-            LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_HANG].x),
+            LINES_MARGIN_LEFT + (TILE_WIDTH * player.hands[HAND_HANG].x),
             (player.hands[HAND_HANG].y
                 ? INSIDE_LINE_POSITION
                 : OUTSIDE_LINE_POSITION
@@ -146,7 +146,7 @@ void drawPlayer() {
     // Hanger selector
     drawSprite(
         HANG_SPRITE,
-        LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_HANG].x),
+        LINES_MARGIN_LEFT + (TILE_WIDTH * player.hands[HAND_HANG].x),
         (player.hands[HAND_HANG].y
             ? INSIDE_LINE_POSITION
             : OUTSIDE_LINE_POSITION
@@ -157,7 +157,7 @@ void drawPlayer() {
     if (player.hands[HAND_TAKE].cloth) {
         drawCloth(
             player.hands[HAND_TAKE].cloth,
-            LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_TAKE].x),
+            LINES_MARGIN_LEFT + (TILE_WIDTH * player.hands[HAND_TAKE].x),
             (player.hands[HAND_TAKE].y
                 ? INSIDE_LINE_POSITION
                 : OUTSIDE_LINE_POSITION
@@ -167,7 +167,7 @@ void drawPlayer() {
         // Cloth selector
         drawSprite(
             TAKE_SPRITE,
-            LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_TAKE].x),
+            LINES_MARGIN_LEFT + (TILE_WIDTH * player.hands[HAND_TAKE].x),
             (player.hands[HAND_TAKE].y
                 ? INSIDE_LINE_POSITION
                 : OUTSIDE_LINE_POSITION
@@ -178,7 +178,7 @@ void drawPlayer() {
         // Cloth selector
         drawSprite(
             TAKE_SPRITE,
-            LEFT_MARGIN + (TILE_WIDTH * player.hands[HAND_TAKE].x),
+            LINES_MARGIN_LEFT + (TILE_WIDTH * player.hands[HAND_TAKE].x),
             (player.hands[HAND_TAKE].y
                 ? INSIDE_LINE_POSITION
                 : OUTSIDE_LINE_POSITION
@@ -190,7 +190,7 @@ void drawPlayer() {
     // Scoreboard
     drawText(
         "SCORE",
-        SCREEN_WIDTH - STANDARD_MARGIN - TILE_WIDTH * 5,
+        SCREEN_WIDTH - STANDARD_MARGIN - (TILE_WIDTH * 5.5),
         STANDARD_MARGIN,
         1
     );
@@ -199,14 +199,14 @@ void drawPlayer() {
     sprintf(score, "%lu", player.score);
     drawText(
         score,
-        SCREEN_WIDTH - STANDARD_MARGIN - TILE_WIDTH * 5,
+        SCREEN_WIDTH - STANDARD_MARGIN - (TILE_WIDTH * 5.5),
         STANDARD_MARGIN * 2,
         1
     );
 
     drawText(
         "DROPPED",
-        SCREEN_WIDTH - STANDARD_MARGIN - TILE_WIDTH * 5,
+        SCREEN_WIDTH - STANDARD_MARGIN - (TILE_WIDTH * 5.5),
         STANDARD_MARGIN * 3,
         1
     );
@@ -214,7 +214,7 @@ void drawPlayer() {
     sprintf(score, "%lu", player.dropped);
     drawText(
         score,
-        SCREEN_WIDTH - STANDARD_MARGIN - TILE_WIDTH * 5,
+        SCREEN_WIDTH - STANDARD_MARGIN - (TILE_WIDTH * 5.5),
         STANDARD_MARGIN * 4,
         1
     );

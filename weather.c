@@ -62,7 +62,7 @@ static SpriteCode getWeatherBackground(Weather weather) {
  */
 void drawWeatherGuide(u32 position) {
     /*
-    drawText(           "Forecast       Weather     Chance", LEFT_MARGIN, position, 1);
+    drawText(           "Forecast       Weather     Chance", LINES_MARGIN_LEFT, position, 1);
     position += STANDARD_MARGIN * 2;
     string text[4];
     sprintf(text[0],    "$%02x             $%02x           50%%",  SUN_SPRITE, SUN_SPRITE);
@@ -71,7 +71,7 @@ void drawWeatherGuide(u32 position) {
     sprintf(text[3],    "               $%02x           0%%",  STORM_SPRITE);
 
     for (u32 i = 0; i < 4; i++) {
-        drawText(text[i], LEFT_MARGIN, position, 1);
+        drawText(text[i], LINES_MARGIN_LEFT, position, 1);
         position += STANDARD_MARGIN;
     }
 
@@ -83,7 +83,7 @@ void drawWeatherGuide(u32 position) {
     sprintf(text[3],    "               $%02x           10%%",  STORM_SPRITE);
 
     for (u32 i = 0; i < 4; i++) {
-        drawText(text[i], LEFT_MARGIN, position, 1);
+        drawText(text[i], LINES_MARGIN_LEFT, position, 1);
         position += STANDARD_MARGIN;
     }
     */
@@ -91,18 +91,18 @@ void drawWeatherGuide(u32 position) {
 
 void drawWeather() {
     Weather current = getCurrentWeather();
-    drawBox(getWeatherBackground(current), LEFT_MARGIN, 0, OUTSIDE_LINE_SIZE * TILE_WIDTH, ROOF_POSITION);
-    drawBox(INSIDE_BG, LEFT_MARGIN, ROOF_POSITION, OUTSIDE_LINE_SIZE * TILE_WIDTH, SCREEN_HEIGHT - ROOF_POSITION);
+    drawBox(getWeatherBackground(current), LINES_MARGIN_LEFT, 0, OUTSIDE_LINE_SIZE * TILE_WIDTH, ROOF_POSITION);
+    drawBox(INSIDE_BG, LINES_MARGIN_LEFT, ROOF_POSITION, OUTSIDE_LINE_SIZE * TILE_WIDTH, SCREEN_HEIGHT - ROOF_POSITION);
     drawSprite(
         INSIDE_SPRITE,
-        LEFT_MARGIN + 4,
+        LINES_MARGIN_LEFT + 4,
         ROOF_POSITION + 20,
         0, 2
     );
 
     drawSprite(
         getWeatherSprite(getCurrentWeather()),
-        LEFT_MARGIN + 4,
+        LINES_MARGIN_LEFT + 4,
         4,
         0, 2
     );
@@ -110,7 +110,7 @@ void drawWeather() {
     // Goes over in the left-side "QUEUE" column
     drawSprite(
         getWeatherSprite(nextForecast),
-        QUEUE_MARGIN,
+        QUEUE_MARGIN_LEFT,
         QUEUE_MARGIN_TOP + STANDARD_MARGIN,
         0, 2
     );

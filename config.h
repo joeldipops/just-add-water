@@ -1,3 +1,14 @@
+#define IS_PAL 1
+
+#ifdef IS_PAL
+    #define LEFT_MARGIN 24
+    #define TOP_MARGIN 4
+#else
+    #define LEFT_MARGIN 0
+    #define TOP_MARGIN 0
+#endif
+
+
 #define INIT_TURN_SECONDS 0
 #define INIT_TURN_CLOTHS 3
 // Cos we need to fit a '+' and a '1'
@@ -28,14 +39,14 @@
 // TODO
 
 // Queue Frame
-#define QUEUE_MARGIN TILE_WIDTH
-#define QUEUE_MARGIN_TOP (5 * TILE_WIDTH)
+#define QUEUE_MARGIN_LEFT (TILE_WIDTH + LEFT_MARGIN)
+#define QUEUE_MARGIN_TOP ((5 * TILE_WIDTH) + TOP_MARGIN)
 
 // Lines frame
-#define LEFT_MARGIN (8 * TILE_WIDTH)
-#define OUTSIDE_LINE_POSITION (5 * TILE_WIDTH)
-#define ROOF_POSITION (11 * TILE_WIDTH)
-#define INSIDE_LINE_POSITION (16 * TILE_WIDTH)
+#define LINES_MARGIN_LEFT ((8 * TILE_WIDTH) + LEFT_MARGIN)
+#define OUTSIDE_LINE_POSITION ((5 * TILE_WIDTH) + TOP_MARGIN)
+#define ROOF_POSITION ((11 * TILE_WIDTH) + TOP_MARGIN)
+#define INSIDE_LINE_POSITION ((16 * TILE_WIDTH) + TOP_MARGIN)
 
 #define CLOTH_QUEUE_SIZE 18
 #define CLOTH_QUEUE_SHOWN 1

@@ -26,35 +26,35 @@ void initClothManager() {
 
 void drawQueue() {
     u32 y = QUEUE_MARGIN_TOP;
-    drawText("NEXT", QUEUE_MARGIN, y, 1);
+    drawText("NEXT", QUEUE_MARGIN_LEFT, y, 1);
 
     y += STANDARD_MARGIN;
     // Draw the full details of the next cloth
     Cloth* next = clothQueue[0];
     if (next) {
-        drawCloth(next, QUEUE_MARGIN + TILE_WIDTH * 2.5, y);
+        drawCloth(next, QUEUE_MARGIN_LEFT + TILE_WIDTH * 2.5, y);
     }
 
     // And then the glowing pile of pending cloths.
 
     // The outline of the pile.
     y += STANDARD_MARGIN * 3;
-    drawSprite(CURSOR_TOP_LEFT_SPRITE, QUEUE_MARGIN, y, 0, 1);
-    drawSprite(CURSOR_TOP_SPRITE, QUEUE_MARGIN + (TILE_WIDTH / 2), y, 0, 1);
-    drawSprite(CURSOR_TOP_RIGHT_SPRITE, QUEUE_MARGIN + TILE_WIDTH, y, 0, 1);
+    drawSprite(CURSOR_TOP_LEFT_SPRITE, QUEUE_MARGIN_LEFT, y, 0, 1);
+    drawSprite(CURSOR_TOP_SPRITE, QUEUE_MARGIN_LEFT + (TILE_WIDTH / 2), y, 0, 1);
+    drawSprite(CURSOR_TOP_RIGHT_SPRITE, QUEUE_MARGIN_LEFT + TILE_WIDTH, y, 0, 1);
 
     y += TILE_WIDTH / 2;
 
     for (u32 i = 1; i < (CLOTH_QUEUE_SIZE - 3) / 3; i++) {
-        drawSprite(CURSOR_LEFT_SPRITE, QUEUE_MARGIN, y, 0, 1);
-        drawSprite(CURSOR_RIGHT_SPRITE, QUEUE_MARGIN + TILE_WIDTH, y, 0, 1);
+        drawSprite(CURSOR_LEFT_SPRITE, QUEUE_MARGIN_LEFT, y, 0, 1);
+        drawSprite(CURSOR_RIGHT_SPRITE, QUEUE_MARGIN_LEFT + TILE_WIDTH, y, 0, 1);
         y += TILE_WIDTH;
     }
 
     y -= TILE_WIDTH / 2;
-    drawSprite(CURSOR_BOTTOM_LEFT_SPRITE, QUEUE_MARGIN, y, 0, 1);
-    drawSprite(CURSOR_BOTTOM_SPRITE, QUEUE_MARGIN + (TILE_WIDTH / 2), y, 0, 1);
-    drawSprite(CURSOR_BOTTOM_RIGHT_SPRITE, QUEUE_MARGIN + TILE_WIDTH, y, 0, 1);
+    drawSprite(CURSOR_BOTTOM_LEFT_SPRITE, QUEUE_MARGIN_LEFT, y, 0, 1);
+    drawSprite(CURSOR_BOTTOM_SPRITE, QUEUE_MARGIN_LEFT + (TILE_WIDTH / 2), y, 0, 1);
+    drawSprite(CURSOR_BOTTOM_RIGHT_SPRITE, QUEUE_MARGIN_LEFT + TILE_WIDTH, y, 0, 1);
 
     // Then fill it up with cloths from the bottom up.
     y -= TILE_WIDTH / 4;
@@ -67,7 +67,7 @@ void drawQueue() {
             spriteId = QUEUED_AMBER_SPRITE;
         }
 
-        drawScaledSprite(spriteId, QUEUE_MARGIN + 2, y, 0, 2, 1);
+        drawScaledSprite(spriteId, QUEUE_MARGIN_LEFT + 2, y, 0, 2, 1);
         y -= TILE_WIDTH / 4;
     }
 }
