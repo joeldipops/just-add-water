@@ -24,7 +24,7 @@ static void initialiseSubsystems() {
     initClothManager();
 
     init_interrupts();
-    display_init(RESOLUTION, COLOUR_DEPTH, 2, GAMMA_NONE, ANTIALIAS_OFF);
+    display_init(RESOLUTION, COLOUR_DEPTH, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE_FETCH_ALWAYS);
     dfs_init(DFS_DEFAULT_LOCATION);
     rdp_init();
     controller_init();
