@@ -28,17 +28,17 @@ void drawQueue() {
     u32 y = QUEUE_MARGIN_TOP;
     drawText("NEXT", QUEUE_MARGIN_LEFT, y, 1);
 
-    y += STANDARD_MARGIN;
+    y += TILE_WIDTH ;
     // Draw the full details of the next cloth
     Cloth* next = clothQueue[0];
     if (next) {
-        drawCloth(next, QUEUE_MARGIN_LEFT + TILE_WIDTH * 2.5, y);
+        drawCloth(next, QUEUE_MARGIN_LEFT + TILE_WIDTH + 2, y);
     }
 
     // And then the glowing pile of pending cloths.
 
     // The outline of the pile.
-    y += STANDARD_MARGIN * 3;
+    y += TILE_WIDTH * 3;
     drawSprite(CURSOR_TOP_LEFT_SPRITE, QUEUE_MARGIN_LEFT, y, 0, 1);
     drawSprite(CURSOR_TOP_SPRITE, QUEUE_MARGIN_LEFT + (TILE_WIDTH / 2), y, 0, 1);
     drawSprite(CURSOR_TOP_RIGHT_SPRITE, QUEUE_MARGIN_LEFT + TILE_WIDTH, y, 0, 1);
@@ -152,7 +152,7 @@ static void initNewCloth(Cloth* cloth) {
 #else
     cloth->dryingState = DRYING_SPUN;
     cloth->growthType = GROWTH_LINEAR;
-    cloth->growthFactor = 4;
+    cloth->growthFactor = 1;
     cloth->size = 1;
 #endif
 

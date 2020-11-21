@@ -97,22 +97,22 @@ void drawWeather() {
         INSIDE_SPRITE,
         LINES_MARGIN_LEFT + 4,
         ROOF_POSITION + 20,
-        0, 2
+        0, 1
     );
 
     drawSprite(
         getWeatherSprite(getCurrentWeather()),
         LINES_MARGIN_LEFT + 4,
         4,
-        0, 2
+        0, 1
     );
 
     // Goes over in the left-side "QUEUE" column
     drawSprite(
         getWeatherSprite(nextForecast),
         QUEUE_MARGIN_LEFT,
-        QUEUE_MARGIN_TOP + STANDARD_MARGIN,
-        0, 2
+        QUEUE_MARGIN_TOP + TILE_WIDTH,
+        0, 1
     );
 }
 
