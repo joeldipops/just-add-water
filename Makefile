@@ -72,7 +72,10 @@ $(PROG_NAME).dfs: timer.sprite font.sprite sprites.sprite
 	$(MKDFSPATH) $(PROG_NAME).dfs ./filesystem/
 
 timer.sprite:
-	mksprite 16 8 4 ./assets/timer.png ./filesystem/timer.sprite
+	mksprite 16 16 4 ./assets/timer.png ./filesystem/timer.sprite
+
+font.sprite:
+	mksprite 16 12 8 ./assets/font.png ./filesystem/font.sprite
 
 %.sprite: ./assets/%.png
 	mksprite 16 32 3 $^ ./filesystem/$@

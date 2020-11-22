@@ -20,27 +20,27 @@ void initTitle() {
 }
 
 void drawTitle() {
-    drawText("SHRUNK IN THE WASH!", 100, STANDARD_MARGIN, 2);
+    drawText("SHRUNK IN THE WASH!", 32, TOP_MARGIN, 2);
 
     float scale = 1;
 
     string text;
-    sprintf(text, "Hang wet laundry with your left hand ( $%02x $%02x )", L_SPRITE, D_SPRITE);
-    drawText(text, QUEUE_MARGIN_LEFT, STANDARD_MARGIN * 4, scale);
+    sprintf(text, "Hang wet laundry with your left hand $%02x$%02x", L_SPRITE, D_SPRITE);
+    drawText(text, QUEUE_MARGIN_LEFT, TOP_MARGIN + TILE_WIDTH * 4, scale);
 
-    sprintf(text, "Take down or move clothes with your right. ( $%02x $%02x )", R_SPRITE, C_SPRITE);
-    drawText(text, QUEUE_MARGIN_LEFT, STANDARD_MARGIN * 6, scale);
+    sprintf(text, "Take down or move with the right $%02x $%02x", R_SPRITE, C_SPRITE);
+    drawText(text, QUEUE_MARGIN_LEFT, TOP_MARGIN + TILE_WIDTH * 6, scale);
 
     sprintf(text, "Discard something you picked up with $%02x", A_SPRITE);
-    drawText(text, QUEUE_MARGIN_LEFT, STANDARD_MARGIN * 8, scale);
+    drawText(text, QUEUE_MARGIN_LEFT, TOP_MARGIN + TILE_WIDTH * 8, scale);
 
-    drawText("Clothes will change size as they dry.", QUEUE_MARGIN_LEFT, STANDARD_MARGIN * 10, scale);
-    drawText("(Don't run out of space!)", QUEUE_MARGIN_LEFT, STANDARD_MARGIN * 11, scale);
+    drawText("Clothes will change size as they dry.", QUEUE_MARGIN_LEFT, TOP_MARGIN + TILE_WIDTH * 10, scale);
+    drawText("(Don't run out of space!)", QUEUE_MARGIN_LEFT, TOP_MARGIN + TILE_WIDTH * 11, scale);
 
-    drawText("Keep an eye on the weather forecast.", QUEUE_MARGIN_LEFT, STANDARD_MARGIN * 12, scale);
-    drawText("(Watch out for rain!)", QUEUE_MARGIN_LEFT, STANDARD_MARGIN * 13, scale);
+    drawText("Keep an eye on the weather forecast.", QUEUE_MARGIN_LEFT, TOP_MARGIN + TILE_WIDTH  * 12, scale);
+    drawText("(Watch out for rain!)", QUEUE_MARGIN_LEFT, TOP_MARGIN + TILE_WIDTH * 13, scale);
 
     if (flashStart) {
-        drawText("Press Start", 224, STANDARD_MARGIN * 16, 1.5);
+        drawText("Press Start", 128, TOP_MARGIN + TILE_WIDTH * 2, 1);
     }
 }

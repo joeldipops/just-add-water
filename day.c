@@ -61,8 +61,7 @@ void startNewDay() {
 }
 
 void drawDay() {
-    drawSprite(TIMER_SPRITE_1 + secondsLeft, QUEUE_MARGIN_LEFT, STANDARD_MARGIN, 0, 0.5);
-    drawSprite(TIMER_SPRITE_1 + 8 + secondsLeft, QUEUE_MARGIN_LEFT, STANDARD_MARGIN + TILE_WIDTH, 0,0.5);
+    drawSprite(TIMER_SPRITE_1 + secondsLeft, QUEUE_MARGIN_LEFT, STANDARD_MARGIN, 0, 1);
 }
 
 

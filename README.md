@@ -9,4 +9,6 @@ Hand Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Fre
 
 Stopwatch Icons from https://of-imperfect.itch.io/stopwatch
 
+Font from https://opengameart.org/content/8x8-font Released under https://creativecommons.org/publicdomain/zero/1.0/
+
 

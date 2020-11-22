@@ -187,12 +187,34 @@ void drawPlayer() {
         );
     }
 
+    drawText(
+        "SCORE",
+        LEFT_MARGIN,
+        TOP_MARGIN + SCREEN_HEIGHT - (TILE_WIDTH * 4) + 2,
+        1
+    );
+
     string score = "";
     sprintf(score, "%lu", player.score);
     drawText(
         score,
         LEFT_MARGIN,
+        TOP_MARGIN + SCREEN_HEIGHT - (TILE_WIDTH * 3.5) + 2,
+        1.1
+    );
+
+    drawText(
+        "DROPPED",
+        LEFT_MARGIN,
         TOP_MARGIN + SCREEN_HEIGHT - (TILE_WIDTH * 2),
+        1
+    );
+
+    sprintf(score, "%lu", player.dropped);
+    drawText(
+        score,
+        LEFT_MARGIN,
+        TOP_MARGIN + SCREEN_HEIGHT - (TILE_WIDTH),
         1
     );
 }
