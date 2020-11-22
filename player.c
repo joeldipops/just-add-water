@@ -187,35 +187,12 @@ void drawPlayer() {
         );
     }
 
-    // Scoreboard
-    drawText(
-        "SCORE",
-        SCREEN_WIDTH - STANDARD_MARGIN - (TILE_WIDTH * 5.5),
-        STANDARD_MARGIN,
-        1
-    );
-
     string score = "";
     sprintf(score, "%lu", player.score);
     drawText(
         score,
-        SCREEN_WIDTH - STANDARD_MARGIN - (TILE_WIDTH * 5.5),
-        STANDARD_MARGIN * 2,
-        1
-    );
-
-    drawText(
-        "DROPPED",
-        SCREEN_WIDTH - STANDARD_MARGIN - (TILE_WIDTH * 5.5),
-        STANDARD_MARGIN * 3,
-        1
-    );
-
-    sprintf(score, "%lu", player.dropped);
-    drawText(
-        score,
-        SCREEN_WIDTH - STANDARD_MARGIN - (TILE_WIDTH * 5.5),
-        STANDARD_MARGIN * 4,
+        LEFT_MARGIN,
+        TOP_MARGIN + SCREEN_HEIGHT - (TILE_WIDTH * 2),
         1
     );
 }

@@ -1,7 +1,7 @@
 #define IS_PAL 1
 
 #ifdef IS_PAL
-    #define LEFT_MARGIN 8
+    #define LEFT_MARGIN 12
     #define TOP_MARGIN 4
 #else
     #define LEFT_MARGIN 0
@@ -14,8 +14,8 @@
 // Cos we need to fit a '+' and a '1'
 #define MIN_CLOTH_SIZE 2
 
-#define OUTSIDE_LINE_SIZE 24
-#define INSIDE_LINE_SIZE 24
+#define OUTSIDE_LINE_SIZE 16
+#define INSIDE_LINE_SIZE 16
 
 #define RESOLUTION RESOLUTION_320x240
 //#define RESOLUTION RESOLUTION_640x576
@@ -43,10 +43,10 @@
 #define QUEUE_MARGIN_TOP ((2 * TILE_WIDTH) + TOP_MARGIN)
 
 // Lines frame
-#define LINES_MARGIN_LEFT ((4 * TILE_WIDTH) + LEFT_MARGIN)
+#define LINES_MARGIN_LEFT (4 * TILE_WIDTH)
 #define OUTSIDE_LINE_POSITION ((2 * TILE_WIDTH) + TOP_MARGIN)
 #define ROOF_POSITION ((7 * TILE_WIDTH) + TOP_MARGIN)
-#define INSIDE_LINE_POSITION ((9 * TILE_WIDTH) + TOP_MARGIN)
+#define INSIDE_LINE_POSITION ((10 * TILE_WIDTH))
 
 #define CLOTH_QUEUE_SIZE 18
 #define CLOTH_QUEUE_SHOWN 1

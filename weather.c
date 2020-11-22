@@ -96,7 +96,7 @@ void drawWeather() {
     drawSprite(
         INSIDE_SPRITE,
         LINES_MARGIN_LEFT + 4,
-        ROOF_POSITION + 20,
+        ROOF_POSITION + 12,
         0, 1
     );
 
