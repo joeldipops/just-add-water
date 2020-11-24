@@ -14,6 +14,7 @@ bool hangCloth(u32 lineId, u32 x, Cloth* cloth);
 Cloth* takeCloth(u32 lineId, u32 x);
 
 void updateHangingCloths(Weather weather);
-
+void updateHangingClothSize(Weather weather);
+void updateHangingClothPosition();
 
 #endif

@@ -25,12 +25,16 @@ typedef enum {
 } GrowthType;
 
 typedef struct {
+    // We no longer care about this cloth.
     bool isFreeable;
-    char text[3]; // text that appears on the icon.
+    // number of discrete chunks.
     u32 size;
+    // Degrees of wetness.
     DryingState dryingState;
+    // Only linear growth at this stage.
     GrowthType growthType;
-    s32 growthFactor; // can be negative
+    // can be negative
+    s32 growthFactor;
 } Cloth;
 
 void initCloths();

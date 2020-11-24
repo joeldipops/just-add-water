@@ -104,9 +104,11 @@ static void dropCloth(Cloth* cloth) {
     getPlayer()->dropped++;
 }
 
-static void updateClothsOnLine(Line* line, Weather weather) {
+/**
+ * Grow or shrink the cloths based on the weather.
+ */
+void updateClothSize(Line* line, Weather weather) {
     u32 i = 0;
-    // First pass - resize the cloths.
     while (i < line->length) {
         if (line->cloths[i]) {
             u32 oldSize = line->cloths[i]->size;
@@ -116,8 +118,12 @@ static void updateClothsOnLine(Line* line, Weather weather) {
             i++;
         }
     }
+}
 
-    // Second pass - shuffle them along with the change in size and dump any that fell off.
+/**
+ * Shuffle clothes along the line now that they have a new size, and dump any that fell off.
+ */
+void updateClothPosition(Line* line) {
     u32 iSource = 0;
     u32 iDest = 0;
     Cloth* lastCloth = 0;
@@ -151,6 +157,24 @@ static void updateClothsOnLine(Line* line, Weather weather) {
 
         iSource++;
     }
+}
+
+
+void updateHangingClothSize(Weather weather) {
+    updateClothSize(&outsideLine, weather);
+
+    // Inside is always considered 'cloudy'
+    updateClothSize(&insideLine, WEATHER_CLOUDY);
+}
+
+void updateHangingClothPosition() {
+    updateClothPosition(&outsideLine);
+    updateClothPosition(&insideLine);
+}
+
+static void updateClothsOnLine(Line* line, Weather weather) {
+    updateClothSize(line, weather);
+    updateClothPosition(line);
 }
 
 void updateHangingCloths(Weather weather) {
