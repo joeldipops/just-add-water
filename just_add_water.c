@@ -16,6 +16,18 @@
 #include<time.h> 
 #include <libdragon.h>
 
+/**
+ *************** TODOS ********************
+ * * Make the days longer at first, and gradually shorten then
+ * ** Which means tweaking the timer icons again.
+ * * Fix that segfault.
+ * * Make the left and right hands easier to tell apart.
+ * * There might be something wrong with the growth, double check.
+ * * Sound effects
+ * * Animate the growth between days!
+ * * Animate the hands as put and take things.
+ */
+
 
 static void initialiseSubsystems() {
     srand(time(0));
