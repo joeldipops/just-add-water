@@ -10,10 +10,10 @@
 #include "resources.h"
 #include "title.h"
 #include "renderer.h"
+#include "animation.h"
 
 #include <stdio.h>
 #include <stdlib.h> 
-#include<time.h> 
 #include <libdragon.h>
 
 /**
@@ -30,10 +30,10 @@
 
 
 static void initialiseSubsystems() {
-    srand(time(0));
     initLine();
     initPlayer();
     initClothManager();
+    initAnimation();
 
     init_interrupts();
     display_init(RESOLUTION, COLOUR_DEPTH, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE_FETCH_ALWAYS);
@@ -78,6 +78,7 @@ void renderFrame() {
     isRenderAllowed = false;
 
     while(!(nextFrame = display_lock()))
+    drawAnimations();
 
     rdp_sync(SYNC_PIPE);
 
@@ -106,6 +107,8 @@ void renderFrame() {
             drawText("Error", 100, 100, 2);
             break;
     }
+
+    drawAnimations();
 
     renderSprites();
 

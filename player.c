@@ -9,6 +9,8 @@
 #include "day.h"
 #include "renderer.h"
 
+#include <time.h> 
+
 static Player player;
 
 static void handleMoveX(Hand* hand, bool isLeft) {
@@ -226,7 +228,8 @@ void drawPlayer() {
 bool handleController(N64ControllerState* pressed, N64ControllerState* released) {
     if (released->c[0].start) {
         switch (player.state) {
-            case STATE_TITLE: 
+            case STATE_TITLE:
+                srand(time(0));
                 player.state = STATE_PLAY;
                 closeTitle();
                 startNewDay();

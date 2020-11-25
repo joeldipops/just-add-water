@@ -47,28 +47,6 @@ static char charMap[10] = {
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
 };
 
-void buildClothText(Cloth* cloth) {
-    if (cloth->growthFactor < 0) {\
-        if (cloth->growthType == GROWTH_LINEAR) {
-            cloth->text[0] = '-';
-        } else {
-            cloth->text[0] = '/';
-        }
-    } else if (cloth->growthFactor == 0) {
-        cloth->text[0] = ' ';
-        cloth->text[1] = '0';
-    } else {
-        if (cloth->growthType == GROWTH_LINEAR) {
-            cloth->text[0] = '+';
-        } else {
-            cloth->text[0] = '-';
-        }
-    }
-
-    cloth->text[1] = charMap[abs(cloth->growthFactor)];
-    cloth->text[2] = 0;
-}
-
 void drawCloth(Cloth* cloth, u32 x, u32 y) {
     SpriteCode spriteId;
 

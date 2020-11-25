@@ -1,5 +1,6 @@
 #include "text.h"
 #include "config.h"
+#include "animation.h"
 
 #include <stdio.h>
 #include <libdragon.h>

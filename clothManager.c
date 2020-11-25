@@ -155,8 +155,6 @@ static void initNewCloth(Cloth* cloth) {
     cloth->growthFactor = 1;
     cloth->size = 1;
 #endif
-
-    buildClothText(cloth);
 }
 
 /**
