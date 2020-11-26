@@ -59,6 +59,7 @@ void startAnimation(Animation* animation) {
 void abandonAnimation(Animation* animation) {
     removeFromQueue(animation);
     free(animation);
+    free(0);
     animation = 0;
 }
 

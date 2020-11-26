@@ -8,6 +8,7 @@
 #include "title.h"
 #include "day.h"
 #include "renderer.h"
+#include "animation.h"
 
 #include <time.h> 
 
@@ -74,6 +75,24 @@ static void handleDrop() {
     }
 }
 
+static void animateScore(u32 score, u32 x, u32 y) {
+    Animation* anim = newAnimation();
+
+    x = LINES_MARGIN_LEFT + (TILE_WIDTH * x);
+    y = (player.hands[HAND_TAKE].y
+                ? INSIDE_LINE_POSITION
+                : OUTSIDE_LINE_POSITION
+            ) + 4;
+
+    for (u32 i = 0; i < 8; i++) {
+        // TODO: actual sprite should be "+1" etc.
+        setSimpleFrame(&anim->frames[i], PLUS_ONE_SPRITE + score - 1, x, y - i, 0.1);
+        anim->frames[i].remainingCycles = 1;
+    }
+
+    startAnimation(anim);
+}
+
 static void handleTake() {
     Hand* hand = &player.hands[HAND_TAKE];
 
@@ -96,6 +115,8 @@ static void handleTake() {
         // If it's dry, chuck it in the basket.
         player.score += taken->size;
         taken->isFreeable = true;
+
+        animateScore(taken->size, hand->x, hand->y);
     } else if (taken->dryingState != DRYING_DIRTY) {
         // If it's not, take it to be hung somewhere else.
         hand->cloth = taken;

@@ -78,8 +78,6 @@ void renderFrame() {
     isRenderAllowed = false;
 
     while(!(nextFrame = display_lock()))
-    drawAnimations();
-
     rdp_sync(SYNC_PIPE);
 
     fps_frame();
