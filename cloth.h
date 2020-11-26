@@ -29,6 +29,8 @@ typedef struct {
     bool isFreeable;
     // number of discrete chunks.
     u32 size;
+    // previous sized, used when animating.
+    u32 oldSize;
     // Degrees of wetness.
     DryingState dryingState;
     // Only linear growth at this stage.

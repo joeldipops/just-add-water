@@ -1,7 +1,7 @@
 #include "animation.h"
 #include "renderer.h"
 
-#define MAX_ANIMATIONS 32
+#define MAX_ANIMATIONS 64
 static Animation* _queue[MAX_ANIMATIONS];
 static u32 _queueIndex = 0;
 

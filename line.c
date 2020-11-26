@@ -28,6 +28,10 @@ void initLine() {
     insideLine.length = INSIDE_LINE_SIZE;
 }
 
+static void animateGrowth(Line* line) {
+    //for (u32 i = 0; i < line->length; i++) {}
+}
+
 static void drawLine(Line* line, u32 x, u32 y) {
     for (u32 i = 0; i < line->length; i++) {
         if (line->cloths[i]) {

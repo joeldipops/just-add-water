@@ -3,6 +3,7 @@
 #include "text.h"
 #include "weather.h"
 #include "renderer.h"
+#include "animation.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <libdragon.h>
@@ -34,6 +35,8 @@ static void changeClothState(Cloth* cloth, DryingState newState) {
             // throw;
     }
 
+    cloth->oldSize = cloth->size;
+
     if (cloth->size < 1) {
         cloth->size = 1;
     } else if (cloth->size > 16) {
@@ -43,9 +46,222 @@ static void changeClothState(Cloth* cloth, DryingState newState) {
     cloth->dryingState = newState;
 }
 
-static char charMap[10] = {
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
-};
+
+/**
+ * TODO: This only handles discrete 'size' chunks which is next to useless, but good to have on the board.
+ * The next step is to nudge those x values along so stuff is actually growing with each frame...
+ */
+void setClothAnimationFrames(Cloth* cloth, u32 currentSize, Animation** animations, u32 frameIndex, u32 x, u32 y) {
+    #define currentFrame() (&animations[animationIndex]->frames[frameIndex])
+
+    SpriteCode spriteId;
+
+    u32 animationIndex = 0;
+
+    setSimpleFrame(currentFrame(), BASE_CLOTH_SPRITE, x, y, 0.1);
+    currentFrame()->z = 0;
+    currentFrame()->scaleX = currentSize;
+    animationIndex++;
+
+    // Draw border.
+    u32 drawPriority = 1;
+    if (cloth->dryingState > DRYING_DRY) {
+        // Normal border.
+        setSimpleFrame(currentFrame(), CURSOR_TOP_LEFT_SPRITE, x, y, 0.1);
+        currentFrame()->z = drawPriority;
+        animationIndex++;
+
+        setSimpleFrame(currentFrame(), CURSOR_BOTTOM_LEFT_SPRITE, x, y + TILE_WIDTH, 0.1);
+        currentFrame()->z = drawPriority;
+        animationIndex++;
+
+        for (u32 i = 0; i < currentSize; i++) {
+            u32 xPos = x + TILE_WIDTH * i;
+
+            if (i + 1 == currentSize) {
+                setSimpleFrame(currentFrame(), CURSOR_TOP_RIGHT_SPRITE, xPos, y, 0.1);
+                currentFrame()->z = drawPriority;
+                animationIndex++;
+
+                setSimpleFrame(currentFrame(), CURSOR_BOTTOM_RIGHT_SPRITE, xPos, y + TILE_WIDTH, 0.1);
+                currentFrame()->z = drawPriority;
+                animationIndex++;
+            } else {
+                setSimpleFrame(currentFrame(), CURSOR_TOP_SPRITE, xPos, y, 0.1);
+                currentFrame()->z = drawPriority;
+                animationIndex++;
+
+                setSimpleFrame(currentFrame(), CURSOR_BOTTOM_SPRITE, xPos, y + TILE_WIDTH, 0.1);
+                currentFrame()->z = drawPriority;
+                animationIndex++;
+            }
+        }
+    } else {
+        // TODO - how to cover the progression to gilding.  Probably doing one side at a time so the gilding gradually 
+        // circles the cloth.
+        setSimpleFrame(currentFrame(), GILDED_TOP_LEFT_SPRITE, x, y, 0.1);
+        currentFrame()->z = drawPriority;
+        animationIndex++;
+
+        setSimpleFrame(currentFrame(), GILDED_BOTTOM_LEFT_SPRITE, x, y + TILE_WIDTH, 0.1);
+        currentFrame()->z = drawPriority;
+        animationIndex++;
+
+        for (u32 i = 0; i < currentSize; i++) {
+            u32 xPos = x + TILE_WIDTH * i;
+
+            if (i + 1 == currentSize) {
+                setSimpleFrame(currentFrame(), GILDED_TOP_RIGHT_SPRITE, xPos, y, 0.1);
+                currentFrame()->z = drawPriority;
+                animationIndex++;
+
+                setSimpleFrame(currentFrame(), GILDED_BOTTOM_RIGHT_SPRITE, xPos, y + TILE_WIDTH, 0.1);
+                currentFrame()->z = drawPriority;
+                animationIndex++;
+            } else {
+                setSimpleFrame(currentFrame(), GILDED_TOP_SPRITE, xPos, y, 0.1);
+                currentFrame()->z = drawPriority;
+                animationIndex++;
+
+                setSimpleFrame(currentFrame(), GILDED_BOTTOM_SPRITE, xPos, y + TILE_WIDTH, 0.1);
+                currentFrame()->z = drawPriority;
+                animationIndex++;
+            }
+        }
+    }
+
+    drawPriority = 2;
+
+    // Draw water gauge.
+    switch(cloth->dryingState) {
+        case DRYING_DRENCHED:
+            setSimpleFrame(currentFrame(), FULL_WATER_SPRITE, x, y, 0.1);
+            currentFrame()->z = drawPriority;
+            animationIndex++;
+
+            setSimpleFrame(currentFrame(), FULL_WATER_SPRITE, x, y + TILE_WIDTH, 0.1);
+            currentFrame()->z = drawPriority;
+            animationIndex++;
+            break;
+        case DRYING_SPUN:
+            setSimpleFrame(currentFrame(), HALF_WATER_SPRITE, x, y, 0.1);
+            currentFrame()->z = drawPriority;
+            animationIndex++;
+
+            setSimpleFrame(currentFrame(), FULL_WATER_SPRITE, x, y + TILE_WIDTH, 0.1);
+            currentFrame()->z = drawPriority;
+            animationIndex++;
+            break;
+        case DRYING_MOIST:
+            setSimpleFrame(currentFrame(), NO_WATER_SPRITE, x, y, 0.1);
+            currentFrame()->z = drawPriority;
+            animationIndex++;
+
+            setSimpleFrame(currentFrame(), FULL_WATER_SPRITE, x, y + TILE_WIDTH, 0.1);
+            currentFrame()->z = drawPriority;
+            animationIndex++;
+            break;
+        case DRYING_DAMP:
+            setSimpleFrame(currentFrame(), NO_WATER_SPRITE, x, y, 0.1);
+            currentFrame()->z = drawPriority;
+            animationIndex++;
+
+            setSimpleFrame(currentFrame(), HALF_WATER_SPRITE, x, y + TILE_WIDTH, 0.1);
+            currentFrame()->z = drawPriority;
+            animationIndex++;
+            break;
+        case DRYING_DRY:
+        case DRYING_COMPLETE:
+            setSimpleFrame(currentFrame(), NO_WATER_SPRITE, x, y, 0.1);
+            currentFrame()->z = drawPriority;
+            animationIndex++;
+
+            setSimpleFrame(currentFrame(), NO_WATER_SPRITE, x, y + TILE_WIDTH, 0.1);
+            currentFrame()->z = drawPriority;
+            animationIndex++;
+            break;
+        case DRYING_DIRTY:
+            setSimpleFrame(currentFrame(), DIRTY_WATER_SPRITE, x, y, 0.1);
+            currentFrame()->z = drawPriority;
+            animationIndex++;
+
+            setSimpleFrame(currentFrame(), DIRTY_WATER_SPRITE, x, y + TILE_WIDTH, 0.1);
+            currentFrame()->z = drawPriority;
+            animationIndex++;
+            break;
+        default: break;
+    }
+
+    if (cloth->growthFactor > 0) {
+        setSimpleFrame(
+            currentFrame(), BIG_DRY_SPRITE,
+            x + TILE_WIDTH * (currentSize - 1), y, 0.1
+        );
+        currentFrame()->z = drawPriority;
+        animationIndex++;
+
+        setSimpleFrame(
+            currentFrame(), SMALL_WET_SPRITE,
+            x + TILE_WIDTH * (currentSize - 1), y + TILE_WIDTH, 0.1
+        );
+        currentFrame()->z = drawPriority;
+        animationIndex++;
+    } else if (cloth->growthFactor < 0) {
+        setSimpleFrame(
+            currentFrame(), BIG_WET_SPRITE,
+            x + TILE_WIDTH * (currentSize - 1), y, 0.1
+        );
+        currentFrame()->z = drawPriority;
+        animationIndex++;
+
+        setSimpleFrame(
+            currentFrame(), SMALL_DRY_SPRITE,
+            x + TILE_WIDTH * (currentSize - 1), y + TILE_WIDTH, 0.1
+        );
+        currentFrame()->z = drawPriority;
+        animationIndex++;
+    }
+
+    if (cloth->growthFactor) {
+        setSimpleFrame(
+            currentFrame(), GROWTH_1_SPRITE + abs(cloth->growthFactor) - 1,
+            x + TILE_WIDTH * (currentSize - 1) + 6,
+            y + 6, 0.1
+        );
+        currentFrame()->z = drawPriority;
+        animationIndex++;
+    }
+
+    #undef currentFrame
+}
+
+void prepareClothAnimation(Cloth* cloth, u32 x, u32 y) {
+    u32 maxSize = (cloth->oldSize > cloth->size)
+        ? cloth->oldSize 
+        : cloth->size
+    ;
+
+    u32 spritesNeeded = maxSize + 8;
+
+    Animation** animations = calloc(spritesNeeded, sizeof(Animation*));
+    for (u32 i = 0; i < spritesNeeded; i++) {
+        animations[i] = newAnimation();
+    }
+
+    // We will have 16 animation frames.
+    for (u32 i = 0; i < 16; i++) {
+        // TODO gradually scale up the size.
+        setClothAnimationFrames(cloth, 1, animations, i, x, y);
+    }
+
+    // Ensure all sprites start and end at the same time.
+    disable_interrupts();
+    for (u32 i = 0; i < spritesNeeded; i++) {
+        startAnimation(animations[i]);
+    }
+    enable_interrupts();
+
+}
 
 void drawCloth(Cloth* cloth, u32 x, u32 y) {
     SpriteCode spriteId;
