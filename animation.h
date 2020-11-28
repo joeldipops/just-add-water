@@ -13,8 +13,8 @@ typedef struct {
     u32 x;
     u32 y;
     u32 z;
-    u32 scaleX;
-    u32 scaleY;
+    float scaleX;
+    float scaleY;
     SpriteCode sprite;
     // How long this frame should remain visible for
     u32 remainingCycles;

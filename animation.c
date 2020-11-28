@@ -19,15 +19,18 @@ void drawAnimations() {
         Animation* animation = _queue[i];
         if (animation) {
             Frame* frame = &animation->frames[animation->currentFrameIndex];
-            if (!frame) {
-                abandonAnimation(animation);
-                continue;
+            if (frame && frame->remainingCycles) {
+                drawScaledSprite(frame->sprite, frame->x, frame->y, frame->z, frame->scaleX, frame->scaleY);
+                frame->remainingCycles--;
+                if (frame->remainingCycles == 0) {
+                    animation->currentFrameIndex++;
+                }
+            } else {
+                animation->currentFrameIndex++;
             }
 
-            drawScaledSprite(frame->sprite, frame->x, frame->y, frame->z, frame->scaleX, frame->scaleY);
-            frame->remainingCycles--;
-            if (frame->remainingCycles == 0) {
-                animation->currentFrameIndex++;
+            if (animation->currentFrameIndex >= animation->numberOfFrames) {
+                abandonAnimation(animation);
             }
         }
     }

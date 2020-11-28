@@ -43,4 +43,7 @@ void initCloths();
 bool isClothDry(Cloth* cloth);
 void drawCloth(Cloth* cloth, u32 x, u32 y);
 void updateCloth();
+
+
+void prepareClothAnimation(Cloth*, u32,u32);
 #endif
