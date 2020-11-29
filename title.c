@@ -21,6 +21,7 @@ void closeTitle() {
 static Cloth animated;
 
 void initTitle() {
+    /*
     animated.dryingState = DRYING_DAMP;
     animated.growthFactor = 1;
     animated.growthType = GROWTH_LINEAR;
@@ -28,6 +29,7 @@ void initTitle() {
     animated.size = 3;
 
     prepareClothAnimation(&animated, 24, 24);
+    */
     new_timer(TIMER_TICKS(TICKS_PER_SECOND) / 3, TF_CONTINUOUS, animateTitleScreen);
 }
 

@@ -28,10 +28,6 @@ void initLine() {
     insideLine.length = INSIDE_LINE_SIZE;
 }
 
-static void animateGrowth(Line* line) {
-    //for (u32 i = 0; i < line->length; i++) {}
-}
-
 static void drawLine(Line* line, u32 x, u32 y) {
     for (u32 i = 0; i < line->length; i++) {
         if (line->cloths[i]) {
@@ -117,6 +113,11 @@ void updateClothSize(Line* line, Weather weather) {
         if (line->cloths[i]) {
             u32 oldSize = line->cloths[i]->size;
             updateCloth(line->cloths[i], weather);
+            prepareClothAnimation(
+                line->cloths[i],
+                LINES_MARGIN_LEFT + i * TILE_WIDTH,
+                line == &outsideLine ? OUTSIDE_LINE_POSITION : INSIDE_LINE_POSITION
+            );
             i += oldSize;
         } else {
             i++;

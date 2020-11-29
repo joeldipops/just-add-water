@@ -97,7 +97,9 @@ void renderFrame() {
         case STATE_PLAY:
             drawDay();
             drawWeather();
-            drawLines();
+            if (!isWaiting()) {
+                drawLines();
+            }
             drawQueue();
             drawPlayer();
             break;

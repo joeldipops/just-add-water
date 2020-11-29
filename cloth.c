@@ -96,6 +96,7 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
         // This isn't working but I don't understand the behaviour I'm seeing at all.
         // The middle tile disappears when I want it to show, and shows offset by 16px when
         // I don't want to see it at all and it's doing my head in.
+        /*
         if (pixelLength > TILE_WIDTH * 2) {
             for (u32 i = TILE_WIDTH; i < pixelLength; i += TILE_WIDTH) {
                 u32 xPos = x + i;
@@ -108,10 +109,11 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
                 currentFrame()->z = drawPriority;
                 animationIndex++;
             }
-        }
+        }*/
     } else {
         // TODO - how to cover the progression to gilding.  Probably doing one side at a time so the gilding gradually 
         // circles the cloth.
+        // Left end
         setSimpleFrame(currentFrame(), GILDED_TOP_LEFT_SPRITE, x, y, 0.1);
         currentFrame()->z = drawPriority;
         animationIndex++;
@@ -120,32 +122,16 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
         currentFrame()->z = drawPriority;
         animationIndex++;
 
-        for (u32 i = 0; i < tilesUsed; i++) {
-            u32 xPos;
+        // Right end
+        u32 xPos = x + TILE_WIDTH * (tilesUsed - 1) + overHang;
+        setSimpleFrame(currentFrame(), GILDED_TOP_RIGHT_SPRITE, xPos, y, 0.1);
+        currentFrame()->z = drawPriority;
+        animationIndex++;
 
-            if (i + 1 == tilesUsed) {
-                xPos = x + TILE_WIDTH * i + overHang;
-                setSimpleFrame(currentFrame(), GILDED_TOP_RIGHT_SPRITE, xPos, y, 0.1);
-                currentFrame()->z = drawPriority;
-                animationIndex++;
-
-                setSimpleFrame(currentFrame(), GILDED_BOTTOM_RIGHT_SPRITE, xPos, y + TILE_WIDTH, 0.1);
-                currentFrame()->z = drawPriority;
-                animationIndex++;
-            } else {
-                xPos = x + TILE_WIDTH * i;
-                setSimpleFrame(currentFrame(), GILDED_TOP_SPRITE, xPos, y, 0.1);
-                currentFrame()->z = drawPriority;
-                animationIndex++;
-
-                setSimpleFrame(currentFrame(), GILDED_BOTTOM_SPRITE, xPos, y + TILE_WIDTH, 0.1);
-                currentFrame()->z = drawPriority;
-                animationIndex++;
-            }
-        }
+        setSimpleFrame(currentFrame(), GILDED_BOTTOM_RIGHT_SPRITE, xPos, y + TILE_WIDTH, 0.1);
+        currentFrame()->z = drawPriority;
+        animationIndex++;
     }
-
-    /*
 
     drawPriority = 2;
 
@@ -209,31 +195,33 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
         default: break;
     }
 
+    u32 xPos = x + TILE_WIDTH * (tilesUsed - 1) + overHang;
+
     if (cloth->growthFactor > 0) {
         setSimpleFrame(
             currentFrame(), BIG_DRY_SPRITE,
-            x + TILE_WIDTH * (tilesUsed - 1), y, 0.1
+            xPos, y, 0.1
         );
         currentFrame()->z = drawPriority;
         animationIndex++;
 
         setSimpleFrame(
             currentFrame(), SMALL_WET_SPRITE,
-            x + TILE_WIDTH * (tilesUsed - 1), y + TILE_WIDTH, 0.1
+            xPos, y + TILE_WIDTH, 0.1
         );
         currentFrame()->z = drawPriority;
         animationIndex++;
     } else if (cloth->growthFactor < 0) {
         setSimpleFrame(
             currentFrame(), BIG_WET_SPRITE,
-            x + TILE_WIDTH * (tilesUsed - 1), y, 0.1
+            xPos, y, 0.1
         );
         currentFrame()->z = drawPriority;
         animationIndex++;
 
         setSimpleFrame(
             currentFrame(), SMALL_DRY_SPRITE,
-            x + TILE_WIDTH * (tilesUsed - 1), y + TILE_WIDTH, 0.1
+            xPos, y + TILE_WIDTH, 0.1
         );
         currentFrame()->z = drawPriority;
         animationIndex++;
@@ -242,13 +230,12 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
     if (cloth->growthFactor) {
         setSimpleFrame(
             currentFrame(), GROWTH_1_SPRITE + abs(cloth->growthFactor) - 1,
-            x + TILE_WIDTH * (tilesUsed - 1) + 6,
+            xPos + 6,
             y + 6, 0.1
         );
         currentFrame()->z = drawPriority;
         animationIndex++;
     }
-    */
 
     #undef currentFrame
 }
