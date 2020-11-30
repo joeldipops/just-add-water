@@ -1,7 +1,7 @@
 #include "animation.h"
 #include "renderer.h"
 
-#define MAX_ANIMATIONS 64
+#define MAX_ANIMATIONS 256
 static Animation* _queue[MAX_ANIMATIONS];
 static u32 _queueIndex = 0;
 
@@ -45,7 +45,7 @@ static void addToQueue(Animation* animation) {
 
     // Thought of coming up with a robust system to allocate new indices,
     // But I'm in a hurry so lets just assume it's not gonna be a big deal if we have to wrap around.
-    if (_queueIndex >= MAX_FRAMES) {
+    if (_queueIndex >= MAX_ANIMATIONS) {
         _queueIndex = 0;
     }
 }
@@ -64,6 +64,14 @@ void abandonAnimation(Animation* animation) {
     free(animation);
     free(0);
     animation = 0;
+}
+
+void abandonAllAnimations() {
+    for (u32 i = 0; i < MAX_ANIMATIONS; i++) {
+        if (_queue[i]) {
+            abandonAnimation(_queue[i]);
+        }
+    }
 }
 
 void setSimpleFrame(Frame* frame, SpriteCode sprite, u32 x, u32 y, float seconds) {

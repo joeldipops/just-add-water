@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 void startNewDay();
+void startFirstDay();
 void cancelDayTimers();
 void drawDay();
 bool isWaiting();

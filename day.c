@@ -7,6 +7,7 @@
 #include "line.h"
 #include "clothManager.h"
 #include "renderer.h"
+#include "animation.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -61,6 +62,10 @@ void continueNewDay() {
         }
     }
 
+    // This is dodgy - of course we could have other animations going on.
+    // But this is for a jam, not a retail product, so just cancel them all.
+    abandonAllAnimations();
+
     if (secondsTimer) {
         delete_timer(secondsTimer);
     }
@@ -86,6 +91,15 @@ void startNewDay() {
     updateHangingClothSize(getCurrentWeather());
 
     _waiting = true;
+}
+
+void startFirstDay() {
+    newDayWeather();
+
+    secondsLeft = secondsPerDay;
+    secondsTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND), TF_CONTINUOUS, onSecondTick);
+
+    _waiting = false;
 }
 
 void drawDay() {

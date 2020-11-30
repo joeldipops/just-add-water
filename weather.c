@@ -24,7 +24,7 @@ const Weather WeatherDie[WEATHER_SIZE] = {
 
 static Weather nextForecast = WEATHER_SUNNY;
 //static Weather forecast;
-static Weather weather;
+static Weather _weather;
 
 static SpriteCode getWeatherSprite(Weather weather) {
     switch(weather) {
@@ -117,7 +117,7 @@ void drawWeather() {
 }
 
 Weather getCurrentWeather() {
-    return weather;
+    return _weather;
     /*
     switch (weather) {
         case WEATHER_STORM:
@@ -138,7 +138,7 @@ Weather getForecast() {
 }
 
 void newDayWeather() {
-    weather = nextForecast;
+    _weather = nextForecast;
     nextForecast = WeatherDie[rand() % WEATHER_SIZE];
 
     /*

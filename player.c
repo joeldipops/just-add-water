@@ -258,7 +258,7 @@ bool handleController(N64ControllerState* pressed, N64ControllerState* released)
                 srand(time(&ticks));
                 player.state = STATE_PLAY;
                 closeTitle();
-                startNewDay();
+                startFirstDay();
                 player.hands[HAND_HANG].cloth = dequeueCloth();
                 break;
             case STATE_PLAY:

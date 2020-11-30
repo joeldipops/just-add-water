@@ -35,5 +35,6 @@ void drawAnimations();
 Animation* newAnimation();
 void startAnimation(Animation* animation);
 void abandonAnimation(Animation* animation);
+void abandonAllAnimations();
 
 #endif

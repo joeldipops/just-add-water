@@ -5,6 +5,7 @@
 #include "config.h"
 #include "text.h"
 #include "player.h"
+#include "day.h"
 #include <stdbool.h>
 #include <string.h>
 
@@ -46,8 +47,10 @@ void drawLines() {
     drawBox(LINE_SPRITE, LINES_MARGIN_LEFT, INSIDE_LINE_POSITION, INSIDE_LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
     drawBox(ROOF_SPRITE, LINES_MARGIN_LEFT, ROOF_POSITION, OUTSIDE_LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
 
-    drawLine(&outsideLine, LINES_MARGIN_LEFT, OUTSIDE_LINE_POSITION);
-    drawLine(&insideLine, LINES_MARGIN_LEFT, INSIDE_LINE_POSITION);
+    if (!isWaiting()) {
+        drawLine(&outsideLine, LINES_MARGIN_LEFT, OUTSIDE_LINE_POSITION);
+        drawLine(&insideLine, LINES_MARGIN_LEFT, INSIDE_LINE_POSITION);
+    }
 }
 
 bool hangCloth(u32 lineId, u32 x, Cloth* cloth) {
