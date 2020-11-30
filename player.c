@@ -76,7 +76,7 @@ static void handleDrop() {
 }
 
 static void animateScore(u32 score, u32 x, u32 y) {
-    Animation* anim = newAnimation();
+    Animation* anim = newAnimation(8);
 
     x = LINES_MARGIN_LEFT + (TILE_WIDTH * x);
     y = (player.hands[HAND_TAKE].y
@@ -87,7 +87,7 @@ static void animateScore(u32 score, u32 x, u32 y) {
     for (u32 i = 0; i < 8; i++) {
         // TODO: actual sprite should be "+1" etc.
         setSimpleFrame(&anim->frames[i], PLUS_ONE_SPRITE + score - 1, x, y - i, 0.1);
-        anim->frames[i].remainingCycles = 1;
+        anim->frames[i].remainingCycles = 2;
     }
 
     startAnimation(anim);

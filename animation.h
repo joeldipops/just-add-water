@@ -32,7 +32,7 @@ void initAnimation();
 void setSimpleFrame(Frame* frame, SpriteCode sprite, u32 x, u32 y, float seconds);
 
 void drawAnimations();
-Animation* newAnimation();
+Animation* newAnimation(u32 numberOfFrames);
 void startAnimation(Animation* animation);
 void abandonAnimation(Animation* animation);
 void abandonAllAnimations();

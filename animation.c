@@ -9,8 +9,18 @@ void initAnimation() {
     memset(_queue, 0, sizeof(Animation*) * MAX_ANIMATIONS);
 }
 
-Animation* newAnimation() {
+/**
+ * Constructor.
+ * @param numberOfFrames.
+ */
+Animation* newAnimation(u32 numberOfFrames) {
     Animation* result = calloc(1, sizeof(Animation));
+    result->currentFrameIndex = 0;
+    result->numberOfFrames = numberOfFrames;
+
+    // undefined.
+    result->queueIndex = -1;
+
     return result;
 }
 

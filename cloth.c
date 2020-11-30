@@ -261,7 +261,7 @@ void prepareClothAnimation(Cloth* cloth, u32 x, u32 y) {
 
     Animation** animations = calloc(spritesNeeded, sizeof(Animation*));
     for (u32 i = 0; i < spritesNeeded; i++) {
-        animations[i] = newAnimation();
+        animations[i] = newAnimation(numberOfFrames);
         animations[i]->numberOfFrames = numberOfFrames;
     }
 
