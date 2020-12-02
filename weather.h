@@ -8,7 +8,8 @@ typedef enum { WEATHER_SUNNY, WEATHER_CLOUDY, WEATHER_RAIN, WEATHER_STORM } Weat
 void drawWeather();
 void drawWeatherGuide(u32 position);
 Weather getCurrentWeather();
-Weather getCurrentForecast();
+Weather getForecast();
 void newDayWeather();
+void prepareNewDayWeather();
 
 #endif

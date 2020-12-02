@@ -67,7 +67,7 @@ typedef enum {
     GROWTH_3_SPRITE,
     GROWTH_4_SPRITE,
 
-    reserved2,
+    GROWTH_0_SPRITE,
 
     GILDED_TOP_SPRITE,
     GILDED_LEFT_SPRITE,

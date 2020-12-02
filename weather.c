@@ -2,6 +2,8 @@
 #include "text.h"
 #include "renderer.h"
 #include "config.h"
+#include "animation.h"
+#include "math.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -22,7 +24,7 @@ const Weather WeatherDie[WEATHER_SIZE] = {
     WEATHER_SUNNY, WEATHER_SUNNY, WEATHER_SUNNY
 };
 
-static Weather nextForecast = WEATHER_SUNNY;
+static Weather _nextForecast = WEATHER_SUNNY;
 //static Weather forecast;
 static Weather _weather;
 
@@ -89,6 +91,8 @@ void drawWeatherGuide(u32 position) {
     */
 }
 
+static bool _animationQueued = false;
+
 void drawWeather() {
     Weather current = getCurrentWeather();
     drawBox(getWeatherBackground(current), LINES_MARGIN_LEFT, 0, OUTSIDE_LINE_SIZE * TILE_WIDTH, ROOF_POSITION);
@@ -109,11 +113,30 @@ void drawWeather() {
 
     // Goes over in the left-side "QUEUE" column
     drawSprite(
-        getWeatherSprite(nextForecast),
+        getWeatherSprite(_nextForecast),
         QUEUE_MARGIN_LEFT,
         QUEUE_MARGIN_TOP + TILE_WIDTH,
         0, 1
     );
+
+    if (_animationQueued) {
+        _animationQueued = false;
+
+        Animation* anim = newAnimation(8);
+        for (u32 i = 0; i < 8; i++) {
+            setSimpleFrame(
+                &anim->frames[i],
+                getWeatherSprite(_nextForecast),
+                (SCREEN_WIDTH - LINES_MARGIN_LEFT) / 2 + LINES_MARGIN_LEFT - i * 3,
+                (INSIDE_LINE_POSITION - TOP_MARGIN) / 2 + TOP_MARGIN - i * 3,
+                0.1
+            );
+            anim->frames[i].scaleX = i * 0.5;
+            anim->frames[i].scaleY = i * 0.5;
+        }
+
+        startAnimation(anim);
+    }
 }
 
 Weather getCurrentWeather() {
@@ -134,16 +157,14 @@ Weather getCurrentWeather() {
 }
 
 Weather getForecast() {
-    return nextForecast;
+    return _nextForecast;
+}
+
+void prepareNewDayWeather() {
+    _animationQueued = true;
 }
 
 void newDayWeather() {
-    _weather = nextForecast;
-    nextForecast = WeatherDie[rand() % WEATHER_SIZE];
-
-    /*
-    forecast = nextForecast;
-    nextForecast = ForecastDie[rand() % FORECAST_SIZE];
-    weather = WeatherDie[rand() % WEATHER_SIZE];
-    */
+    _weather = _nextForecast;
+    _nextForecast = WeatherDie[rand() % WEATHER_SIZE];
 }

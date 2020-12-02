@@ -40,7 +40,7 @@
 
 // Queue Frame
 #define QUEUE_MARGIN_LEFT (LEFT_MARGIN)
-#define QUEUE_MARGIN_TOP ((2 * TILE_WIDTH) + TOP_MARGIN)
+#define QUEUE_MARGIN_TOP ((2.5 * TILE_WIDTH) + TOP_MARGIN)
 
 // Lines frame
 #define LINES_MARGIN_LEFT (4 * TILE_WIDTH)

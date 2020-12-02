@@ -60,10 +60,23 @@ static void handleHang() {
     }
 
     hand->cloth = dequeueCloth();
+}
 
-    // Release this cloth but have to wait a bit to get the next one so an "animation" can play.
-    //hand->cloth = 0;
-    //clothRequestTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND) / 2, TF_ONE_SHOT, handleClothRequest);
+static void animateDropped(u32 x, u32 y) {
+    Animation* anim = newAnimation(8);
+
+    x = LINES_MARGIN_LEFT + (TILE_WIDTH * x);
+    y = (player.hands[HAND_TAKE].y
+                ? INSIDE_LINE_POSITION
+                : OUTSIDE_LINE_POSITION
+            ) + 4;
+
+    for (u32 i = 0; i < 8; i++) {
+        setSimpleFrame(&anim->frames[i], GROWTH_0_SPRITE, x, y + i, 0.1);
+        anim->frames[i].remainingCycles = 2;
+    }
+
+    startAnimation(anim);
 }
 
 static void handleDrop() {
@@ -72,6 +85,7 @@ static void handleDrop() {
         hand->cloth->isFreeable = true;
         hand->cloth = 0;
         player.dropped++;
+        animateDropped(hand->x, hand->y);
     }
 }
 
@@ -85,9 +99,8 @@ static void animateScore(u32 score, u32 x, u32 y) {
             ) + 4;
 
     for (u32 i = 0; i < 8; i++) {
-        // TODO: actual sprite should be "+1" etc.
         setSimpleFrame(&anim->frames[i], PLUS_ONE_SPRITE + score - 1, x, y - i, 0.1);
-        anim->frames[i].remainingCycles = 2;
+        anim->frames[i].remainingCycles = 1;
     }
 
     startAnimation(anim);
@@ -124,6 +137,7 @@ static void handleTake() {
         // It's dirty, we're done with it.  Mark it for cleanup.
         player.dropped++;
         taken->isFreeable = true;
+        animateDropped(hand->x, hand->y);
     }
 }
 
@@ -213,7 +227,7 @@ void drawPlayer() {
     drawText(
         "SCORE",
         LEFT_MARGIN,
-        TOP_MARGIN + SCREEN_HEIGHT - (TILE_WIDTH * 4) + 2,
+        TOP_MARGIN + SCREEN_HEIGHT - (TILE_WIDTH * 3),
         1
     );
 
@@ -222,23 +236,8 @@ void drawPlayer() {
     drawText(
         score,
         LEFT_MARGIN,
-        TOP_MARGIN + SCREEN_HEIGHT - (TILE_WIDTH * 3.5) + 2,
+        TOP_MARGIN + SCREEN_HEIGHT - (TILE_WIDTH * 2.5),
         1.1
-    );
-
-    drawText(
-        "DROPPED",
-        LEFT_MARGIN,
-        TOP_MARGIN + SCREEN_HEIGHT - (TILE_WIDTH * 2),
-        1
-    );
-
-    sprintf(score, "%lu", player.dropped);
-    drawText(
-        score,
-        LEFT_MARGIN,
-        TOP_MARGIN + SCREEN_HEIGHT - (TILE_WIDTH),
-        1
     );
 }
 

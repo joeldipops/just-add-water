@@ -59,7 +59,7 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
     SpriteCode spriteId;
 
     u32 animationIndex = 0;
-    float secsPerFrame = 0.1;
+    float secsPerFrame = 0.05;
 
 
     setSimpleFrame(currentFrame(), BASE_CLOTH_SPRITE, x, y, secsPerFrame);

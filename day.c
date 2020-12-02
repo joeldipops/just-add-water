@@ -52,6 +52,8 @@ void cancelDayTimers() {
 void continueNewDay() {
     _waiting = false;
 
+    newDayWeather();
+
     updateHangingClothPosition();
     processFinishedCloths();
 
@@ -85,10 +87,10 @@ void startNewDay() {
         delete_timer(secondsTimer);
     }
 
-    secondsTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND), TF_CONTINUOUS, continueNewDay);
+    secondsTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND / 1.5), TF_CONTINUOUS, continueNewDay);
 
-    newDayWeather();
-    updateHangingClothSize(getCurrentWeather());
+    prepareNewDayWeather();
+    updateHangingClothSize(getForecast());
 
     _waiting = true;
 }
