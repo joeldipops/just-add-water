@@ -247,9 +247,6 @@ void drawPlayer() {
  * @returns true if action was taken, false otherwise.
  */
 bool handleController(N64ControllerState* pressed, N64ControllerState* released) {
-    if (isWaiting()) {
-        return false;
-    }
     time_t ticks;
     if (released->c[0].start) {
         switch (player.state) {
@@ -284,19 +281,22 @@ bool handleController(N64ControllerState* pressed, N64ControllerState* released)
         return false;
     }
 
-    if (released->c[0].L) {
-        handleHang();
-        return true;
-    }
+    if (!isWaiting()) {
+        if (released->c[0].L) {
+            handleHang();
+            return true;
+        }
 
-    // Discard whatever you're holding in your right hand so you can pick up something else.
-    if (released->c[0].A || released->c[0].B) {
-        handleDrop();
-    }
+        // Discard whatever you're holding in your right hand so you can pick up something else.
+        if (released->c[0].A || released->c[0].B) {
+            handleDrop();
+            return true;
+        }
 
-    if (released->c[0].R) {
-        handleTake();
-        return true;
+        if (released->c[0].R) {
+            handleTake();
+            return true;
+        }
     }
 
     bool result = false;
