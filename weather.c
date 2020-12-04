@@ -131,8 +131,9 @@ void drawWeather() {
                 (INSIDE_LINE_POSITION - TOP_MARGIN) / 2 + TOP_MARGIN - i * 3,
                 0.1
             );
-            anim->frames[i].scaleX = i * 0.5;
-            anim->frames[i].scaleY = i * 0.5;
+            float scale = i * 0.5;
+            anim->frames[i].scaleX = scale ? scale : 0.25;
+            anim->frames[i].scaleY = scale ? scale : 0.25;
         }
 
         startAnimation(anim);
