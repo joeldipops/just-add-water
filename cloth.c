@@ -11,6 +11,8 @@
 #include <stdio.h>
 
 static void changeClothState(Cloth* cloth, DryingState newState) {
+    cloth->oldSize = cloth->size;
+
     // There's no coming back from dirty.
     if (cloth->dryingState == DRYING_DIRTY) {
         return;
@@ -21,8 +23,6 @@ static void changeClothState(Cloth* cloth, DryingState newState) {
     }
 
     s32 diff = newState - cloth->dryingState;
-
-    cloth->oldSize = cloth->size;
 
     switch(cloth->growthType) {
         case GROWTH_LINEAR:
@@ -266,8 +266,13 @@ void prepareClothAnimation(Cloth* cloth, u32 x, u32 y) {
     }
 
     for (u32 i = 0; i < numberOfFrames; i++) {
-        // Only assumes growth.
-        u32 pixelWidth = (cloth->oldSize * TILE_WIDTH) + ((diff / numberOfFrames) * i);
+        u32 pixelWidth;
+        if (cloth->size > cloth->oldSize) {
+            // Only assumes growth.
+            pixelWidth = (cloth->oldSize * TILE_WIDTH) + ((diff / numberOfFrames) * i);
+        } else {
+            pixelWidth = (cloth->size * TILE_WIDTH) + ((diff / numberOfFrames) * (numberOfFrames - i));
+        }
 
         setClothAnimationFrames(cloth, pixelWidth, animations, i, x, y);
     }
@@ -378,6 +383,8 @@ void updateCloth(Cloth* cloth, Weather weather) {
     switch(weather) {
         case WEATHER_STORM:
             cloth->dryingState = DRYING_DIRTY;
+            // Stop the animation bouncing around.
+            cloth->oldSize = cloth->size;
             return;
         case WEATHER_RAIN:
             changeClothState(cloth, DRYING_DRENCHED);
