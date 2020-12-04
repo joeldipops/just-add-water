@@ -246,12 +246,10 @@ void drawPlayer() {
  * @returns true if action was taken, false otherwise.
  */
 bool handleController(N64ControllerState* pressed, N64ControllerState* released) {
-    time_t ticks;
     if (released->c[0].start) {
         switch (player.state) {
             case STATE_TITLE:
-                ticks = timer_ticks();
-                srand(time(&ticks));
+                srand(timer_ticks());
                 player.state = STATE_PLAY;
                 closeTitle();
                 startFirstDay();

@@ -8,17 +8,17 @@
 #include <string.h>
 
 
-static Cloth** masterClothList;
-static u32 clothListLength;
-static Cloth* clothQueue[CLOTH_QUEUE_SIZE];
-static u32 queueIndex = 0;
+static Cloth** _masterClothList;
+static u32 _clothListLength;
+static Cloth* _clothQueue[CLOTH_QUEUE_SIZE];
+static u32 _queueIndex = 0;
 
 // Can be extended if necessary.
 static u32 clothListMaxLength = 32;
 
 void initClothManager() {
-    masterClothList = calloc(sizeof(Cloth*), clothListMaxLength);
-    clothListLength = 0;
+    _masterClothList = calloc(sizeof(Cloth*), clothListMaxLength);
+    _clothListLength = 0;
     for (u32 i = 0; i < INIT_TURN_CLOTHS; i++) {
         enqueueCloth();
     }
@@ -30,7 +30,7 @@ void drawQueue() {
 
     y += TILE_WIDTH ;
     // Draw the full details of the next cloth
-    Cloth* next = clothQueue[0];
+    Cloth* next = _clothQueue[0];
     if (next) {
         drawCloth(next, QUEUE_MARGIN_LEFT + TILE_WIDTH + 2, y);
     }
@@ -60,7 +60,7 @@ void drawQueue() {
     y -= TILE_WIDTH / 4;
 
     SpriteCode spriteId = QUEUED_GREEN_SPRITE;
-    for (u32 i = 0; i < queueIndex; i++) {
+    for (u32 i = 0; i < _queueIndex; i++) {
         if (i == CLOTH_QUEUE_SIZE / 6 * 5) {
             spriteId = QUEUED_RED_SPRITE;;
         } else if (i == CLOTH_QUEUE_SIZE / 2) {
@@ -76,7 +76,7 @@ void drawQueue() {
  * Return the cloth at the head of the queue and shuffle the rest along.
  */
 Cloth* dequeueCloth() {
-    Cloth* result = clothQueue[0];
+    Cloth* result = _clothQueue[0];
 
     // The queue is empty.
     if (!result) {
@@ -84,12 +84,12 @@ Cloth* dequeueCloth() {
     }
 
     for (u32 i = 0; i < CLOTH_QUEUE_SIZE - 1; i++) {
-        clothQueue[i] = clothQueue[i+1];
+        _clothQueue[i] = _clothQueue[i+1];
     }
 
-    clothQueue[CLOTH_QUEUE_SIZE - 1] = 0;
+    _clothQueue[CLOTH_QUEUE_SIZE - 1] = 0;
 
-    queueIndex--;
+    _queueIndex--;
 
     return result;
 }
@@ -162,7 +162,7 @@ static void initNewCloth(Cloth* cloth) {
  * @return true if successful, false if the queue has overflowed.
  */
 bool enqueueCloth() {
-    if (queueIndex > CLOTH_QUEUE_SIZE) {
+    if (_queueIndex > CLOTH_QUEUE_SIZE) {
         return false;
     }
 
@@ -170,21 +170,21 @@ bool enqueueCloth() {
 
     initNewCloth(newCloth);
 
-    masterClothList[clothListLength] = newCloth;
+    _masterClothList[_clothListLength] = newCloth;
 
-    clothListLength++;
-    if (clothListLength >= clothListMaxLength) {
+    _clothListLength++;
+    if (_clothListLength >= clothListMaxLength) {
         u32 newMaxLength = clothListMaxLength * 2;
-        Cloth** temp = masterClothList;
-        masterClothList = calloc(sizeof(Cloth*), newMaxLength);
-        memcpy(masterClothList, temp, clothListMaxLength * sizeof(Cloth*));
+        Cloth** temp = _masterClothList;
+        _masterClothList = calloc(sizeof(Cloth*), newMaxLength);
+        memcpy(_masterClothList, temp, clothListMaxLength * sizeof(Cloth*));
         clothListMaxLength = newMaxLength;
 
         free(temp);
     }
 
-    clothQueue[queueIndex] = newCloth;
-    queueIndex++;
+    _clothQueue[_queueIndex] = newCloth;
+    _queueIndex++;
 
     return true;
 }
@@ -194,14 +194,14 @@ bool enqueueCloth() {
  */
 void removeFinishedCloths(u32 startIndex) {
     bool freedFound = false;
-    for (u32 i = startIndex; i < clothListLength; i++) {
-        if (!masterClothList[i]) {
+    for (u32 i = startIndex; i < _clothListLength; i++) {
+        if (!_masterClothList[i]) {
             removeFinishedCloths(i + 1);
             freedFound = true;
         }
 
         if (freedFound) {
-            masterClothList[i] = masterClothList[i + 1];
+            _masterClothList[i] = _masterClothList[i + 1];
         }
     }
 }
@@ -212,16 +212,16 @@ void removeFinishedCloths(u32 startIndex) {
 void processFinishedCloths() {
     u32 removedCloths = 0;
 
-    for(u32 i = 0; i < clothListLength; i++) {
-        if (masterClothList[i]->isFreeable) {
+    for(u32 i = 0; i < _clothListLength; i++) {
+        if (_masterClothList[i] && _masterClothList[i]->isFreeable) {
             // Do some fiddling with scores or something.
-            free(masterClothList[i]);
-            masterClothList[i] = 0;
+            free(_masterClothList[i]);
+            _masterClothList[i] = 0;
             removedCloths++;
         }
     }
 
-    clothListLength = clothListLength - removedCloths;
+    _clothListLength = _clothListLength - removedCloths;
 
     removeFinishedCloths(0);
 }
