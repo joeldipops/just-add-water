@@ -81,12 +81,19 @@ static void animateDropped(u32 x, u32 y) {
 
 static void handleDrop() {
     Hand* hand = &player.hands[HAND_TAKE];
-    if (hand->cloth) {
-        hand->cloth->isFreeable = true;
-        hand->cloth = 0;
-        player.dropped++;
-        animateDropped(hand->x, hand->y);
+    // If hand is empty, first grab whatever cloth we're sitting on.
+    if (!hand->cloth) {
+        hand->cloth = takeCloth(hand->y, hand->x);
     }
+    // If nothing to drop, we're done.
+    if (!hand->cloth) {
+        return;
+    }
+
+    hand->cloth->isFreeable = true;
+    hand->cloth = 0;
+    player.dropped++;
+    animateDropped(hand->x, hand->y);
 }
 
 static void animateScore(u32 score, u32 x, u32 y) {

@@ -254,12 +254,13 @@ void prepareClothAnimation(Cloth* cloth, u32 x, u32 y) {
     }
     float diff = (maxSize - minSize) * TILE_WIDTH;
 
-    u32 spritesNeeded = 16;//maxSize + 8;
+    // Some arbitrary number, we should actually calculate this from the cloth properties...
+    u32 spritesNeeded = 16;
 
     // We will have 16 animation frames.
     const float numberOfFrames = 16;
 
-    Animation** animations = calloc(spritesNeeded, sizeof(Animation*));
+    Animation* animations[spritesNeeded];
     for (u32 i = 0; i < spritesNeeded; i++) {
         animations[i] = newAnimation(numberOfFrames);
         animations[i]->numberOfFrames = numberOfFrames;
