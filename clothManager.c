@@ -190,20 +190,20 @@ bool enqueueCloth() {
 }
 
 /**
- * Recursively shifts cleaned up cloths out of existence.
+ * Shifts cleaned up cloths out of existence.
  */
-void removeFinishedCloths(u32 startIndex) {
-    bool freedFound = false;
-    for (u32 i = startIndex; i < _clothListLength; i++) {
-        if (!_masterClothList[i]) {
-            removeFinishedCloths(i + 1);
-            freedFound = true;
-        }
+void removeFinishedCloths(u32 oldLength) {
+    Cloth* temp[_clothListLength];
+    u32 tempIndex = 0;
 
-        if (freedFound) {
-            _masterClothList[i] = _masterClothList[i + 1];
+    for (u32 i = 0; i < oldLength; i++) {
+        if (_masterClothList[i]) {
+            temp[tempIndex] = _masterClothList[i];
+            tempIndex++;
         }
     }
+
+    memcpy(_masterClothList, temp, sizeof(Cloth*) * _clothListLength);
 }
 
 /**
@@ -221,8 +221,10 @@ void processFinishedCloths() {
         }
     }
 
+    u32 oldLength = _clothListLength;
+
     _clothListLength = _clothListLength - removedCloths;
 
-    removeFinishedCloths(0);
+    removeFinishedCloths(oldLength);
 }
 

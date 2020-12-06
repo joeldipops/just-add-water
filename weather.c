@@ -167,5 +167,5 @@ void prepareNewDayWeather() {
 
 void newDayWeather() {
     _weather = _nextForecast;
-    _nextForecast = WeatherDie[rand() % WEATHER_SIZE];
+    _nextForecast = WEATHER_STORM;//WeatherDie[rand() % WEATHER_SIZE];
 }
