@@ -7,6 +7,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "text.h"
+
+static u32 _clothsPerDay = 3;
 
 static Cloth** _masterClothList;
 static u32 _clothListLength;
@@ -14,7 +17,7 @@ static Cloth* _clothQueue[CLOTH_QUEUE_SIZE];
 static u32 _queueIndex = 0;
 
 // Can be extended if necessary.
-static u32 clothListMaxLength = 32;
+static u32 clothListMaxLength = 1024;
 
 void initClothManager() {
     _masterClothList = calloc(sizeof(Cloth*), clothListMaxLength);
@@ -95,48 +98,83 @@ Cloth* dequeueCloth() {
 }
 
 #define DRYING_SIZE 6
-const DryingState DryingDie[DRYING_SIZE] = {
-    DRYING_SPUN, DRYING_SPUN, DRYING_SPUN, DRYING_SPUN, DRYING_SPUN,
-    DRYING_DRENCHED
+// Initially simple, will increase in complexity as turnCount increases.
+DryingState DryingDie[DRYING_SIZE] = {
+    DRYING_SPUN, DRYING_SPUN, DRYING_SPUN, DRYING_SPUN, DRYING_SPUN, DRYING_SPUN
 };
 
 #define SIZE_SIZE 8
-const u32 SizeDie[SIZE_SIZE] = {
-    2, 2, 2, 2,
-    3, 3, 3,
-    4
-};
+u32 SizeDie[SIZE_SIZE] = { 1, 1, 1, 1, 1, 1, 1, 1 };
 
 
 #define GROWTH_TYPE_SIZE 4
 // No growth quadratic until I can be arsed sorting out the algorithm for it.
-const u32 GrowthTypeDie[GROWTH_TYPE_SIZE]= {
-    GROWTH_NONE,
-    GROWTH_LINEAR, GROWTH_LINEAR, GROWTH_LINEAR
+u32 GrowthTypeDie[GROWTH_TYPE_SIZE]= { 
+    GROWTH_LINEAR, GROWTH_LINEAR, GROWTH_LINEAR, GROWTH_LINEAR
 };
 
 #define FACTOR_SIZE 8
-const s32 LinearFactorDie[FACTOR_SIZE] = {
-    -2,
-    -1,
-    +1, +1, +1,
-    +2, +2,
-    +3
-};
+s32 LinearFactorDie[FACTOR_SIZE] = { 0, 0, 0, 0, 0, 0 };
 
 const s32 QuadraticFactorDie[FACTOR_SIZE] = {
     -2, -2,
     +2, +2, +2, +2
 };
 
+/**
+ * Should be called every turn as we update the dice.
+ *
+ * Turn 1 Basic placement
+ * 
+ * Turn 2, 3 Teach growth
+ * 
+ * Turn 4, 5 Start mixing things up
+ *
+ * Turn 6 First size increase (just two instead of three cloths this turn)
+ * 
+ * Turn 7, 8, 9 Continue mixing things up
+ * 
+ * Turn 10 A big mother with full dampness (just one)
+ * 
+ * Turn 11 - 15 Things mixed up but with the possibility of a big mother every now and then
+ * 
+ * Turn 16 - introduce reverse growth
+ * 
+ * Turn 17 - 20 mix up with reverse growth a possibility.
+ * 
+ * Turn 21 - Cloth with Double growth rate
+ * 
+ * Turn 25 - increase cloths per turn
+ * 
+ * Turn 30 - Triple growth rate
+ * 
+ * Every 5 turns onwards - increase cloths per turn until it's half the max each turn.
+ */
+void increaseComplexity(u32 turnCount) {
+    if (turnCount == 2) {
+        LinearFactorDie[0] = 1;
+        LinearFactorDie[1] = 1;
+        LinearFactorDie[2] = 1;
+        LinearFactorDie[3] = 1;
+        LinearFactorDie[4] = 1;
+        LinearFactorDie[5] = 1;
+        LinearFactorDie[6] = 1;
+        LinearFactorDie[7] = 1;
+    } else if (turnCount == 3) {
+
+    } 
+}
+
 
 static void initNewCloth(Cloth* cloth) {
 #ifdef RANDOMISE_CLOTHS
+
     cloth->dryingState = DryingDie[rand() % DRYING_SIZE];
 
     // Will be randomised - increasing in complexity as time goes on.
     cloth->growthType = GrowthTypeDie[rand() % GROWTH_TYPE_SIZE];
     cloth->size = SizeDie[rand() % SIZE_SIZE];
+    cloth->initialSize = cloth->size;
 
     switch(cloth->growthType) {
         case GROWTH_LINEAR:
@@ -157,6 +195,24 @@ static void initNewCloth(Cloth* cloth) {
 #endif
 }
 
+bool enqueueClothsPerDay() {
+    if (_queueIndex + _clothsPerDay > CLOTH_QUEUE_SIZE) {
+        return false;
+    }
+
+    for (u32 i = 0; i < _clothsPerDay; i++) {
+        Cloth* newCloth = calloc(sizeof(Cloth), 1);
+        initNewCloth(newCloth);
+        _masterClothList[_clothListLength] = newCloth;
+        _clothListLength++;
+
+        _clothQueue[_queueIndex] = newCloth;
+        _queueIndex++;
+    }
+
+    return true;
+}
+
 /**
  * Create a new cloth and add it to the upcoming queue
  * @return true if successful, false if the queue has overflowed.
@@ -173,6 +229,7 @@ bool enqueueCloth() {
     _masterClothList[_clothListLength] = newCloth;
 
     _clothListLength++;
+    // Maybe is reason for crash?  Have blown it out to a very large number so this code can hopefully be ignored.
     if (_clothListLength >= clothListMaxLength) {
         u32 newMaxLength = clothListMaxLength * 2;
         Cloth** temp = _masterClothList;
@@ -223,7 +280,12 @@ void processFinishedCloths() {
 
     u32 oldLength = _clothListLength;
 
-    _clothListLength = _clothListLength - removedCloths;
+    // Shouldn't happen, but maybe is why things crash?
+    if (removedCloths < _clothListLength) {
+        _clothListLength = _clothListLength - removedCloths;
+    } else {
+        _clothListLength = 0;
+    }
 
     removeFinishedCloths(oldLength);
 }

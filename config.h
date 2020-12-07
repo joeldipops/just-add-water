@@ -14,8 +14,8 @@
 // Cos we need to fit a '+' and a '1'
 #define MIN_CLOTH_SIZE 2
 
-#define OUTSIDE_LINE_SIZE 16
-#define INSIDE_LINE_SIZE 16
+#define OUTSIDE_LINE_SIZE 15
+#define INSIDE_LINE_SIZE 15
 
 #define RESOLUTION RESOLUTION_320x240
 //#define RESOLUTION RESOLUTION_640x576
@@ -53,7 +53,7 @@
 
 #define COLOUR_DEPTH DEPTH_16_BPP
 
-//#define RANDOMISE_CLOTHS 1
+#define RANDOMISE_CLOTHS 1
 //#define SHOW_FRAME_COUNT 1
 
 #define HELD_OFFSET (TILE_WIDTH * 2 + 5)

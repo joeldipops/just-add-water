@@ -37,9 +37,13 @@ typedef struct {
     GrowthType growthType;
     // can be negative
     s32 growthFactor;
+
+    u32 initialSize;
+    DryingState initialDryingState;
 } Cloth;
 
 void initCloths();
+u32 calculateScore(Cloth* cloth);
 bool isClothDry(Cloth* cloth);
 void drawCloth(Cloth* cloth, u32 x, u32 y);
 void updateCloth();

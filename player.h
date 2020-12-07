@@ -21,8 +21,6 @@ typedef struct {
 
     State state;
 
-    Cloth* clothToHang;
-
     u32 score;
     u32 dropped;
 } Player;

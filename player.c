@@ -133,10 +133,11 @@ static void handleTake() {
 
     if (isClothDry(taken)) {
         // If it's dry, chuck it in the basket.
-        player.score += taken->size;
+        u32 clothScore = calculateScore(taken);
+        player.score += clothScore;
         taken->isFreeable = true;
 
-        animateScore(taken->size, hand->x, hand->y);
+        animateScore(clothScore, hand->x, hand->y);
     } else if (taken->dryingState != DRYING_DIRTY) {
         // If it's not, take it to be hung somewhere else.
         hand->cloth = taken;

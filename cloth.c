@@ -376,6 +376,27 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
     }
 }
 
+u32 calculateScore(Cloth* cloth) {
+    u32 result = cloth->size;
+
+    // A multipliable bonus if your cloth started of bigger than normal.
+    result += cloth->initialSize - 1;
+
+    // Higher than normal growth factors get lots of points.
+    if (cloth->growthFactor > 1) {
+        result *= cloth->growthFactor;
+    }
+
+    // A non-multipliable bonus for a higher than normal initial drying state.
+    if (cloth->initialDryingState == DRYING_DRENCHED) {
+        result += 2;
+    }
+
+    // Easier than baseline cloths don't have any specific negative
+
+    return result;
+}
+
 bool isClothDry(Cloth* cloth) {
     return cloth->dryingState <= DRYING_DRY;
 }

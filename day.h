@@ -2,6 +2,7 @@
 #define DAY_INCLUDED
 
 #include <stdbool.h>
+#include "core.h"
 
 void startNewDay();
 void startFirstDay();

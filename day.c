@@ -15,9 +15,10 @@
 
 static u32 secondsLeft = 0;
 timer_link_t* secondsTimer = 0;
+u32 _turnCount = 1;
+
 
 static u32 secondsPerDay = INIT_TURN_SECONDS;
-static u32 clothsPerDay = INIT_TURN_CLOTHS;
 
 void initDay() {
 
@@ -51,17 +52,18 @@ void cancelDayTimers() {
  */
 void continueNewDay() {
     _waiting = false;
+    _turnCount++;
+
 
     newDayWeather();
 
     updateHangingClothPosition();
     processFinishedCloths();
 
-    for (u32 i = 0; i < clothsPerDay; i++) {
-        if (!enqueueCloth()) {
-            gameOver();
-            return;
-        }
+    increaseComplexity(_turnCount);
+    if (!enqueueClothsPerDay()) {
+        gameOver();
+        return;
     }
 
     // This is dodgy - of course we could have other animations going on.
