@@ -151,18 +151,255 @@ const s32 QuadraticFactorDie[FACTOR_SIZE] = {
  * Every 5 turns onwards - increase cloths per turn until it's half the max each turn.
  */
 void increaseComplexity(u32 turnCount) {
-    if (turnCount == 2) {
-        LinearFactorDie[0] = 1;
-        LinearFactorDie[1] = 1;
-        LinearFactorDie[2] = 1;
-        LinearFactorDie[3] = 1;
-        LinearFactorDie[4] = 1;
-        LinearFactorDie[5] = 1;
-        LinearFactorDie[6] = 1;
-        LinearFactorDie[7] = 1;
-    } else if (turnCount == 3) {
+    switch (turnCount) {
+        // Turn 2, 3 Teach growth
+        case 2:
+            LinearFactorDie[0] = 1;
+            LinearFactorDie[1] = 1;
+            LinearFactorDie[2] = 1;
+            LinearFactorDie[3] = 1;
+            LinearFactorDie[4] = 1;
+            LinearFactorDie[5] = 1;
+            LinearFactorDie[6] = 1;
+            LinearFactorDie[7] = 1;
+            break;
+        // Turn 4, 5 Start mixing things up
+        case 4:
+            LinearFactorDie[0] = 0;
+            LinearFactorDie[1] = 0;
+            LinearFactorDie[2] = 0;
+            LinearFactorDie[3] = 0;
+            break;
+        // Turn 6 First size increase (just two instead of three cloths this turn)
+        case 6:
+            _clothsPerDay = 2;
 
-    } 
+            SizeDie[0] = 2;
+            SizeDie[1] = 2;
+            SizeDie[2] = 2;
+            SizeDie[3] = 2;
+            SizeDie[4] = 2;
+            SizeDie[5] = 2;
+            SizeDie[6] = 2;
+            SizeDie[7] = 2;
+
+            LinearFactorDie[0] = 1;
+            LinearFactorDie[1] = 1;
+            LinearFactorDie[2] = 1;
+            LinearFactorDie[3] = 1;
+            break;
+        // Turn 7, 8, 9 Continue mixing things up
+        case 7:
+            _clothsPerDay = 3;
+
+            SizeDie[0] = 1;
+            SizeDie[1] = 1;
+            SizeDie[2] = 1;
+            SizeDie[3] = 1;
+            SizeDie[4] = 1;
+            SizeDie[5] = 1;
+            SizeDie[6] = 2;
+            SizeDie[7] = 2;
+
+            LinearFactorDie[0] = 0;
+            LinearFactorDie[1] = 0;
+            LinearFactorDie[2] = 0;
+            LinearFactorDie[3] = 0;
+            break;
+        // Turn 10 A big mother with full dampness (just one)
+        case 10:
+            _clothsPerDay = 1;
+
+            SizeDie[0] = 3;
+            SizeDie[1] = 3;
+            SizeDie[2] = 3;
+            SizeDie[3] = 3;
+            SizeDie[4] = 3;
+            SizeDie[5] = 3;
+            SizeDie[6] = 3;
+            SizeDie[7] = 3;
+
+            LinearFactorDie[0] = 1;
+            LinearFactorDie[1] = 1;
+            LinearFactorDie[2] = 1;
+            LinearFactorDie[3] = 1;
+
+            DryingDie[0] = DRYING_DRENCHED;
+            DryingDie[1] = DRYING_DRENCHED;
+            DryingDie[2] = DRYING_DRENCHED;
+            DryingDie[3] = DRYING_DRENCHED;
+            DryingDie[4] = DRYING_DRENCHED;
+            DryingDie[5] = DRYING_DRENCHED;
+            break;
+        // Turn 11 - 15 Things mixed up but with the possibility of a big mother every now and then
+        case 11:
+            _clothsPerDay = 3;
+            SizeDie[0] = 1;
+            SizeDie[1] = 1;
+            SizeDie[2] = 1;
+            SizeDie[3] = 1;
+            SizeDie[4] = 1;
+            SizeDie[5] = 1;
+            SizeDie[6] = 2;
+            SizeDie[7] = 3;
+
+            LinearFactorDie[0] = 0;
+            LinearFactorDie[1] = 0;
+            LinearFactorDie[2] = 0;
+            LinearFactorDie[3] = 0;
+
+            DryingDie[0] = DRYING_DAMP;
+            DryingDie[1] = DRYING_MOIST;
+            DryingDie[2] = DRYING_SPUN;
+            DryingDie[3] = DRYING_SPUN;
+            DryingDie[4] = DRYING_SPUN;
+            DryingDie[5] = DRYING_DRENCHED;
+            break;
+        // Turn 16 - introduce reverse growth
+        case 16:
+            LinearFactorDie[0] = -1;
+            LinearFactorDie[1] = -1;
+            LinearFactorDie[2] = -1;
+            LinearFactorDie[3] = -1;
+            LinearFactorDie[4] = -1;
+            LinearFactorDie[5] = -1;
+            LinearFactorDie[6] = -1;
+            LinearFactorDie[7] = -1;
+
+
+            SizeDie[0] = 2;
+            SizeDie[1] = 2;
+            SizeDie[2] = 2;
+            SizeDie[3] = 2;
+            SizeDie[4] = 2;
+            SizeDie[5] = 2;
+            SizeDie[6] = 3;
+            SizeDie[7] = 3;
+            break;
+        // Turn 17 - 20 mix up with reverse growth a possibility.
+        case 17:
+            _clothsPerDay = 3;
+            SizeDie[0] = 1;
+            SizeDie[1] = 1;
+            SizeDie[2] = 1;
+            SizeDie[3] = 1;
+            SizeDie[4] = 1;
+            SizeDie[5] = 1;
+            SizeDie[6] = 2;
+            SizeDie[7] = 3;
+
+            LinearFactorDie[0] = 0;
+            LinearFactorDie[1] = 0;
+            LinearFactorDie[2] = 1;
+            LinearFactorDie[3] = 1;
+            LinearFactorDie[4] = 1;
+            LinearFactorDie[5] = 1;
+            LinearFactorDie[6] = -1;
+            LinearFactorDie[7] = -1;
+
+
+            DryingDie[0] = DRYING_DAMP;
+            DryingDie[1] = DRYING_MOIST;
+            DryingDie[2] = DRYING_SPUN;
+            DryingDie[3] = DRYING_SPUN;
+            DryingDie[4] = DRYING_SPUN;
+            DryingDie[5] = DRYING_DRENCHED;
+            break;
+        // Turn 21 - Cloth with Double growth rate
+        case 21:
+            _clothsPerDay = 2;
+            LinearFactorDie[0] = 2;
+            LinearFactorDie[1] = 2;
+            LinearFactorDie[2] = 2;
+            LinearFactorDie[3] = 2;
+            LinearFactorDie[4] = 2;
+            LinearFactorDie[5] = 2;
+            LinearFactorDie[6] = 2;
+            LinearFactorDie[7] = 2;
+
+
+            SizeDie[0] = 1;
+            SizeDie[1] = 1;
+            SizeDie[2] = 1;
+            SizeDie[3] = 1;
+            SizeDie[4] = 1;
+            SizeDie[5] = 1;
+            SizeDie[6] = 1;
+            SizeDie[7] = 1;
+            break;
+        case 22:
+            _clothsPerDay = 3;
+            SizeDie[0] = 1;
+            SizeDie[1] = 1;
+            SizeDie[2] = 1;
+            SizeDie[3] = 1;
+            SizeDie[4] = 1;
+            SizeDie[5] = 1;
+            SizeDie[6] = 2;
+            SizeDie[7] = 3;
+
+            LinearFactorDie[0] = 2;
+            LinearFactorDie[1] = 0;
+            LinearFactorDie[2] = 1;
+            LinearFactorDie[3] = 1;
+            LinearFactorDie[4] = 1;
+            LinearFactorDie[5] = 1;
+            LinearFactorDie[6] = -1;
+            LinearFactorDie[7] = -1;
+
+            break;
+        // A little breather here.
+        case 25:
+            _clothsPerDay = 2;
+            break;
+        // Turn 30 - Triple growth rate
+        case 30:
+            _clothsPerDay = 1;
+            LinearFactorDie[0] = 3;
+            LinearFactorDie[1] = 3;
+            LinearFactorDie[2] = 3;
+            LinearFactorDie[3] = 3;
+            LinearFactorDie[4] = 3;
+            LinearFactorDie[5] = 3;
+            LinearFactorDie[6] = 3;
+            LinearFactorDie[7] = 3;
+
+
+            SizeDie[0] = 1;
+            SizeDie[1] = 1;
+            SizeDie[2] = 1;
+            SizeDie[3] = 1;
+            SizeDie[4] = 1;
+            SizeDie[5] = 1;
+            SizeDie[6] = 1;
+            SizeDie[7] = 1;
+            break;
+        case 31:
+            SizeDie[0] = 1;
+            SizeDie[1] = 1;
+            SizeDie[2] = 1;
+            SizeDie[3] = 1;
+            SizeDie[4] = 1;
+            SizeDie[5] = 1;
+            SizeDie[6] = 2;
+            SizeDie[7] = 3;
+
+            LinearFactorDie[0] = -1;
+            LinearFactorDie[1] = -1;
+            LinearFactorDie[2] = 0;
+            LinearFactorDie[3] = 1;
+            LinearFactorDie[4] = 1;
+            LinearFactorDie[5] = 1;
+            LinearFactorDie[6] = 2;
+            LinearFactorDie[7] = 3;
+            break;
+        default:
+            if (turnCount > 31 && !(turnCount % 5) && _clothsPerDay < (CLOTH_QUEUE_SIZE - 1)) {
+                _clothsPerDay++;
+            }
+            // Just continue with whatever the last setting was.
+            break;
+    }
 }
 
 
