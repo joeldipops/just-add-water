@@ -113,6 +113,7 @@ Cloth* takeCloth(u32 lineId, u32 x) {
 
 
 static void dropCloth(Line* line, Cloth* cloth) {
+    // Animate the cloth falling off the line.
     const u32 animsNeeded = 16;
     const u32 numberOfFrames = 16;
     Animation* animations[animsNeeded];
@@ -131,6 +132,7 @@ static void dropCloth(Line* line, Cloth* cloth) {
         startAnimation(animations[i]);
     }
 
+    // Mark the cloth as dropped.
     cloth->isFreeable = true;
     getPlayer()->dropped++;
 }
