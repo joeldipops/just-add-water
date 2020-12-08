@@ -403,15 +403,13 @@ void increaseComplexity(u32 turnCount) {
 }
 
 
-static void initNewCloth(Cloth* cloth) {
+static void randomiseCloth(Cloth* cloth) {
 #ifdef RANDOMISE_CLOTHS
 
     cloth->dryingState = DryingDie[rand() % DRYING_SIZE];
 
     // Will be randomised - increasing in complexity as time goes on.
     cloth->growthType = GrowthTypeDie[rand() % GROWTH_TYPE_SIZE];
-    cloth->size = SizeDie[rand() % SIZE_SIZE];
-    cloth->initialSize = cloth->size;
 
     switch(cloth->growthType) {
         case GROWTH_LINEAR:
@@ -438,12 +436,12 @@ bool enqueueClothsPerDay() {
     }
 
     for (u32 i = 0; i < _clothsPerDay; i++) {
-        Cloth* newCloth = calloc(sizeof(Cloth), 1);
-        initNewCloth(newCloth);
-        _masterClothList[_clothListLength] = newCloth;
+        Cloth* cloth = newCloth(SizeDie[rand() % SIZE_SIZE]);
+        randomiseCloth(cloth);
+        _masterClothList[_clothListLength] = cloth;
         _clothListLength++;
 
-        _clothQueue[_queueIndex] = newCloth;
+        _clothQueue[_queueIndex] = cloth;
         _queueIndex++;
     }
 
@@ -459,11 +457,10 @@ bool enqueueCloth() {
         return false;
     }
 
-    Cloth* newCloth = calloc(sizeof(Cloth), 1);
+    Cloth* cloth = newCloth(SizeDie[rand() % SIZE_SIZE]);
+    randomiseCloth(cloth);
 
-    initNewCloth(newCloth);
-
-    _masterClothList[_clothListLength] = newCloth;
+    _masterClothList[_clothListLength] = cloth;
 
     _clothListLength++;
     // Maybe is reason for crash?  Have blown it out to a very large number so this code can hopefully be ignored.
@@ -477,7 +474,7 @@ bool enqueueCloth() {
         free(temp);
     }
 
-    _clothQueue[_queueIndex] = newCloth;
+    _clothQueue[_queueIndex] = cloth;
     _queueIndex++;
 
     return true;

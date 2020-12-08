@@ -81,12 +81,20 @@ static Cloth* takeClothFromLine(Line* line, u32 x) {
     if (line->cloths[x]) {
         Cloth* result = line->cloths[x];
 
+        u32 firstTile = 0;
+
         // Remove from the line.
         for (u32 i = 0; i < line->length; i++) {
             if (line->cloths[i] == result) {
+                if (!firstTile) {
+                    firstTile = i;
+                }
+                
                 line->cloths[i] = 0;
             }
         }
+
+        result->grabPoint = x - firstTile;
 
         return result;
     } else {

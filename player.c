@@ -118,7 +118,7 @@ static void handleTake() {
 
     // If we're already holding something, put it back on the line.
     if (hand->cloth) {
-        if (hangCloth(hand->y, hand->x, hand->cloth)) {
+        if (hangCloth(hand->y, hand->x - hand->cloth->grabPoint, hand->cloth)) {
             hand->cloth = 0;
         }
         return;
@@ -202,7 +202,7 @@ void drawPlayer() {
     if (player.hands[HAND_TAKE].cloth) {
         drawCloth(
             player.hands[HAND_TAKE].cloth,
-            LINES_MARGIN_LEFT + (TILE_WIDTH * player.hands[HAND_TAKE].x),
+            LINES_MARGIN_LEFT + (TILE_WIDTH * (player.hands[HAND_TAKE].x - player.hands[HAND_TAKE].cloth->grabPoint)),
             (player.hands[HAND_TAKE].y
                 ? INSIDE_LINE_POSITION
                 : OUTSIDE_LINE_POSITION

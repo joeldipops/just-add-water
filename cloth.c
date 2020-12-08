@@ -419,3 +419,12 @@ void updateCloth(Cloth* cloth, Weather weather) {
             break;
     }
 }
+
+Cloth* newCloth(u32 size) {
+    Cloth* result = calloc(sizeof(Cloth), 1);    
+    result->grabPoint = 0;
+    result->size = size;
+    result->initialSize = size;
+    result->oldSize = size;
+    return result;
+}
