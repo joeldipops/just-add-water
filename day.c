@@ -68,7 +68,7 @@ void continueNewDay() {
 
     // This is dodgy - of course we could have other animations going on.
     // But this is for a jam, not a retail product, so just cancel them all.
-    abandonAllAnimations();
+    //abandonAllAnimations();
 
     if (secondsTimer) {
         delete_timer(secondsTimer);

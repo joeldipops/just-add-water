@@ -2,6 +2,7 @@
 #define CLOTH_INCLUDED
 
 #include "core.h"
+#include "animation.h"
 #include <libdragon.h>
 
 
@@ -48,6 +49,7 @@ bool isClothDry(Cloth* cloth);
 void drawCloth(Cloth* cloth, u32 x, u32 y);
 void updateCloth();
 
+void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animations, u32 frameIndex, u32 x, u32 y);
 
 void prepareClothAnimation(Cloth*, u32,u32);
 #endif

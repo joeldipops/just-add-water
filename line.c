@@ -6,6 +6,7 @@
 #include "text.h"
 #include "player.h"
 #include "day.h"
+#include "animation.h"
 #include <stdbool.h>
 #include <string.h>
 
@@ -102,7 +103,26 @@ Cloth* takeCloth(u32 lineId, u32 x) {
     }
 }
 
-static void dropCloth(Cloth* cloth) {
+
+static void dropCloth(Line* line, Cloth* cloth) {
+    const u32 animsNeeded = 16;
+    const u32 numberOfFrames = 16;
+    Animation* animations[animsNeeded];
+    for (u32 i = 0; i < numberOfFrames; i++) {
+        animations[i] = newAnimation(numberOfFrames);
+    }
+
+    u32 y = (line == &outsideLine) ? OUTSIDE_LINE_POSITION : INSIDE_LINE_POSITION;
+    const u32 x = LINES_MARGIN_LEFT + ((INSIDE_LINE_SIZE - cloth->size) * TILE_WIDTH);
+
+    for (u32 i = 0; i < numberOfFrames; i++) {
+        setClothAnimationFrames(cloth, cloth->size * TILE_WIDTH, animations, i, x + (i % 2), y + i * 2);
+    }
+
+    for (u32 i = 0; i < animsNeeded; i++) {
+        startAnimation(animations[i]);
+    }
+
     cloth->isFreeable = true;
     getPlayer()->dropped++;
 }
@@ -151,7 +171,7 @@ void updateClothPosition(Line* line) {
 
             // If cloth can't fit on the line, it falls and becomes dirty.
             if ((iDest + lastCloth->size) > line->length) {
-                dropCloth(lastCloth);
+                dropCloth(line, lastCloth);
             } else {
                 for (u32 j = 0; j < lastCloth->size; j++) {
                     line->cloths[iDest] = lastCloth;
