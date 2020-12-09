@@ -111,9 +111,8 @@ void renderFrame() {
     // If gameover, keep drawing the background, but just plop gameover over the top of it.
     if (getPlayer()->state == STATE_GAMEOVER) {
 
-        drawBox(BG_SPRITE, 0, 112, SCREEN_WIDTH, TILE_WIDTH * 3);
-        drawText("Game Over", 200, 112, 2);
-        drawText("Press Start", 200, 142, 1);
+        drawText("Game Over", LINES_MARGIN_LEFT + TILE_WIDTH * 3, OUTSIDE_LINE_POSITION + TILE_WIDTH, 2);
+        drawText("Press Start", LINES_MARGIN_LEFT + TILE_WIDTH * 3, OUTSIDE_LINE_POSITION + TILE_WIDTH * 3, 1);
     }
 
 #ifdef SHOW_FRAME_COUNT

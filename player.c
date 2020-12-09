@@ -174,6 +174,7 @@ void initPlayer() {
 void gameOver() {
     player.state = STATE_GAMEOVER;
     cancelDayTimers();
+    abandonAllAnimations();
 }
 
 void drawPlayer() {
@@ -270,9 +271,19 @@ bool handleController(N64ControllerState* pressed, N64ControllerState* released)
                 player.state = STATE_PLAY;
                 break;
             case STATE_GAMEOVER:
+                disable_interrupts();
                 player.score = 0;
                 player.dropped = 0;
+
                 player.state = STATE_PLAY;
+                player.hands[HAND_HANG].cloth = 0;
+                player.hands[HAND_TAKE].cloth = 0;
+                initDay();
+                initLine();
+                initClothManager();
+
+                enable_interrupts();
+                startFirstDay();
                 break;
             default:
                 player.state = STATE_ERROR;
@@ -282,7 +293,7 @@ bool handleController(N64ControllerState* pressed, N64ControllerState* released)
         return true;
     }
 
-    if (player.state == STATE_PAUSE) {
+    if (player.state == STATE_PAUSE || player.state == STATE_GAMEOVER) {
         return false;
     }
 

@@ -21,7 +21,7 @@ u32 _turnCount = 1;
 static u32 secondsPerDay = INIT_TURN_SECONDS;
 
 void initDay() {
-
+    _turnCount = 1;
 }
 
 static bool _waiting = false;
@@ -58,17 +58,13 @@ void continueNewDay() {
     newDayWeather();
 
     updateHangingClothPosition();
-    processFinishedCloths();
+    //processFinishedCloths();
 
     increaseComplexity(_turnCount);
     if (!enqueueClothsPerDay()) {
         gameOver();
         return;
     }
-
-    // This is dodgy - of course we could have other animations going on.
-    // But this is for a jam, not a retail product, so just cancel them all.
-    //abandonAllAnimations();
 
     if (secondsTimer) {
         delete_timer(secondsTimer);

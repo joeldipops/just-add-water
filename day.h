@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "core.h"
 
+void initDay();
 void startNewDay();
 void startFirstDay();
 void cancelDayTimers();

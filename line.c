@@ -23,6 +23,8 @@ static Line outsideLine;
 static Line insideLine;
 
 void initLine() {
+    memset(_outsideLine, 0, sizeof(Cloth*) * OUTSIDE_LINE_SIZE);
+    memset(_insideLine, 0, sizeof(Cloth*) * INSIDE_LINE_SIZE);
     outsideLine.cloths = _outsideLine;
     outsideLine.length = OUTSIDE_LINE_SIZE;
 

@@ -11,16 +11,78 @@
 
 static u32 _clothsPerDay = 3;
 
-static Cloth** _masterClothList;
+
+static Cloth _masterClothList[CLOTH_MASTER_LIST_SIZE];
 static u32 _clothListLength;
 static Cloth* _clothQueue[CLOTH_QUEUE_SIZE];
 static u32 _queueIndex = 0;
 
-// Can be extended if necessary.
-static u32 clothListMaxLength = 1024;
+#define DRYING_SIZE 6
+// Initially simple, will increase in complexity as turnCount increases.
+DryingState DryingDie[DRYING_SIZE] = {
+    DRYING_SPUN, DRYING_SPUN, DRYING_SPUN, DRYING_SPUN, DRYING_SPUN, DRYING_SPUN
+};
+
+#define SIZE_SIZE 8
+u32 SizeDie[SIZE_SIZE] = { 1, 1, 1, 1, 1, 1, 1, 1 };
+
+
+#define GROWTH_TYPE_SIZE 4
+// No growth quadratic until I can be arsed sorting out the algorithm for it.
+u32 GrowthTypeDie[GROWTH_TYPE_SIZE]= { 
+    GROWTH_LINEAR, GROWTH_LINEAR, GROWTH_LINEAR, GROWTH_LINEAR
+};
+
+#define FACTOR_SIZE 8
+s32 LinearFactorDie[FACTOR_SIZE] = { 0, 0, 0, 0, 0, 0 };
+
+const s32 QuadraticFactorDie[FACTOR_SIZE] = {
+    -2, -2,
+    +2, +2, +2, +2
+};
 
 void initClothManager() {
-    _masterClothList = calloc(sizeof(Cloth*), clothListMaxLength);
+    _queueIndex = 0;
+
+    memset(_masterClothList, 0, sizeof(Cloth) * CLOTH_MASTER_LIST_SIZE);
+
+    /*
+    for(u32 i = 0; i < _clothListLength; i++) {
+        if (_masterClothList[i]) {
+            free(_masterClothList[i]);
+            _masterClothList[i] = 0;
+        }
+    }*/
+    DryingDie[0] = DRYING_SPUN;
+    DryingDie[1] = DRYING_SPUN;
+    DryingDie[2] = DRYING_SPUN;
+    DryingDie[3] = DRYING_SPUN;
+    DryingDie[4] = DRYING_SPUN;
+    DryingDie[5] = DRYING_SPUN;
+
+    SizeDie[0] = 1;
+    SizeDie[1] = 1;
+    SizeDie[2] = 1;
+    SizeDie[3] = 1;
+    SizeDie[4] = 1;
+    SizeDie[5] = 1;
+    SizeDie[6] = 1;
+    SizeDie[7] = 1;
+
+    GrowthTypeDie[0] = GROWTH_LINEAR;
+    GrowthTypeDie[1] = GROWTH_LINEAR;
+    GrowthTypeDie[2] = GROWTH_LINEAR;
+    GrowthTypeDie[3] = GROWTH_LINEAR;
+
+    LinearFactorDie[0] = 0;
+    LinearFactorDie[1] = 0;
+    LinearFactorDie[2] = 0;
+    LinearFactorDie[3] = 0;
+    LinearFactorDie[4] = 0;
+    LinearFactorDie[5] = 0;
+    LinearFactorDie[6] = 0;
+    LinearFactorDie[7] = 0;
+
     _clothListLength = 0;
     for (u32 i = 0; i < INIT_TURN_CLOTHS; i++) {
         enqueueCloth();
@@ -34,7 +96,7 @@ void drawQueue() {
     y += TILE_WIDTH ;
     // Draw the full details of the next cloth
     Cloth* next = _clothQueue[0];
-    if (next) {
+    if (next && next->size) {
         drawCloth(next, QUEUE_MARGIN_LEFT + TILE_WIDTH + 2, y);
     }
 
@@ -82,8 +144,8 @@ Cloth* dequeueCloth() {
     Cloth* result = _clothQueue[0];
 
     // The queue is empty.
-    if (!result) {
-        return result;
+    if (!result || !result->size) {
+        return 0;
     }
 
     for (u32 i = 0; i < CLOTH_QUEUE_SIZE - 1; i++) {
@@ -96,30 +158,6 @@ Cloth* dequeueCloth() {
 
     return result;
 }
-
-#define DRYING_SIZE 6
-// Initially simple, will increase in complexity as turnCount increases.
-DryingState DryingDie[DRYING_SIZE] = {
-    DRYING_SPUN, DRYING_SPUN, DRYING_SPUN, DRYING_SPUN, DRYING_SPUN, DRYING_SPUN
-};
-
-#define SIZE_SIZE 8
-u32 SizeDie[SIZE_SIZE] = { 1, 1, 1, 1, 1, 1, 1, 1 };
-
-
-#define GROWTH_TYPE_SIZE 4
-// No growth quadratic until I can be arsed sorting out the algorithm for it.
-u32 GrowthTypeDie[GROWTH_TYPE_SIZE]= { 
-    GROWTH_LINEAR, GROWTH_LINEAR, GROWTH_LINEAR, GROWTH_LINEAR
-};
-
-#define FACTOR_SIZE 8
-s32 LinearFactorDie[FACTOR_SIZE] = { 0, 0, 0, 0, 0, 0 };
-
-const s32 QuadraticFactorDie[FACTOR_SIZE] = {
-    -2, -2,
-    +2, +2, +2, +2
-};
 
 /**
  * Should be called every turn as we update the dice.
@@ -436,9 +474,11 @@ bool enqueueClothsPerDay() {
     }
 
     for (u32 i = 0; i < _clothsPerDay; i++) {
-        Cloth* cloth = newCloth(SizeDie[rand() % SIZE_SIZE]);
+        Cloth* cloth = &_masterClothList[_clothListLength];
+        initCloth(cloth, SizeDie[rand() % SIZE_SIZE]);
+        //Cloth* cloth = newCloth(SizeDie[rand() % SIZE_SIZE]);
         randomiseCloth(cloth);
-        _masterClothList[_clothListLength] = cloth;
+        //_masterClothList[_clothListLength] = cloth;
         _clothListLength++;
 
         _clothQueue[_queueIndex] = cloth;
@@ -457,22 +497,13 @@ bool enqueueCloth() {
         return false;
     }
 
-    Cloth* cloth = newCloth(SizeDie[rand() % SIZE_SIZE]);
+    Cloth* cloth = &_masterClothList[_clothListLength];
+    initCloth(cloth, SizeDie[rand() % SIZE_SIZE]);
+
+    //Cloth* cloth = newCloth(SizeDie[rand() % SIZE_SIZE]);
     randomiseCloth(cloth);
 
-    _masterClothList[_clothListLength] = cloth;
-
     _clothListLength++;
-    // Maybe is reason for crash?  Have blown it out to a very large number so this code can hopefully be ignored.
-    if (_clothListLength >= clothListMaxLength) {
-        u32 newMaxLength = clothListMaxLength * 2;
-        Cloth** temp = _masterClothList;
-        _masterClothList = calloc(sizeof(Cloth*), newMaxLength);
-        memcpy(_masterClothList, temp, clothListMaxLength * sizeof(Cloth*));
-        clothListMaxLength = newMaxLength;
-
-        free(temp);
-    }
 
     _clothQueue[_queueIndex] = cloth;
     _queueIndex++;
@@ -482,8 +513,10 @@ bool enqueueCloth() {
 
 /**
  * Shifts cleaned up cloths out of existence.
+ * @deprecated until after the jam when I try to fix the crash.
  */
 void removeFinishedCloths(u32 oldLength) {
+    /*
     Cloth* temp[_clothListLength];
     u32 tempIndex = 0;
 
@@ -495,12 +528,15 @@ void removeFinishedCloths(u32 oldLength) {
     }
 
     memcpy(_masterClothList, temp, sizeof(Cloth*) * _clothListLength);
+    */
 }
 
 /**
  * Checks if cloths can be freed from memory, then does so.
+ * @deprecated until after the jam when I try to fix the crash.
  */
 void processFinishedCloths() {
+    /*
     u32 removedCloths = 0;
 
     for(u32 i = 0; i < _clothListLength; i++) {
@@ -522,5 +558,6 @@ void processFinishedCloths() {
     }
 
     removeFinishedCloths(oldLength);
+    */
 }
 
