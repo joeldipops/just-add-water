@@ -429,18 +429,28 @@ void updateCloth(Cloth* cloth, Weather weather) {
     }
 }
 
-void initCloth(Cloth* cloth, u32 size) {
+/**
+ * Non-allocating constructor.
+ */
+void initCloth(Cloth* cloth, u32 size, DryingState dryingState) {
     cloth->grabPoint = 0;
     cloth->size = size;
     cloth->initialSize = size;
     cloth->oldSize = size;
+    cloth->dryingState = dryingState;
+    cloth->initialDryingState = dryingState;
 }
 
-Cloth* newCloth(u32 size) {
+/**
+ * Constructor
+ */
+Cloth* newCloth(u32 size, DryingState dryingState) {
     Cloth* result = calloc(sizeof(Cloth), 1);
     result->grabPoint = 0;
     result->size = size;
     result->initialSize = size;
     result->oldSize = size;
+    result->dryingState = dryingState;
+    result->initialDryingState = dryingState;
     return result;
 }

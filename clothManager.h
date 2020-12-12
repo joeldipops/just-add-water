@@ -7,9 +7,10 @@
 void initClothManager();
 void increaseComplexity(u32 turnCount);
 /**
- * Add a single cloth to the queue
+ * Add a single, existing cloth to the queue
  */
-bool enqueueCloth();
+bool enqueueCloth(Cloth* cloth);
+
 /**
  * Add a set number of cloths to the queue depending on how far in to the game we are.
  */

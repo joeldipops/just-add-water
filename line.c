@@ -7,6 +7,7 @@
 #include "player.h"
 #include "day.h"
 #include "animation.h"
+#include "clothManager.h"
 #include <stdbool.h>
 #include <string.h>
 
@@ -134,8 +135,12 @@ static void dropCloth(Line* line, Cloth* cloth) {
         startAnimation(animations[i]);
     }
 
-    // Mark the cloth as dropped.
-    cloth->isFreeable = true;
+    // Cloths that fall off the line go back in to the queue, their size already changed.
+    cloth->dryingState = cloth->initialDryingState;
+    cloth->initialSize = cloth->size;
+    cloth->oldSize = cloth->size;
+    enqueueCloth(cloth);
+
     getPlayer()->dropped++;
 }
 

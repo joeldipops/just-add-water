@@ -47,8 +47,8 @@ typedef struct {
 } Cloth;
 
 void initCloths();
-void initCloth(Cloth* cloth, u32 size);
-Cloth* newCloth(u32 size);
+void initCloth(Cloth* cloth, u32 size, DryingState dryingState);
+Cloth* newCloth(u32 size, DryingState dryingState);
 u32 calculateScore(Cloth* cloth);
 bool isClothDry(Cloth* cloth);
 void drawCloth(Cloth* cloth, u32 x, u32 y);

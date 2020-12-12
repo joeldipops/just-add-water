@@ -41,27 +41,6 @@ const s32 QuadraticFactorDie[FACTOR_SIZE] = {
     +2, +2, +2, +2
 };
 
-void initClothManager() {
-    _queueIndex = 0;
-
-    memset(_masterClothList, 0, sizeof(Cloth) * CLOTH_MASTER_LIST_SIZE);
-
-    /*
-    for(u32 i = 0; i < _clothListLength; i++) {
-        if (_masterClothList[i]) {
-            free(_masterClothList[i]);
-            _masterClothList[i] = 0;
-        }
-    }*/
-
-    increaseComplexity(1);
-
-    _clothListLength = 0;
-    for (u32 i = 0; i < INIT_TURN_CLOTHS; i++) {
-        enqueueCloth();
-    }
-}
-
 void drawQueue() {
     u32 y = QUEUE_MARGIN_TOP;
     drawText("NEXT", QUEUE_MARGIN_LEFT, y, 1);
@@ -445,13 +424,34 @@ void increaseComplexity(u32 turnCount) {
     }
 }
 
+bool enqueueCloth(Cloth* cloth) {
+    if (_queueIndex > CLOTH_QUEUE_SIZE) {
+        return false;
+    }
+    
+    _clothQueue[_queueIndex] = cloth;
+    _queueIndex++;
 
-static void randomiseCloth(Cloth* cloth) {
-#ifdef RANDOMISE_CLOTHS
+    return true;
+}
 
-    cloth->dryingState = DryingDie[rand() % DRYING_SIZE];
+/**
+ * Create a new cloth and add it to the upcoming queue
+ * @return true if successful, false if the queue has overflowed.
+ */
+bool enqueueNewCloth() {
+    if (_queueIndex > CLOTH_QUEUE_SIZE) {
+        return false;
+    }
 
-    // Will be randomised - increasing in complexity as time goes on.
+    Cloth* cloth = &_masterClothList[_clothListLength];
+    initCloth(
+        cloth,
+        SizeDie[rand() % SIZE_SIZE],
+        DryingDie[rand() % DRYING_SIZE]
+    );
+
+    //Cloth* cloth = newCloth(SizeDie[rand() % SIZE_SIZE]);
     cloth->growthType = GrowthTypeDie[rand() % GROWTH_TYPE_SIZE];
 
     switch(cloth->growthType) {
@@ -465,12 +465,11 @@ static void randomiseCloth(Cloth* cloth) {
             cloth->growthFactor = 0;
             break;
     }
-#else
-    cloth->dryingState = DRYING_SPUN;
-    cloth->growthType = GROWTH_LINEAR;
-    cloth->growthFactor = 1;
-    cloth->size = 1;
-#endif
+
+    _clothListLength++;
+
+    enqueueCloth(cloth);
+    return true;
 }
 
 bool enqueueClothsPerDay() {
@@ -480,41 +479,32 @@ bool enqueueClothsPerDay() {
 
     for (u32 i = 0; i < _clothsPerDay; i++) {
         Cloth* cloth = &_masterClothList[_clothListLength];
-        initCloth(cloth, SizeDie[rand() % SIZE_SIZE]);
+        initCloth(cloth, SizeDie[rand() % SIZE_SIZE], DryingDie[rand() % DRYING_SIZE]);
+
+        cloth->growthType = GrowthTypeDie[rand() % GROWTH_TYPE_SIZE];
+
+        switch(cloth->growthType) {
+            case GROWTH_LINEAR:
+                cloth->growthFactor = LinearFactorDie[rand() % FACTOR_SIZE];
+                break;
+            case GROWTH_QUADRATIC:
+                cloth->growthFactor = QuadraticFactorDie[rand() % FACTOR_SIZE];
+                break;
+            case GROWTH_NONE:
+                cloth->growthFactor = 0;
+                break;
+        }
+
         //Cloth* cloth = newCloth(SizeDie[rand() % SIZE_SIZE]);
-        randomiseCloth(cloth);
         //_masterClothList[_clothListLength] = cloth;
         _clothListLength++;
 
-        _clothQueue[_queueIndex] = cloth;
-        _queueIndex++;
+        enqueueCloth(cloth);
     }
 
     return true;
 }
 
-/**
- * Create a new cloth and add it to the upcoming queue
- * @return true if successful, false if the queue has overflowed.
- */
-bool enqueueCloth() {
-    if (_queueIndex > CLOTH_QUEUE_SIZE) {
-        return false;
-    }
-
-    Cloth* cloth = &_masterClothList[_clothListLength];
-    initCloth(cloth, SizeDie[rand() % SIZE_SIZE]);
-
-    //Cloth* cloth = newCloth(SizeDie[rand() % SIZE_SIZE]);
-    randomiseCloth(cloth);
-
-    _clothListLength++;
-
-    _clothQueue[_queueIndex] = cloth;
-    _queueIndex++;
-
-    return true;
-}
 
 /**
  * Shifts cleaned up cloths out of existence.
@@ -560,9 +550,29 @@ void processFinishedCloths() {
         _clothListLength = _clothListLength - removedCloths;
     } else {
         _clothListLength = 0;
-    }
+    }dropped++
 
     removeFinishedCloths(oldLength);
     */
 }
 
+void initClothManager() {
+    _queueIndex = 0;
+
+    memset(_masterClothList, 0, sizeof(Cloth) * CLOTH_MASTER_LIST_SIZE);
+
+    /*
+    for(u32 i = 0; i < _clothListLength; i++) {
+        if (_masterClothList[i]) {
+            free(_masterClothList[i]);
+            _masterClothList[i] = 0;
+        }
+    }*/
+
+    increaseComplexity(1);
+
+    _clothListLength = 0;
+    for (u32 i = 0; i < INIT_TURN_CLOTHS; i++) {
+        enqueueNewCloth();
+    }
+}
