@@ -1,11 +1,10 @@
-#define IS_PAL 1
-
-#ifdef IS_PAL
-    #define LEFT_MARGIN 12
-    #define TOP_MARGIN 4
-#else
+#ifdef IS_NTSC
     #define LEFT_MARGIN 0
     #define TOP_MARGIN 0
+#else
+    #define LEFT_MARGIN 12
+    #define TOP_MARGIN 4
+
 #endif
 
 

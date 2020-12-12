@@ -53,35 +53,8 @@ void initClothManager() {
             _masterClothList[i] = 0;
         }
     }*/
-    DryingDie[0] = DRYING_SPUN;
-    DryingDie[1] = DRYING_SPUN;
-    DryingDie[2] = DRYING_SPUN;
-    DryingDie[3] = DRYING_SPUN;
-    DryingDie[4] = DRYING_SPUN;
-    DryingDie[5] = DRYING_SPUN;
 
-    SizeDie[0] = 1;
-    SizeDie[1] = 1;
-    SizeDie[2] = 1;
-    SizeDie[3] = 1;
-    SizeDie[4] = 1;
-    SizeDie[5] = 1;
-    SizeDie[6] = 1;
-    SizeDie[7] = 1;
-
-    GrowthTypeDie[0] = GROWTH_LINEAR;
-    GrowthTypeDie[1] = GROWTH_LINEAR;
-    GrowthTypeDie[2] = GROWTH_LINEAR;
-    GrowthTypeDie[3] = GROWTH_LINEAR;
-
-    LinearFactorDie[0] = 0;
-    LinearFactorDie[1] = 0;
-    LinearFactorDie[2] = 0;
-    LinearFactorDie[3] = 0;
-    LinearFactorDie[4] = 0;
-    LinearFactorDie[5] = 0;
-    LinearFactorDie[6] = 0;
-    LinearFactorDie[7] = 0;
+    increaseComplexity(1);
 
     _clothListLength = 0;
     for (u32 i = 0; i < INIT_TURN_CLOTHS; i++) {
@@ -190,6 +163,38 @@ Cloth* dequeueCloth() {
  */
 void increaseComplexity(u32 turnCount) {
     switch (turnCount) {
+        case 1:
+            DryingDie[0] = DRYING_SPUN;
+            DryingDie[1] = DRYING_SPUN;
+            DryingDie[2] = DRYING_SPUN;
+            DryingDie[3] = DRYING_SPUN;
+            DryingDie[4] = DRYING_SPUN;
+            DryingDie[5] = DRYING_SPUN;
+
+            SizeDie[0] = 1;
+            SizeDie[1] = 1;
+            SizeDie[2] = 1;
+            SizeDie[3] = 1;
+            SizeDie[4] = 1;
+            SizeDie[5] = 1;
+            SizeDie[6] = 1;
+            SizeDie[7] = 1;
+
+            GrowthTypeDie[0] = GROWTH_LINEAR;
+            GrowthTypeDie[1] = GROWTH_LINEAR;
+            GrowthTypeDie[2] = GROWTH_LINEAR;
+            GrowthTypeDie[3] = GROWTH_LINEAR;
+
+            LinearFactorDie[0] = 0;
+            LinearFactorDie[1] = 0;
+            LinearFactorDie[2] = 0;
+            LinearFactorDie[3] = 0;
+            LinearFactorDie[4] = 0;
+            LinearFactorDie[5] = 0;
+            LinearFactorDie[6] = 0;
+            LinearFactorDie[7] = 0;
+            break;
+
         // Turn 2, 3 Teach growth
         case 2:
             LinearFactorDie[0] = 1;

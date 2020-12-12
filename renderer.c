@@ -57,6 +57,7 @@ void renderSprites() {
             } else {
                 sheet = getSpriteSheet();
             }
+
             rdp_load_texture_stride(0, 0, MIRROR_DISABLED, sheet, adjustedCode);
 
             for (u32 i = 0; i < drawLists[z].index[spriteId]; i++) {

@@ -83,6 +83,19 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
         currentFrame()->z = drawPriority;
         animationIndex++;
 
+        if (pixelLength > TILE_WIDTH * 2) {
+             for (u32 i = TILE_WIDTH; i < pixelLength - TILE_WIDTH; i += TILE_WIDTH) {
+                 u32 xPos = x + i;
+                 setSimpleFrame(currentFrame(), CURSOR_TOP_SPRITE, xPos, y, secsPerFrame);
+                 currentFrame()->z = drawPriority;
+                 animationIndex++;
+
+                 setSimpleFrame(currentFrame(), CURSOR_BOTTOM_SPRITE, xPos, y + TILE_WIDTH, secsPerFrame);
+                 currentFrame()->z = drawPriority;
+                 animationIndex++;
+             }
+        }
+
         // Right end
         u32 xPos = x + TILE_WIDTH * (tilesUsed - 1) + overHang;
         setSimpleFrame(currentFrame(), CURSOR_TOP_RIGHT_SPRITE, xPos, y, secsPerFrame);
@@ -93,24 +106,7 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
         currentFrame()->z = drawPriority;
         animationIndex++;
 
-        // Only show the middle tile if we have to.
-        // This isn't working but I don't understand the behaviour I'm seeing at all.
-        // The middle tile disappears when I want it to show, and shows offset by 16px when
-        // I don't want to see it at all and it's doing my head in.
 
-        // if (pixelLength > TILE_WIDTH * 2) {
-        //     for (u32 i = TILE_WIDTH; i < pixelLength; i += TILE_WIDTH) {
-        //         u32 xPos = x + i;
-
-        //         setSimpleFrame(currentFrame(), CURSOR_TOP_SPRITE, xPos, y, secsPerFrame);
-        //         currentFrame()->z = drawPriority;
-        //         animationIndex++;
-
-        //         setSimpleFrame(currentFrame(), CURSOR_BOTTOM_SPRITE, xPos, y + TILE_WIDTH, secsPerFrame);
-        //         currentFrame()->z = drawPriority;
-        //         animationIndex++;
-        //     }
-        // }
     } else {
         // TODO - how to cover the progression to gilding.  Probably doing one side at a time so the gilding gradually 
         // circles the cloth.
@@ -122,6 +118,19 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
         setSimpleFrame(currentFrame(), GILDED_BOTTOM_LEFT_SPRITE, x, y + TILE_WIDTH, secsPerFrame);
         currentFrame()->z = drawPriority;
         animationIndex++;
+
+         if (pixelLength > TILE_WIDTH * 2) {
+             for (u32 i = TILE_WIDTH; i < pixelLength - TILE_WIDTH; i += TILE_WIDTH) {
+                 u32 xPos = x + i;
+                 setSimpleFrame(currentFrame(), GILDED_TOP_SPRITE, xPos, y, secsPerFrame);
+                 currentFrame()->z = drawPriority;
+                 animationIndex++;
+
+                 setSimpleFrame(currentFrame(), GILDED_BOTTOM_SPRITE, xPos, y + TILE_WIDTH, secsPerFrame);
+                 currentFrame()->z = drawPriority;
+                 animationIndex++;
+             }
+        }        
 
         // Right end
         u32 xPos = x + TILE_WIDTH * (tilesUsed - 1) + overHang;
@@ -255,7 +264,7 @@ void prepareClothAnimation(Cloth* cloth, u32 x, u32 y) {
     float diff = (maxSize - minSize) * TILE_WIDTH;
 
     // Some arbitrary number, we should actually calculate this from the cloth properties...
-    u32 spritesNeeded = 16;
+    u32 spritesNeeded = 32;
 
     // We will have 16 animation frames.
     const float numberOfFrames = 16;
