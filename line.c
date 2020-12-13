@@ -67,7 +67,7 @@ bool hangCloth(s32 lineId, s32 x, Cloth* cloth) {
 
     // If there's already a cloth where we want to put this new one
     for (s32 i = x; i < x + cloth->size; i++) {
-        if (cloths[i]) {
+        if (cloths[i] || i >= LINE_SIZE) {
             return false;
         }
     }

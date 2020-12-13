@@ -26,7 +26,6 @@ DryingState DryingDie[DRYING_SIZE] = {
 #define SIZE_SIZE 8
 s32 SizeDie[SIZE_SIZE] = { 1, 1, 1, 1, 1, 1, 1, 1 };
 
-
 #define GROWTH_TYPE_SIZE 4
 // No growth quadratic until I can be arsed sorting out the algorithm for it.
 s32 GrowthTypeDie[GROWTH_TYPE_SIZE]= { 
