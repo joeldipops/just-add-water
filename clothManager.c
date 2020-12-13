@@ -448,7 +448,6 @@ bool enqueueNewCloth() {
         DryingDie[rand() % DRYING_SIZE]
     );
 
-    //Cloth* cloth = newCloth(SizeDie[rand() % SIZE_SIZE]);
     cloth->growthType = GrowthTypeDie[rand() % GROWTH_TYPE_SIZE];
 
     switch(cloth->growthType) {
@@ -492,8 +491,6 @@ bool enqueueClothsPerDay() {
                 break;
         }
 
-        //Cloth* cloth = newCloth(SizeDie[rand() % SIZE_SIZE]);
-        //_masterClothList[_clothListLength] = cloth;
         _clothListLength++;
 
         enqueueCloth(cloth);
@@ -502,69 +499,10 @@ bool enqueueClothsPerDay() {
     return true;
 }
 
-
-/**
- * Shifts cleaned up cloths out of existence.
- * @deprecated until after the jam when I try to fix the crash.
- */
-void removeFinishedCloths(u32 oldLength) {
-    /*
-    Cloth* temp[_clothListLength];
-    u32 tempIndex = 0;
-
-    for (u32 i = 0; i < oldLength; i++) {
-        if (_masterClothList[i]) {
-            temp[tempIndex] = _masterClothList[i];
-            tempIndex++;
-        }
-    }
-
-    memcpy(_masterClothList, temp, sizeof(Cloth*) * _clothListLength);
-    */
-}
-
-/**
- * Checks if cloths can be freed from memory, then does so.
- * @deprecated until after the jam when I try to fix the crash.
- */
-void processFinishedCloths() {
-    /*
-    u32 removedCloths = 0;
-
-    for(u32 i = 0; i < _clothListLength; i++) {
-        if (_masterClothList[i] && _masterClothList[i]->isFreeable) {
-            // Do some fiddling with scores or something.
-            free(_masterClothList[i]);
-            _masterClothList[i] = 0;
-            removedCloths++;
-        }
-    }
-
-    u32 oldLength = _clothListLength;
-
-    // Shouldn't happen, but maybe is why things crash?
-    if (removedCloths < _clothListLength) {
-        _clothListLength = _clothListLength - removedCloths;
-    } else {
-        _clothListLength = 0;
-    }
-
-    removeFinishedCloths(oldLength);
-    */
-}
-
 void initClothManager() {
     _queueIndex = 0;
 
     memset(_masterClothList, 0, sizeof(Cloth) * CLOTH_MASTER_LIST_SIZE);
-
-    /*
-    for(u32 i = 0; i < _clothListLength; i++) {
-        if (_masterClothList[i]) {
-            free(_masterClothList[i]);
-            _masterClothList[i] = 0;
-        }
-    }*/
 
     increaseComplexity(1);
 

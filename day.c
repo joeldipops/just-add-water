@@ -56,7 +56,6 @@ void continueNewDay() {
     newDayWeather();
 
     updateHangingClothPosition();
-    //processFinishedCloths();
 
     increaseComplexity(_turnCount);
     if (!enqueueClothsPerDay()) {
