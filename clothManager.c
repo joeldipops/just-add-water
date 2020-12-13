@@ -547,7 +547,7 @@ void processFinishedCloths() {
         _clothListLength = _clothListLength - removedCloths;
     } else {
         _clothListLength = 0;
-    }dropped++
+    }
 
     removeFinishedCloths(oldLength);
     */
