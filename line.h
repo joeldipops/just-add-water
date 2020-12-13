@@ -10,8 +10,8 @@ void initLine();
 
 void drawLines();
 
-bool hangCloth(u32 lineId, u32 x, Cloth* cloth);
-Cloth* takeCloth(u32 lineId, u32 x);
+bool hangCloth(s32 lineId, s32 x, Cloth* cloth);
+Cloth* takeCloth(s32 lineId, s32 x);
 
 void updateHangingCloths(Weather weather);
 void updateHangingClothSize();

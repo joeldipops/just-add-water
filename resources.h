@@ -54,6 +54,6 @@ sprite_t* getTimerSheet();
  * @param rotation How the sprite should be transformed.
  * @return Pointer to the new transformed sprite.
  */
-sprite_t* transformSprite(const sprite_t* sheet, const u32 spriteCode, const Transformation transformation);
+sprite_t* transformSprite(const sprite_t* sheet, const s32 spriteCode, const Transformation transformation);
 
 #endif

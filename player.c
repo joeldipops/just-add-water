@@ -15,9 +15,9 @@
 static Player player;
 
 static void handleMoveX(Hand* hand, bool isLeft) {
-    u32 max = hand->y 
-        ? INSIDE_LINE_SIZE - 1 
-        : OUTSIDE_LINE_SIZE - 1
+    s32 max = hand->y 
+        ? LINE_SIZE - 1 
+        : LINE_SIZE - 1
     ;
 
     if (isLeft) {
@@ -62,7 +62,7 @@ static void handleHang() {
     hand->cloth = dequeueCloth();
 }
 
-static void animateDropped(u32 x, u32 y) {
+static void animateDropped(s32 x, s32 y) {
     Animation* anim = newAnimation(8);
 
     x = LINES_MARGIN_LEFT + (TILE_WIDTH * x);
@@ -71,7 +71,7 @@ static void animateDropped(u32 x, u32 y) {
                 : OUTSIDE_LINE_POSITION
             ) + 4;
 
-    for (u32 i = 0; i < 8; i++) {
+    for (s32 i = 0; i < 8; i++) {
         setSimpleFrame(&anim->frames[i], GROWTH_0_SPRITE, x, y + i, 0.1);
         anim->frames[i].remainingCycles = 2;
     }
@@ -96,7 +96,7 @@ static void handleDrop() {
     animateDropped(hand->x, hand->y);
 }
 
-static void animateScore(u32 score, u32 x, u32 y) {
+static void animateScore(s32 score, s32 x, s32 y) {
     Animation* anim = newAnimation(8);
 
     x = LINES_MARGIN_LEFT + (TILE_WIDTH * x);
@@ -105,7 +105,7 @@ static void animateScore(u32 score, u32 x, u32 y) {
                 : OUTSIDE_LINE_POSITION
             ) + 4;
 
-    for (u32 i = 0; i < 8; i++) {
+    for (s32 i = 0; i < 8; i++) {
         setSimpleFrame(&anim->frames[i], PLUS_ONE_SPRITE + score - 1, x, y - i, 0.1);
         anim->frames[i].remainingCycles = 1;
     }
@@ -133,7 +133,7 @@ static void handleTake() {
 
     if (isClothDry(taken)) {
         // If it's dry, chuck it in the basket.
-        u32 clothScore = calculateScore(taken);
+        s32 clothScore = calculateScore(taken);
         player.score += clothScore;
         taken->isFreeable = true;
 
@@ -152,17 +152,17 @@ static void handleTake() {
 static void handleMoveY(Hand* hand) {
     hand->y = !hand->y;
 
-    if (hand->y && hand->x >= INSIDE_LINE_SIZE) {
-        hand->x = INSIDE_LINE_SIZE - 1;
-    } else if (!hand->y && hand->x >= OUTSIDE_LINE_SIZE) {
-        hand->x = OUTSIDE_LINE_SIZE - 1;
+    if (hand->y && hand->x >= LINE_SIZE) {
+        hand->x = LINE_SIZE - 1;
+    } else if (!hand->y && hand->x >= LINE_SIZE) {
+        hand->x = LINE_SIZE - 1;
     }
 }
 
 void initPlayer() {
     player.hands[HAND_HANG].x = 0;
     player.hands[HAND_HANG].y = 0;
-    player.hands[HAND_TAKE].x = OUTSIDE_LINE_SIZE -1;
+    player.hands[HAND_TAKE].x = LINE_SIZE -1;
     player.hands[HAND_TAKE].y = 0;
     player.hands[HAND_HANG].cloth = 0;
     player.hands[HAND_TAKE].cloth = 0;

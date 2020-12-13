@@ -56,7 +56,7 @@ static SpriteCode getWeatherBackground(Weather weather) {
 /**
  * Commented out while I settle on what the actual percentages should be
  */
-void drawWeatherGuide(u32 position) {
+void drawWeatherGuide(s32 position) {
     /*
     drawText(           "Forecast       Weather     Chance", LINES_MARGIN_LEFT, position, 1);
     position += STANDARD_MARGIN * 2;
@@ -66,7 +66,7 @@ void drawWeatherGuide(u32 position) {
     sprintf(text[2],    "               $%02x           10%%",  RAIN_SPRITE);
     sprintf(text[3],    "               $%02x           0%%",  STORM_SPRITE);
 
-    for (u32 i = 0; i < 4; i++) {
+    for (s32 i = 0; i < 4; i++) {
         drawText(text[i], LINES_MARGIN_LEFT, position, 1);
         position += STANDARD_MARGIN;
     }
@@ -78,7 +78,7 @@ void drawWeatherGuide(u32 position) {
     sprintf(text[2],    "               $%02x           40%%",  RAIN_SPRITE);
     sprintf(text[3],    "               $%02x           10%%",  STORM_SPRITE);
 
-    for (u32 i = 0; i < 4; i++) {
+    for (s32 i = 0; i < 4; i++) {
         drawText(text[i], LINES_MARGIN_LEFT, position, 1);
         position += STANDARD_MARGIN;
     }
@@ -89,8 +89,8 @@ static bool _animationQueued = false;
 
 void drawWeather() {
     Weather current = getCurrentWeather();
-    drawBox(getWeatherBackground(current), LINES_MARGIN_LEFT, 0, OUTSIDE_LINE_SIZE * TILE_WIDTH, ROOF_POSITION);
-    drawBox(INSIDE_BG, LINES_MARGIN_LEFT, ROOF_POSITION, OUTSIDE_LINE_SIZE * TILE_WIDTH, SCREEN_HEIGHT - ROOF_POSITION);
+    drawBox(getWeatherBackground(current), LINES_MARGIN_LEFT, 0, LINE_SIZE * TILE_WIDTH, ROOF_POSITION);
+    drawBox(INSIDE_BG, LINES_MARGIN_LEFT, ROOF_POSITION, LINE_SIZE * TILE_WIDTH, SCREEN_HEIGHT - ROOF_POSITION);
     drawSprite(
         INSIDE_SPRITE,
         LINES_MARGIN_LEFT + 4,
@@ -117,7 +117,7 @@ void drawWeather() {
         _animationQueued = false;
 
         Animation* anim = newAnimation(8);
-        for (u32 i = 0; i < 8; i++) {
+        for (s32 i = 0; i < 8; i++) {
             setSimpleFrame(
                 &anim->frames[i],
                 getWeatherSprite(_nextForecast),

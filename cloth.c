@@ -41,8 +41,8 @@ static void changeClothState(Cloth* cloth, DryingState newState) {
 
     if (cloth->size < 1) {
         cloth->size = 1;
-    } else if (cloth->size > 16) {
-        cloth->size = 16;
+    } else if (cloth->size > LINE_SIZE) {
+        cloth->size = LINE_SIZE;
     }
 
     cloth->dryingState = newState;
@@ -53,12 +53,12 @@ static void changeClothState(Cloth* cloth, DryingState newState) {
  * TODO: This only handles discrete 'size' chunks which is next to useless, but good to have on the board.
  * The next step is to nudge those x values along so stuff is actually growing with each frame...
  */
-void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animations, u32 frameIndex, u32 x, u32 y) {
+void setClothAnimationFrames(Cloth* cloth, s32 pixelLength, Animation** animations, s32 frameIndex, s32 x, s32 y) {
     #define currentFrame() (&animations[animationIndex]->frames[frameIndex])
 
     SpriteCode spriteId;
 
-    u32 animationIndex = 0;
+    s32 animationIndex = 0;
     float secsPerFrame = 0.05;
 
 
@@ -68,11 +68,11 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
     currentFrame()->scaleY = 2;
     animationIndex++;
 
-    u32 tilesUsed = pixelLength / TILE_WIDTH;
-    u32 overHang = pixelLength % TILE_WIDTH;
+    s32 tilesUsed = pixelLength / TILE_WIDTH;
+    s32 overHang = pixelLength % TILE_WIDTH;
 
     // Draw border.
-    u32 drawPriority = 1;
+    s32 drawPriority = 1;
     if (cloth->dryingState > DRYING_DRY) {
         // Left end
         setSimpleFrame(currentFrame(), CURSOR_TOP_LEFT_SPRITE, x, y, secsPerFrame);
@@ -84,8 +84,8 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
         animationIndex++;
 
         if (pixelLength > TILE_WIDTH * 2) {
-             for (u32 i = TILE_WIDTH; i < pixelLength - TILE_WIDTH; i += TILE_WIDTH) {
-                 u32 xPos = x + i;
+             for (s32 i = TILE_WIDTH; i < pixelLength - TILE_WIDTH; i += TILE_WIDTH) {
+                 s32 xPos = x + i;
                  setSimpleFrame(currentFrame(), CURSOR_TOP_SPRITE, xPos, y, secsPerFrame);
                  currentFrame()->z = drawPriority;
                  animationIndex++;
@@ -97,7 +97,7 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
         }
 
         // Right end
-        u32 xPos = x + TILE_WIDTH * (tilesUsed - 1) + overHang;
+        s32 xPos = x + TILE_WIDTH * (tilesUsed - 1) + overHang;
         setSimpleFrame(currentFrame(), CURSOR_TOP_RIGHT_SPRITE, xPos, y, secsPerFrame);
         currentFrame()->z = drawPriority;
         animationIndex++;
@@ -120,8 +120,8 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
         animationIndex++;
 
          if (pixelLength > TILE_WIDTH * 2) {
-             for (u32 i = TILE_WIDTH; i < pixelLength - TILE_WIDTH; i += TILE_WIDTH) {
-                 u32 xPos = x + i;
+             for (s32 i = TILE_WIDTH; i < pixelLength - TILE_WIDTH; i += TILE_WIDTH) {
+                 s32 xPos = x + i;
                  setSimpleFrame(currentFrame(), GILDED_TOP_SPRITE, xPos, y, secsPerFrame);
                  currentFrame()->z = drawPriority;
                  animationIndex++;
@@ -133,7 +133,7 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
         }        
 
         // Right end
-        u32 xPos = x + TILE_WIDTH * (tilesUsed - 1) + overHang;
+        s32 xPos = x + TILE_WIDTH * (tilesUsed - 1) + overHang;
         setSimpleFrame(currentFrame(), GILDED_TOP_RIGHT_SPRITE, xPos, y, secsPerFrame);
         currentFrame()->z = drawPriority;
         animationIndex++;
@@ -205,7 +205,7 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
         default: break;
     }
 
-    u32 xPos = x + TILE_WIDTH * (tilesUsed - 1) + overHang;
+    s32 xPos = x + TILE_WIDTH * (tilesUsed - 1) + overHang;
 
     if (cloth->growthFactor > 0) {
         setSimpleFrame(
@@ -250,9 +250,9 @@ void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animatio
     #undef currentFrame
 }
 
-void prepareClothAnimation(Cloth* cloth, u32 x, u32 y) {
-    u32 minSize;
-    u32 maxSize;
+void prepareClothAnimation(Cloth* cloth, s32 x, s32 y) {
+    s32 minSize;
+    s32 maxSize;
 
     if (cloth->oldSize > cloth->size) {
        minSize = cloth->size;
@@ -270,13 +270,13 @@ void prepareClothAnimation(Cloth* cloth, u32 x, u32 y) {
     const float numberOfFrames = 16;
 
     Animation* animations[spritesNeeded];
-    for (u32 i = 0; i < spritesNeeded; i++) {
+    for (s32 i = 0; i < spritesNeeded; i++) {
         animations[i] = newAnimation(numberOfFrames);
         animations[i]->numberOfFrames = numberOfFrames;
     }
 
-    for (u32 i = 0; i < numberOfFrames; i++) {
-        u32 pixelWidth;
+    for (s32 i = 0; i < numberOfFrames; i++) {
+        s32 pixelWidth;
         if (cloth->size > cloth->oldSize) {
             // Only assumes growth.
             pixelWidth = (cloth->oldSize * TILE_WIDTH) + ((diff / numberOfFrames) * i);
@@ -289,21 +289,21 @@ void prepareClothAnimation(Cloth* cloth, u32 x, u32 y) {
 
     // Ensure all sprites start and end at the same time.
     disable_interrupts();
-    for (u32 i = 0; i < spritesNeeded; i++) {
+    for (s32 i = 0; i < spritesNeeded; i++) {
         startAnimation(animations[i]);
     }
     enable_interrupts();
 
 }
 
-void drawCloth(Cloth* cloth, u32 x, u32 y) {
+void drawCloth(Cloth* cloth, s32 x, s32 y) {
     SpriteCode spriteId;
 
     drawScaledSprite(BASE_CLOTH_SPRITE, x, y, 0, cloth->size, 2);
 
     // Draw border.
 
-    u32 drawPriority = 1;
+    s32 drawPriority = 1;
     if (cloth->dryingState > DRYING_DRY) {
 
 
@@ -311,8 +311,8 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
         drawSprite(CURSOR_TOP_LEFT_SPRITE, x, y, drawPriority, 1);
         drawSprite(CURSOR_BOTTOM_LEFT_SPRITE, x, y + TILE_WIDTH, drawPriority, 1);
 
-        for (u32 i = 0; i < cloth->size; i++) {
-            u32 xPos = x + TILE_WIDTH * i;
+        for (s32 i = 0; i < cloth->size; i++) {
+            s32 xPos = x + TILE_WIDTH * i;
 
             if (i + 1 == cloth->size) {
                 drawSprite(CURSOR_TOP_RIGHT_SPRITE, xPos, y, drawPriority, 1);
@@ -327,8 +327,8 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
         drawSprite(GILDED_TOP_LEFT_SPRITE, x, y, drawPriority, 1);
         drawSprite(GILDED_BOTTOM_LEFT_SPRITE, x, y + TILE_WIDTH, drawPriority, 1);
 
-        for (u32 i = 0; i < cloth->size; i++) {
-            u32 xPos = x + TILE_WIDTH * i;
+        for (s32 i = 0; i < cloth->size; i++) {
+            s32 xPos = x + TILE_WIDTH * i;
 
             if (i + 1 == cloth->size) {
                 drawSprite(GILDED_TOP_RIGHT_SPRITE, xPos, y, drawPriority, 1);
@@ -385,8 +385,8 @@ void drawCloth(Cloth* cloth, u32 x, u32 y) {
     }
 }
 
-u32 calculateScore(Cloth* cloth) {
-    u32 result = cloth->size;
+s32 calculateScore(Cloth* cloth) {
+    s32 result = cloth->size;
 
     // A multipliable bonus if your cloth started of bigger than normal.
     result += cloth->initialSize - 1;
@@ -432,7 +432,7 @@ void updateCloth(Cloth* cloth, Weather weather) {
 /**
  * Non-allocating constructor.
  */
-void initCloth(Cloth* cloth, u32 size, DryingState dryingState) {
+void initCloth(Cloth* cloth, s32 size, DryingState dryingState) {
     cloth->grabPoint = 0;
     cloth->size = size;
     cloth->initialSize = size;
@@ -444,7 +444,7 @@ void initCloth(Cloth* cloth, u32 size, DryingState dryingState) {
 /**
  * Constructor
  */
-Cloth* newCloth(u32 size, DryingState dryingState) {
+Cloth* newCloth(s32 size, DryingState dryingState) {
     Cloth* result = calloc(sizeof(Cloth), 1);
     result->grabPoint = 0;
     result->size = size;

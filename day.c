@@ -13,11 +13,11 @@
 #include <stdio.h>
 #include <libdragon.h>
 
-static u32 secondsLeft = 0;
+static s32 secondsLeft = 0;
 timer_link_t* secondsTimer = 0;
-u32 _turnCount = 1;
+s32 _turnCount = 1;
 
-static u32 secondsPerDay = INIT_TURN_SECONDS;
+static s32 secondsPerDay = INIT_TURN_SECONDS;
 
 void initDay() {
     _turnCount = 1;

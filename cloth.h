@@ -31,7 +31,7 @@ typedef struct {
     // number of discrete chunks.
     s32 size;
     // previous sized, used when animating.
-    u32 oldSize;
+    s32 oldSize;
     // Degrees of wetness.
     DryingState dryingState;
     // Only linear growth at this stage.
@@ -39,22 +39,22 @@ typedef struct {
     // can be negative
     s32 growthFactor;
     // what tile is the cloth being held by.
-    u32 grabPoint;    
+    s32 grabPoint;    
     // used to calculate score.
-    u32 initialSize;
+    s32 initialSize;
     // used to calculate score.
     DryingState initialDryingState;
 } Cloth;
 
 void initCloths();
-void initCloth(Cloth* cloth, u32 size, DryingState dryingState);
-Cloth* newCloth(u32 size, DryingState dryingState);
-u32 calculateScore(Cloth* cloth);
+void initCloth(Cloth* cloth, s32 size, DryingState dryingState);
+Cloth* newCloth(s32 size, DryingState dryingState);
+s32 calculateScore(Cloth* cloth);
 bool isClothDry(Cloth* cloth);
-void drawCloth(Cloth* cloth, u32 x, u32 y);
+void drawCloth(Cloth* cloth, s32 x, s32 y);
 void updateCloth();
 
-void setClothAnimationFrames(Cloth* cloth, u32 pixelLength, Animation** animations, u32 frameIndex, u32 x, u32 y);
+void setClothAnimationFrames(Cloth* cloth, s32 pixelLength, Animation** animations, s32 frameIndex, s32 x, s32 y);
 
-void prepareClothAnimation(Cloth*, u32,u32);
+void prepareClothAnimation(Cloth*, s32,s32);
 #endif

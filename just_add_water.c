@@ -92,6 +92,7 @@ void renderFrame() {
             drawPause();
             break;
         case STATE_GAMEOVER:
+            drawQueue();
         case STATE_PLAY:
             drawDay();
             drawWeather();

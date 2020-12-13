@@ -11,7 +11,7 @@
 
 static bool textInitted = false;
 
-static const u32 SPRITE_SIZE = 16;
+static const s32 SPRITE_SIZE = 16;
 
 /**
  * Initialises text subsystem by loading sprites etc.
@@ -65,16 +65,16 @@ u8 parseByte(const char* start, const u8 maxLength, const u8 base) {
  * @param scale Scale the sprite.
  * @private
  */
-static void draw(const u32 spriteCode, sprite_t* spriteSheet, const u32 x, const u32 y, const float scale) {
+static void draw(const s32 spriteCode, sprite_t* spriteSheet, const s32 x, const s32 y, const float scale) {
     rdp_load_texture_stride(0, 0, MIRROR_DISABLED, spriteSheet, spriteCode);
     rdp_draw_sprite_scaled(0, x, y, scale, scale, MIRROR_DISABLED);
 }
 
 
 /*
-void drawSprite(const SpriteCode spriteCode, const u32 x, const u32 y, const float scale) {
+void drawSprite(const SpriteCode spriteCode, const s32 x, const s32 y, const float scale) {
     sprite_t* sheet;
-    u32 code = spriteCode;
+    s32 code = spriteCode;
     if (spriteCode >= TIMER_SPRITE_1) {
         sheet = getTimerSheet();
         code = spriteCode - TIMER_SPRITE_1;
@@ -95,7 +95,7 @@ void drawSprite(const SpriteCode spriteCode, const u32 x, const u32 y, const flo
  * @param transformation Flip/Fade/Shift etc the character.
  * @private
  */
-static void drawTransformedCharacter(const char character, const u32 x, const u32 y, const float scale, const Transformation transformation) {
+static void drawTransformedCharacter(const char character, const s32 x, const s32 y, const float scale, const Transformation transformation) {
     // Avoid printing any control characters, we don't at this point know what
     // wackiness will ensue.
     if (character <= 0x20) {
@@ -104,7 +104,7 @@ static void drawTransformedCharacter(const char character, const u32 x, const u3
 
     sprite_t* sheet = getCharacterSheet();
 
-    u32 offset = character - 0x20;
+    s32 offset = character - 0x20;
     if (transformation) {
         sheet = transformSprite(sheet, offset, transformation);
         offset = 0;
@@ -121,7 +121,7 @@ static void drawTransformedCharacter(const char character, const u32 x, const u3
  * @param scale size of the image
  * @private
  */
-static void drawCharacter(const char character, const u32 x, const u32 y, const float scale) {
+static void drawCharacter(const char character, const s32 x, const s32 y, const float scale) {
     drawTransformedCharacter(character, x, y, scale, 0);
 }
 
@@ -140,8 +140,8 @@ static void drawCharacter(const char character, const u32 x, const u32 y, const 
  *** -2 badly formatted token.
  * @private
  */
-static s32 drawImage(const string text, const u32 textIndex, const u32 length, const u32 x, const u32 y, const float scale) {
-    u32 i = textIndex;
+static s32 drawImage(const string text, const s32 textIndex, const s32 length, const s32 x, const s32 y, const float scale) {
+    s32 i = textIndex;
     char transformation = text[i+1];
     if (length <= i + 2) {
         return -1;
@@ -162,7 +162,7 @@ static s32 drawImage(const string text, const u32 textIndex, const u32 length, c
     }
 
     // sprite is 2 digit hex, we need to parse it from the string
-    u32 spriteCode = parseByte(&text[i+1], 2, 16);
+    s32 spriteCode = parseByte(&text[i+1], 2, 16);
 
     sprite_t* sheet = getSpriteSheet();
     if (transformation) {
@@ -185,12 +185,12 @@ static s32 drawImage(const string text, const u32 textIndex, const u32 length, c
  ** -1  token is not complete.
  * @private
  */
-static s32 drawTextLine(const string text, const u32 x, const u32 y, const float scale) {
-    u32 length = strlen(text);
-    u32 left = x;
+static s32 drawTextLine(const string text, const s32 x, const s32 y, const float scale) {
+    s32 length = strlen(text);
+    s32 left = x;
     Transformation transform = 0;
 
-    u32 i = 0;
+    s32 i = 0;
 
     // If the first character is a ~, fade the whole line.
     if (text[0] == '~') {
@@ -228,7 +228,7 @@ static s32 drawTextLine(const string text, const u32 x, const u32 y, const float
  * @param y The y co-ordinate to start the string at.
  * @param scale size of the text sprites.
  */
-void drawText(const string text, const u32 x, const u32 y, const float scale) {
+void drawText(const string text, const s32 x, const s32 y, const float scale) {
     if (!textInitted) {
         initText();
     }
@@ -245,25 +245,25 @@ void drawText(const string text, const u32 x, const u32 y, const float scale) {
  */
 void drawTextParagraph(
     const string text,
-    const u32 x,
-    const u32 y,
+    const s32 x,
+    const s32 y,
     const float scale,
-    const u32 width
+    const s32 width
 ) {
 
-    u32 top = y;
+    s32 top = y;
 
-    u32 stringLength = strlen(text);
-    u32 maxLength = width / (CHARACTER_SIZE * scale);
+    s32 stringLength = strlen(text);
+    s32 maxLength = width / (CHARACTER_SIZE * scale);
 
-    u32 i = 0;
+    s32 i = 0;
     while(i < stringLength) {
-        u32 lineAvailable = 0;
+        s32 lineAvailable = 0;
         lineAvailable = (stringLength - i < maxLength) ? stringLength - i : maxLength;
 
         // Split on spaces.
-        u32 lineBreak = lineAvailable;
-        for(u32 j = 0; j < lineAvailable; j++) {
+        s32 lineBreak = lineAvailable;
+        for(s32 j = 0; j < lineAvailable; j++) {
             if (text[i + j] == '$') {
                 // 3 characters, but only takes up 1 space.
                 j += 2;
@@ -307,7 +307,7 @@ void drawTextParagraph(
     }
 }
 
-void drawBox(SpriteCode texture, u32 x, u32 y, u32 width, u32 height) {
+void drawBox(SpriteCode texture, s32 x, s32 y, s32 width, s32 height) {
     rdp_load_texture_stride(0, 0, MIRROR_DISABLED, getSpriteSheet(), texture);
     rdp_draw_textured_rectangle(0, x, y, x + width, y + height - 1, MIRROR_DISABLED);
 }

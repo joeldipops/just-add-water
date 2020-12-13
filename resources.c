@@ -4,7 +4,7 @@
 #include <math.h>
 
 
-static const u32 FADE_FACTOR = 0x0A;
+static const s32 FADE_FACTOR = 0x0A;
 
 static sprite_t* _textMap = 0;
 static sprite_t* _spriteSheet = 0;
@@ -12,11 +12,11 @@ static sprite_t* _timerSheet = 0;
 static bool resourcesInitted = false;
 
 typedef struct {
-    u32 SheetIndex;
-    u32 SpriteCode;
+    s32 SheetIndex;
+    s32 SpriteCode;
     Transformation Transformation;
     sprite_t* Sprite;
-    u32 Position;
+    s32 Position;
 } SpriteLookup;
 
 #define TRANSFORM_CACHE_SIZE 127
@@ -28,7 +28,7 @@ static SpriteLookup _transformCache[TRANSFORM_CACHE_SIZE] = {};
  * @param fadeAmount This amount will be added to each component.
  * @returns The new faded colour.
  */
-u16 fadeColour(const u16 colour, const u32 fadeAmount) {
+u16 fadeColour(const u16 colour, const s32 fadeAmount) {
     u8 red = colour >> 11;
     u8 green = (colour >> 6) & 0x1F;
     u8 blue = (colour >> 1) & 0x1F;
@@ -42,7 +42,7 @@ u16 fadeColour(const u16 colour, const u32 fadeAmount) {
     };
 
     u8 factor = fadeAmount;
-    for (u32 i = 0; i < 3; i++) {
+    for (s32 i = 0; i < 3; i++) {
         factor = factor < room[i] ? factor : room[i];
     }
 
@@ -61,10 +61,10 @@ u16 fadeColour(const u16 colour, const u32 fadeAmount) {
  * @return pointer to sprite in the cache, or 0 if not in the cache.
  * @private
  */
-static sprite_t* getFromCache(const u32 sheetIndex, const u32 spriteCode, const Transformation transformation) {
+static sprite_t* getFromCache(const s32 sheetIndex, const s32 spriteCode, const Transformation transformation) {
     sprite_t* result = 0;
     s32 oldPosition = -1;
-    for (u32 i = 0; i < TRANSFORM_CACHE_SIZE; i++) {
+    for (s32 i = 0; i < TRANSFORM_CACHE_SIZE; i++) {
         if (
             sheetIndex == _transformCache[i].SheetIndex
             && spriteCode == _transformCache[i].SpriteCode
@@ -78,7 +78,7 @@ static sprite_t* getFromCache(const u32 sheetIndex, const u32 spriteCode, const 
 
     // If the sprite was in the cache, put it back on the end of the queue, and push everything that was behind it down one.
     if (result) {
-        for (u32 i = 0; i < TRANSFORM_CACHE_SIZE; i++) {
+        for (s32 i = 0; i < TRANSFORM_CACHE_SIZE; i++) {
             if (_transformCache[i].Position > oldPosition) {
                 _transformCache[i].Position--;
             }
@@ -94,7 +94,7 @@ static sprite_t* getFromCache(const u32 sheetIndex, const u32 spriteCode, const 
  * @private
  */
 static void cacheSprite(SpriteLookup* lookup) {
-    u32 cacheTop = 0;
+    s32 cacheTop = 0;
 
     // Find any slot with position 0
     while(_transformCache[cacheTop].Position) {
@@ -116,7 +116,7 @@ static void cacheSprite(SpriteLookup* lookup) {
     _transformCache[cacheTop].Position = TRANSFORM_CACHE_SIZE;
 
     // Shift everything down by 1 so as things are added they get closer to 0.
-    for (u32 i = 0; i < TRANSFORM_CACHE_SIZE; i++) {
+    for (s32 i = 0; i < TRANSFORM_CACHE_SIZE; i++) {
         if (_transformCache[i].Position > 0) {
             _transformCache[i].Position--;
         }
@@ -151,7 +151,7 @@ s32 initResources() {
     _spriteSheet = loadSheet("/sprites.sprite");
     _timerSheet = loadSheet("/timer.sprite");
 
-    for (u32 i = 0; i < TRANSFORM_CACHE_SIZE; i++) {
+    for (s32 i = 0; i < TRANSFORM_CACHE_SIZE; i++) {
         _transformCache[i].Sprite = 0;
     }
 
@@ -186,8 +186,8 @@ sprite_t* getSpriteSheet() {
  * @param transformation How the sprite should be transformed.
  * @return Pointer to the new transformed sprite.
  */
-sprite_t* transformSprite(const sprite_t* sheet, const u32 spriteCode, const Transformation transformation) {
-    u32 sheetIndex = (sheet == _textMap) ? 0 : 1;
+sprite_t* transformSprite(const sprite_t* sheet, const s32 spriteCode, const Transformation transformation) {
+    s32 sheetIndex = (sheet == _textMap) ? 0 : 1;
 
     // Get from cache if we already have it.
     sprite_t* result = getFromCache(sheetIndex, spriteCode, transformation);
@@ -195,28 +195,28 @@ sprite_t* transformSprite(const sprite_t* sheet, const u32 spriteCode, const Tra
         return result;
     }
 
-    u32 spriteWidth = sheet->width / sheet->hslices;
-    u32 spriteHeight = sheet->height / sheet->vslices;
+    s32 spriteWidth = sheet->width / sheet->hslices;
+    s32 spriteHeight = sheet->height / sheet->vslices;
 
-    u32* data = calloc(spriteHeight * spriteWidth, sheet->bitdepth);
+    s32* data = calloc(spriteHeight * spriteWidth, sheet->bitdepth);
 
-    u32 x = spriteCode % sheet->hslices;
-    u32 y = floor(spriteCode / sheet->hslices);
+    s32 x = spriteCode % sheet->hslices;
+    s32 y = floor(spriteCode / sheet->hslices);
 
-    u32* source = calloc(sheet->height * sheet->width, sheet->bitdepth);
+    s32* source = calloc(sheet->height * sheet->width, sheet->bitdepth);
     memcpy(source, sheet->data, sheet->height * sheet->width * sheet->bitdepth);
 
-    u32 index = 0;
-    u32 destRow = 0;
-    u32 destColumn = 0;
+    s32 index = 0;
+    s32 destRow = 0;
+    s32 destColumn = 0;
 
     switch(transformation) {
         case FADE:
-            for (u32 row = y * spriteHeight; row < y * spriteHeight + spriteHeight; row++) {
-                for (u32 column = x * spriteWidth; column < x * spriteWidth + spriteWidth; column++) {
+            for (s32 row = y * spriteHeight; row < y * spriteHeight + spriteHeight; row++) {
+                for (s32 column = x * spriteWidth; column < x * spriteWidth + spriteWidth; column++) {
                     switch(sheet->bitdepth) {
                         case 2: ;
-                            u32 colour = source[(row * sheet->width + column) * sheet->bitdepth] << 8 | source[(row * sheet->width + column) * sheet->bitdepth + 1]; 
+                            s32 colour = source[(row * sheet->width + column) * sheet->bitdepth] << 8 | source[(row * sheet->width + column) * sheet->bitdepth + 1]; 
                             colour = fadeColour(colour, FADE_FACTOR);
 
                             data[index] = colour >> 8;
@@ -240,9 +240,9 @@ sprite_t* transformSprite(const sprite_t* sheet, const u32 spriteCode, const Tra
             break;
         case ROTATE_90:
             destRow = spriteHeight * sheet->bitdepth - sheet->bitdepth;
-            for (u32 sourceRow = y * spriteHeight; sourceRow < y * spriteHeight + spriteHeight; sourceRow++) {
+            for (s32 sourceRow = y * spriteHeight; sourceRow < y * spriteHeight + spriteHeight; sourceRow++) {
                 destColumn = 0;
-                for (u32 sourceColumn = x * spriteWidth; sourceColumn < x * spriteWidth + spriteWidth; sourceColumn++) {
+                for (s32 sourceColumn = x * spriteWidth; sourceColumn < x * spriteWidth + spriteWidth; sourceColumn++) {
                     memcpy(
                         data + destColumn * spriteWidth + destRow,
                         source + (sourceRow * sheet->width + sourceColumn) * sheet->bitdepth,
@@ -256,9 +256,9 @@ sprite_t* transformSprite(const sprite_t* sheet, const u32 spriteCode, const Tra
         break;
         case ROTATE_180:
             destRow = spriteHeight * sheet->bitdepth - sheet->bitdepth;
-            for (u32 sourceRow = y * spriteHeight; sourceRow < y * spriteHeight + spriteHeight; sourceRow++) {
+            for (s32 sourceRow = y * spriteHeight; sourceRow < y * spriteHeight + spriteHeight; sourceRow++) {
                 destColumn = spriteWidth * sheet->bitdepth - sheet->bitdepth;
-                for (u32 sourceColumn = x * spriteWidth; sourceColumn < x * spriteWidth + spriteWidth; sourceColumn++) {
+                for (s32 sourceColumn = x * spriteWidth; sourceColumn < x * spriteWidth + spriteWidth; sourceColumn++) {
                     memcpy(
                         data + destRow * spriteWidth + destColumn,
                         source + (sourceRow * sheet->width + sourceColumn) * sheet->bitdepth,
@@ -271,9 +271,9 @@ sprite_t* transformSprite(const sprite_t* sheet, const u32 spriteCode, const Tra
         break;
         case ROTATE_270:
             destRow = 0;
-            for (u32 sourceRow = y * spriteHeight; sourceRow < y * spriteHeight + spriteHeight; sourceRow++) {
+            for (s32 sourceRow = y * spriteHeight; sourceRow < y * spriteHeight + spriteHeight; sourceRow++) {
                 destColumn = spriteWidth * sheet->bitdepth - sheet->bitdepth;
-                for (u32 sourceColumn = x * spriteWidth; sourceColumn < x * spriteWidth + spriteWidth; sourceColumn++) {
+                for (s32 sourceColumn = x * spriteWidth; sourceColumn < x * spriteWidth + spriteWidth; sourceColumn++) {
                     memcpy(
                         data + destColumn * spriteWidth + destRow,
                         source + (sourceRow * sheet->width + sourceColumn) * sheet->bitdepth,
@@ -286,9 +286,9 @@ sprite_t* transformSprite(const sprite_t* sheet, const u32 spriteCode, const Tra
         break;
         case FLIP_HORIZONTAL:
             destRow = 0;
-            for (u32 sourceRow = y * spriteHeight; sourceRow < y * spriteHeight + spriteHeight; sourceRow++) {
+            for (s32 sourceRow = y * spriteHeight; sourceRow < y * spriteHeight + spriteHeight; sourceRow++) {
                 destColumn = spriteWidth * sheet->bitdepth - sheet->bitdepth;
-                for (u32 sourceColumn = x * spriteWidth; sourceColumn < x * spriteWidth + spriteWidth; sourceColumn++) {
+                for (s32 sourceColumn = x * spriteWidth; sourceColumn < x * spriteWidth + spriteWidth; sourceColumn++) {
                     memcpy(
                         data + destRow * spriteWidth + destColumn,
                         source + (sourceRow * sheet->width + sourceColumn) * sheet->bitdepth,
@@ -302,9 +302,9 @@ sprite_t* transformSprite(const sprite_t* sheet, const u32 spriteCode, const Tra
         break;
         case FLIP_VERTICAL:
             destRow = spriteHeight * sheet->bitdepth - sheet->bitdepth;
-            for (u32 sourceRow = y * spriteHeight; sourceRow < y * spriteHeight + spriteHeight; sourceRow++) {
+            for (s32 sourceRow = y * spriteHeight; sourceRow < y * spriteHeight + spriteHeight; sourceRow++) {
                 destColumn = 0;
-                for (u32 sourceColumn = x * spriteWidth; sourceColumn < x * spriteWidth + spriteWidth; sourceColumn++) {
+                for (s32 sourceColumn = x * spriteWidth; sourceColumn < x * spriteWidth + spriteWidth; sourceColumn++) {
                     memcpy(
                         data + destRow * spriteWidth + destColumn,
                         source + (sourceRow * sheet->width + sourceColumn) * sheet->bitdepth,
@@ -318,8 +318,8 @@ sprite_t* transformSprite(const sprite_t* sheet, const u32 spriteCode, const Tra
         break;
         default:
             // Straight copy
-            for (u32 row = y * spriteHeight; row < y * spriteHeight + spriteHeight; row++) {
-                for (u32 column = x * spriteWidth; column < x * spriteWidth + spriteWidth; column++) {
+            for (s32 row = y * spriteHeight; row < y * spriteHeight + spriteHeight; row++) {
+                for (s32 column = x * spriteWidth; column < x * spriteWidth + spriteWidth; column++) {
                     memcpy(
                         data + index,
                         source + (row * sheet->width + column) * sheet->bitdepth,
@@ -373,7 +373,7 @@ void freeResources() {
  * Frees up the cache but leaves the resources subsystem initialised.
  */
 void emptyResourceCache() {
-    for (u32 i = 0; i < TRANSFORM_CACHE_SIZE; i++) {
+    for (s32 i = 0; i < TRANSFORM_CACHE_SIZE; i++) {
         if (_transformCache[i].Sprite) {
             free(_transformCache[i].Sprite->data);
             free(_transformCache[i].Sprite);

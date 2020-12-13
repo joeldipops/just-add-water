@@ -9,13 +9,13 @@
 
 #include "text.h"
 
-static u32 _clothsPerDay = 2;
+static s32 _clothsPerDay = 2;
 
 
 static Cloth _masterClothList[CLOTH_MASTER_LIST_SIZE];
-static u32 _clothListLength;
+static s32 _clothListLength;
 static Cloth* _clothQueue[CLOTH_QUEUE_SIZE];
-static u32 _queueIndex = 0;
+static s32 _queueIndex = 0;
 
 #define DRYING_SIZE 6
 // Initially simple, will increase in complexity as turnCount increases.
@@ -24,17 +24,17 @@ DryingState DryingDie[DRYING_SIZE] = {
 };
 
 #define SIZE_SIZE 8
-u32 SizeDie[SIZE_SIZE] = { 1, 1, 1, 1, 1, 1, 1, 1 };
+s32 SizeDie[SIZE_SIZE] = { 15, 15, 15, 15, 15, 15, 15, 15 };
 
 
 #define GROWTH_TYPE_SIZE 4
 // No growth quadratic until I can be arsed sorting out the algorithm for it.
-u32 GrowthTypeDie[GROWTH_TYPE_SIZE]= { 
+s32 GrowthTypeDie[GROWTH_TYPE_SIZE]= { 
     GROWTH_LINEAR, GROWTH_LINEAR, GROWTH_LINEAR, GROWTH_LINEAR
 };
 
 #define FACTOR_SIZE 8
-s32 LinearFactorDie[FACTOR_SIZE] = { 0, 0, 0, 0, 0, 0 };
+s32 LinearFactorDie[FACTOR_SIZE] = { -1, -1, -1, -1, -1, -1 };
 
 const s32 QuadraticFactorDie[FACTOR_SIZE] = {
     -2, -2,
@@ -42,7 +42,7 @@ const s32 QuadraticFactorDie[FACTOR_SIZE] = {
 };
 
 void drawQueue() {
-    u32 y = QUEUE_MARGIN_TOP;
+    s32 y = QUEUE_MARGIN_TOP;
     drawText("NEXT", QUEUE_MARGIN_LEFT, y, 1);
 
     y += TILE_WIDTH ;
@@ -62,7 +62,7 @@ void drawQueue() {
 
     y += TILE_WIDTH / 2;
 
-    for (u32 i = 1; i < (CLOTH_QUEUE_SIZE - 3) / 3; i++) {
+    for (s32 i = 1; i < (CLOTH_QUEUE_SIZE - 3) / 3; i++) {
         drawSprite(CURSOR_LEFT_SPRITE, QUEUE_MARGIN_LEFT, y, 0, 1);
         drawSprite(CURSOR_RIGHT_SPRITE, QUEUE_MARGIN_LEFT + TILE_WIDTH, y, 0, 1);
         y += TILE_WIDTH;
@@ -77,7 +77,7 @@ void drawQueue() {
     y -= TILE_WIDTH / 4;
 
     SpriteCode spriteId = QUEUED_GREEN_SPRITE;
-    for (u32 i = 0; i < _queueIndex; i++) {
+    for (s32 i = 0; i < _queueIndex; i++) {
         if (i == CLOTH_QUEUE_SIZE / 6 * 5) {
             spriteId = QUEUED_RED_SPRITE;;
         } else if (i == CLOTH_QUEUE_SIZE / 2) {
@@ -100,7 +100,7 @@ Cloth* dequeueCloth() {
         return 0;
     }
 
-    for (u32 i = 0; i < CLOTH_QUEUE_SIZE - 1; i++) {
+    for (s32 i = 0; i < CLOTH_QUEUE_SIZE - 1; i++) {
         _clothQueue[i] = _clothQueue[i+1];
     }
 
@@ -140,7 +140,8 @@ Cloth* dequeueCloth() {
  * 
  * Every 5 turns onwards - increase cloths per turn until it's half the max each turn.
  */
-void increaseComplexity(u32 turnCount) {
+void increaseComplexity(s32 turnCount) {
+    /*
     switch (turnCount) {
         case 1:
             _clothsPerDay = 3;
@@ -419,7 +420,7 @@ void increaseComplexity(u32 turnCount) {
             // Just continue with whatever the last setting was.
             break;
     }
-}
+*/}
 
 bool enqueueCloth(Cloth* cloth) {
     if (_queueIndex > CLOTH_QUEUE_SIZE) {
@@ -473,7 +474,7 @@ bool enqueueClothsPerDay() {
         return false;
     }
 
-    for (u32 i = 0; i < _clothsPerDay; i++) {
+    for (s32 i = 0; i < _clothsPerDay; i++) {
         Cloth* cloth = &_masterClothList[_clothListLength];
         initCloth(cloth, SizeDie[rand() % SIZE_SIZE], DryingDie[rand() % DRYING_SIZE]);
 
@@ -507,7 +508,7 @@ void initClothManager() {
     increaseComplexity(1);
 
     _clothListLength = 0;
-    for (u32 i = 0; i < INIT_TURN_CLOTHS; i++) {
+    for (s32 i = 0; i < INIT_TURN_CLOTHS; i++) {
         enqueueNewCloth();
     }
 }

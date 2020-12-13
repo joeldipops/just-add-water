@@ -14,27 +14,27 @@
 
 typedef struct {
     Cloth** cloths;
-    u32 length;
+    s32 length;
 } Line;
 
-static Cloth* _outsideLine[OUTSIDE_LINE_SIZE];
-static Cloth* _insideLine[INSIDE_LINE_SIZE];
+static Cloth* _outsideLine[LINE_SIZE];
+static Cloth* _insideLine[LINE_SIZE];
 
 static Line outsideLine;
 static Line insideLine;
 
 void initLine() {
-    memset(_outsideLine, 0, sizeof(Cloth*) * OUTSIDE_LINE_SIZE);
-    memset(_insideLine, 0, sizeof(Cloth*) * INSIDE_LINE_SIZE);
+    memset(_outsideLine, 0, sizeof(Cloth*) * LINE_SIZE);
+    memset(_insideLine, 0, sizeof(Cloth*) * LINE_SIZE);
     outsideLine.cloths = _outsideLine;
-    outsideLine.length = OUTSIDE_LINE_SIZE;
+    outsideLine.length = LINE_SIZE;
 
     insideLine.cloths = _insideLine;
-    insideLine.length = INSIDE_LINE_SIZE;
+    insideLine.length = LINE_SIZE;
 }
 
-static void drawLine(Line* line, u32 x, u32 y) {
-    for (u32 i = 0; i < line->length; i++) {
+static void drawLine(Line* line, s32 x, s32 y) {
+    for (s32 i = 0; i < line->length; i++) {
         if (line->cloths[i]) {
             drawCloth(
                 line->cloths[i],
@@ -47,9 +47,9 @@ static void drawLine(Line* line, u32 x, u32 y) {
 }
 
 void drawLines() {
-    drawBox(LINE_SPRITE, LINES_MARGIN_LEFT, OUTSIDE_LINE_POSITION, OUTSIDE_LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
-    drawBox(LINE_SPRITE, LINES_MARGIN_LEFT, INSIDE_LINE_POSITION, INSIDE_LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
-    drawBox(ROOF_SPRITE, LINES_MARGIN_LEFT, ROOF_POSITION, OUTSIDE_LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
+    drawBox(LINE_SPRITE, LINES_MARGIN_LEFT, OUTSIDE_LINE_POSITION, LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
+    drawBox(LINE_SPRITE, LINES_MARGIN_LEFT, INSIDE_LINE_POSITION, LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
+    drawBox(ROOF_SPRITE, LINES_MARGIN_LEFT, ROOF_POSITION, LINE_SIZE * TILE_WIDTH, TILE_WIDTH);
 
     if (!isWaiting()) {
         drawLine(&outsideLine, LINES_MARGIN_LEFT, OUTSIDE_LINE_POSITION);
@@ -57,7 +57,7 @@ void drawLines() {
     }
 }
 
-bool hangCloth(u32 lineId, u32 x, Cloth* cloth) {
+bool hangCloth(s32 lineId, s32 x, Cloth* cloth) {
     Cloth** cloths;
     if (lineId == 0) {
         cloths = outsideLine.cloths;
@@ -66,28 +66,28 @@ bool hangCloth(u32 lineId, u32 x, Cloth* cloth) {
     }
 
     // If there's already a cloth where we want to put this new one
-    for (u32 i = x; i < x + cloth->size; i++) {
+    for (s32 i = x; i < x + cloth->size; i++) {
         if (cloths[i]) {
             return false;
         }
     }
 
     // Otherwise hang the new cloth
-    for (u32 i = x; i < x + cloth->size; i++) {
+    for (s32 i = x; i < x + cloth->size; i++) {
         cloths[i] = cloth;
     }
 
     return true;
 }
 
-static Cloth* takeClothFromLine(Line* line, u32 x) {
+static Cloth* takeClothFromLine(Line* line, s32 x) {
     if (line->cloths[x]) {
         Cloth* result = line->cloths[x];
 
-        u32 firstTile = 0;
+        s32 firstTile = 0;
 
         // Remove from the line.
-        for (u32 i = 0; i < line->length; i++) {
+        for (s32 i = 0; i < line->length; i++) {
             if (line->cloths[i] == result) {
                 if (!firstTile) {
                     firstTile = i;
@@ -105,7 +105,7 @@ static Cloth* takeClothFromLine(Line* line, u32 x) {
     }
 }
 
-Cloth* takeCloth(u32 lineId, u32 x) {
+Cloth* takeCloth(s32 lineId, s32 x) {
     Cloth** line;
     if (lineId == 0) {
         return takeClothFromLine(&outsideLine, x);
@@ -117,21 +117,21 @@ Cloth* takeCloth(u32 lineId, u32 x) {
 
 static void dropCloth(Line* line, Cloth* cloth) {
     // Animate the cloth falling off the line.
-    const u32 animsNeeded = 16;
-    const u32 numberOfFrames = 16;
+    const s32 animsNeeded = 16;
+    const s32 numberOfFrames = 16;
     Animation* animations[animsNeeded];
-    for (u32 i = 0; i < numberOfFrames; i++) {
+    for (s32 i = 0; i < numberOfFrames; i++) {
         animations[i] = newAnimation(numberOfFrames);
     }
 
-    u32 y = (line == &outsideLine) ? OUTSIDE_LINE_POSITION : INSIDE_LINE_POSITION;
-    const u32 x = LINES_MARGIN_LEFT + ((INSIDE_LINE_SIZE - cloth->size) * TILE_WIDTH);
+    s32 y = (line == &outsideLine) ? OUTSIDE_LINE_POSITION : INSIDE_LINE_POSITION;
+    const s32 x = LINES_MARGIN_LEFT + ((LINE_SIZE - cloth->size) * TILE_WIDTH);
 
-    for (u32 i = 0; i < numberOfFrames; i++) {
+    for (s32 i = 0; i < numberOfFrames; i++) {
         setClothAnimationFrames(cloth, cloth->size * TILE_WIDTH, animations, i, x + (i % 2), y + i * 2);
     }
 
-    for (u32 i = 0; i < animsNeeded; i++) {
+    for (s32 i = 0; i < animsNeeded; i++) {
         startAnimation(animations[i]);
     }
 
@@ -148,10 +148,10 @@ static void dropCloth(Line* line, Cloth* cloth) {
  * Grow or shrink the cloths based on the weather.
  */
 void updateClothSize(Line* line, Weather weather) {
-    u32 i = 0;
+    s32 i = 0;
     while (i < line->length) {
         if (line->cloths[i]) {
-            u32 oldSize = line->cloths[i]->size;
+            s32 oldSize = line->cloths[i]->size;
             updateCloth(line->cloths[i], weather);
             prepareClothAnimation(
                 line->cloths[i],
@@ -169,8 +169,8 @@ void updateClothSize(Line* line, Weather weather) {
  * Shuffle clothes along the line now that they have a new size, and dump any that fell off.
  */
 void updateClothPosition(Line* line) {
-    u32 iSource = 0;
-    u32 iDest = 0;
+    s32 iSource = 0;
+    s32 iDest = 0;
     Cloth* lastCloth = 0;
 
     Cloth* temp[line->length];
@@ -190,7 +190,7 @@ void updateClothPosition(Line* line) {
             if ((iDest + lastCloth->size) > line->length) {
                 dropCloth(line, lastCloth);
             } else {
-                for (u32 j = 0; j < lastCloth->size; j++) {
+                for (s32 j = 0; j < lastCloth->size; j++) {
                     line->cloths[iDest] = lastCloth;
                     iDest++;
                 }

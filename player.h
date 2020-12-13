@@ -6,8 +6,8 @@
 
 
 typedef struct {
-    u32 x;
-    u32 y;
+    s32 x;
+    s32 y;
     Cloth* cloth;
 } Hand;
 
@@ -21,8 +21,8 @@ typedef struct {
 
     State state;
 
-    u32 score;
-    u32 dropped;
+    s32 score;
+    s32 dropped;
 } Player;
 
 void gameOver();

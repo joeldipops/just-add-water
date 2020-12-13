@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 void initClothManager();
-void increaseComplexity(u32 turnCount);
+void increaseComplexity(s32 turnCount);
 /**
  * Add a single, existing cloth to the queue
  */

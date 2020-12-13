@@ -123,12 +123,12 @@ void freeText();
  * @param y The y co-ordinate to start the string at.
  * @param scale size of the text sprites.
  */
-void drawText(const string text, const u32 x, const u32 y, const float scale);
+void drawText(const string text, const s32 x, const s32 y, const float scale);
 
 /**
  *
  */ 
-//void drawSprite(const SpriteCode spriteCode, const u32 x, const u32 y, const float scale);
+//void drawSprite(const SpriteCode spriteCode, const s32 x, const s32 y, const float scale);
 
 /**
  * Draws a horizontal string of text starting at the given location.
@@ -140,13 +140,13 @@ void drawText(const string text, const u32 x, const u32 y, const float scale);
  */
 void drawTextParagraph(
     const string text,
-    const u32 x,
-    const u32 y,
+    const s32 x,
+    const s32 y,
     const float scale,
-    const u32 width
+    const s32 width
 );
 
-void drawBox(SpriteCode texture, u32 x, u32 y, u32 width, u32 height);
+void drawBox(SpriteCode texture, s32 x, s32 y, s32 width, s32 height);
 
 
 #endif

@@ -3,7 +3,7 @@
 
 #define MAX_ANIMATIONS 256
 static Animation* _queue[MAX_ANIMATIONS];
-static u32 _queueIndex = 0;
+static s32 _queueIndex = 0;
 
 void initAnimation() {
     memset(_queue, 0, sizeof(Animation*) * MAX_ANIMATIONS);
@@ -13,7 +13,7 @@ void initAnimation() {
  * Constructor.
  * @param numberOfFrames.
  */
-Animation* newAnimation(u32 numberOfFrames) {
+Animation* newAnimation(s32 numberOfFrames) {
     Animation* result = calloc(1, sizeof(Animation));
     result->currentFrameIndex = 0;
     result->numberOfFrames = numberOfFrames;
@@ -25,7 +25,7 @@ Animation* newAnimation(u32 numberOfFrames) {
 }
 
 void drawAnimations() {
-    for(u32 i = 0; i < MAX_ANIMATIONS; i++) {
+    for(s32 i = 0; i < MAX_ANIMATIONS; i++) {
         Animation* animation = _queue[i];
         if (animation) {
             Frame* frame = &animation->frames[animation->currentFrameIndex];
@@ -75,14 +75,14 @@ void abandonAnimation(Animation* animation) {
 }
 
 void abandonAllAnimations() {
-    for (u32 i = 0; i < MAX_ANIMATIONS; i++) {
+    for (s32 i = 0; i < MAX_ANIMATIONS; i++) {
         if (_queue[i]) {
             abandonAnimation(_queue[i]);
         }
     }
 }
 
-void setSimpleFrame(Frame* frame, SpriteCode sprite, u32 x, u32 y, float seconds) {
+void setSimpleFrame(Frame* frame, SpriteCode sprite, s32 x, s32 y, float seconds) {
     frame->sprite = sprite;
     frame->x = x;
     frame->y = y;
