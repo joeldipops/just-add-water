@@ -264,7 +264,7 @@ void prepareClothAnimation(Cloth* cloth, s32 x, s32 y) {
     float diff = (maxSize - minSize) * TILE_WIDTH;
 
     // Some arbitrary number, we should actually calculate this from the cloth properties...
-    s32 spritesNeeded = 10 + (cloth->size * 2);
+    s32 spritesNeeded = 10 + (maxSize * 2);
 
     // We will have 16 animation frames.
     const float numberOfFrames = 16;

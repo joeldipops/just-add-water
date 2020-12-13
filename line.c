@@ -117,10 +117,10 @@ Cloth* takeCloth(s32 lineId, s32 x) {
 
 static void dropCloth(Line* line, Cloth* cloth) {
     // Animate the cloth falling off the line.
-    const s32 animsNeeded = 16;
+    s32 animsNeeded = 10 + (cloth->size * 2);
     const s32 numberOfFrames = 16;
     Animation* animations[animsNeeded];
-    for (s32 i = 0; i < numberOfFrames; i++) {
+    for (s32 i = 0; i < animsNeeded; i++) {
         animations[i] = newAnimation(numberOfFrames);
     }
 
