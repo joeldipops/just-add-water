@@ -10,8 +10,6 @@
 
 #define INIT_TURN_SECONDS 6
 #define INIT_TURN_CLOTHS 3
-// Cos we need to fit a '+' and a '1'
-#define MIN_CLOTH_SIZE 2
 
 #define OUTSIDE_LINE_SIZE 15
 #define INSIDE_LINE_SIZE 15

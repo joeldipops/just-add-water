@@ -9,7 +9,7 @@
 
 #include "text.h"
 
-static u32 _clothsPerDay = 3;
+static u32 _clothsPerDay = 2;
 
 
 static Cloth _masterClothList[CLOTH_MASTER_LIST_SIZE];
@@ -143,6 +143,7 @@ Cloth* dequeueCloth() {
 void increaseComplexity(u32 turnCount) {
     switch (turnCount) {
         case 1:
+            _clothsPerDay = 3;
             DryingDie[0] = DRYING_SPUN;
             DryingDie[1] = DRYING_SPUN;
             DryingDie[2] = DRYING_SPUN;
@@ -164,6 +165,7 @@ void increaseComplexity(u32 turnCount) {
             GrowthTypeDie[2] = GROWTH_LINEAR;
             GrowthTypeDie[3] = GROWTH_LINEAR;
 
+            
             LinearFactorDie[0] = 0;
             LinearFactorDie[1] = 0;
             LinearFactorDie[2] = 0;
@@ -187,15 +189,14 @@ void increaseComplexity(u32 turnCount) {
             break;
         // Turn 4, 5 Start mixing things up
         case 4:
+            _clothsPerDay = 2;
             LinearFactorDie[0] = 0;
             LinearFactorDie[1] = 0;
             LinearFactorDie[2] = 0;
             LinearFactorDie[3] = 0;
             break;
-        // Turn 6 First size increase (just two instead of three cloths this turn)
+        // Turn 6 First size increase
         case 6:
-            _clothsPerDay = 2;
-
             SizeDie[0] = 2;
             SizeDie[1] = 2;
             SizeDie[2] = 2;
@@ -212,8 +213,6 @@ void increaseComplexity(u32 turnCount) {
             break;
         // Turn 7, 8, 9 Continue mixing things up
         case 7:
-            _clothsPerDay = 3;
-
             SizeDie[0] = 1;
             SizeDie[1] = 1;
             SizeDie[2] = 1;
@@ -255,7 +254,7 @@ void increaseComplexity(u32 turnCount) {
             break;
         // Turn 11 - 15 Things mixed up but with the possibility of a big mother every now and then
         case 11:
-            _clothsPerDay = 3;
+            _clothsPerDay = 2;
             SizeDie[0] = 1;
             SizeDie[1] = 1;
             SizeDie[2] = 1;
@@ -300,7 +299,6 @@ void increaseComplexity(u32 turnCount) {
             break;
         // Turn 17 - 20 mix up with reverse growth a possibility.
         case 17:
-            _clothsPerDay = 3;
             SizeDie[0] = 1;
             SizeDie[1] = 1;
             SizeDie[2] = 1;
@@ -329,7 +327,7 @@ void increaseComplexity(u32 turnCount) {
             break;
         // Turn 21 - Cloth with Double growth rate
         case 21:
-            _clothsPerDay = 2;
+            _clothsPerDay = 1;
             LinearFactorDie[0] = 2;
             LinearFactorDie[1] = 2;
             LinearFactorDie[2] = 2;
@@ -350,7 +348,7 @@ void increaseComplexity(u32 turnCount) {
             SizeDie[7] = 1;
             break;
         case 22:
-            _clothsPerDay = 3;
+            _clothsPerDay = 2;
             SizeDie[0] = 1;
             SizeDie[1] = 1;
             SizeDie[2] = 1;
@@ -372,7 +370,6 @@ void increaseComplexity(u32 turnCount) {
             break;
         // A little breather here.
         case 25:
-            _clothsPerDay = 2;
             break;
         // Turn 30 - Triple growth rate
         case 30:

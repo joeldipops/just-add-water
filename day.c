@@ -17,7 +17,6 @@ static u32 secondsLeft = 0;
 timer_link_t* secondsTimer = 0;
 u32 _turnCount = 1;
 
-
 static u32 secondsPerDay = INIT_TURN_SECONDS;
 
 void initDay() {
@@ -54,7 +53,6 @@ void continueNewDay() {
     _waiting = false;
     _turnCount++;
 
-
     newDayWeather();
 
     updateHangingClothPosition();
@@ -66,14 +64,11 @@ void continueNewDay() {
         return;
     }
 
-    if (secondsTimer) {
-        delete_timer(secondsTimer);
-    }
-
-    if (secondsPerDay) {
-        secondsLeft = secondsPerDay;
-        secondsTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND), TF_CONTINUOUS, onSecondTick);
-    }
+    disable_interrupts();
+    delete_timer(secondsTimer);
+    secondsLeft = secondsPerDay;
+    secondsTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND), TF_CONTINUOUS, onSecondTick);
+    enable_interrupts();
 }
 
 /**
@@ -81,11 +76,10 @@ void continueNewDay() {
  * Then pause everything for a second while we animate the change-over.
  */
 void startNewDay() {
-    if (secondsTimer) {
-        delete_timer(secondsTimer);
-    }
-
+    disable_interrupts();
+    delete_timer(secondsTimer);
     secondsTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND / 1.5), TF_CONTINUOUS, continueNewDay);
+    enable_interrupts();
 
     prepareNewDayWeather();
     updateHangingClothSize(getForecast());
@@ -96,8 +90,11 @@ void startNewDay() {
 void startFirstDay() {
     newDayWeather();
 
+    disable_interrupts();
+    delete_timer(secondsTimer);
     secondsLeft = secondsPerDay;
     secondsTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND), TF_CONTINUOUS, onSecondTick);
+    enable_interrupts();
 
     _waiting = false;
 }

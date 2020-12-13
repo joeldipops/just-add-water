@@ -29,7 +29,7 @@ typedef struct {
     // We no longer care about this cloth.
     bool isFreeable;
     // number of discrete chunks.
-    u32 size;
+    s32 size;
     // previous sized, used when animating.
     u32 oldSize;
     // Degrees of wetness.

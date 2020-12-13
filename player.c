@@ -297,22 +297,20 @@ bool handleController(N64ControllerState* pressed, N64ControllerState* released)
         return false;
     }
 
-    if (!isWaiting()) {
-        if (released->c[0].L) {
-            handleHang();
-            return true;
-        }
+    if (released->c[0].L) {
+        handleHang();
+        return true;
+    }
 
-        // Discard whatever you're holding in your right hand so you can pick up something else.
-        if (released->c[0].A || released->c[0].B) {
-            handleDrop();
-            return true;
-        }
+    // Discard whatever you're holding in your right hand so you can pick up something else.
+    if (released->c[0].A || released->c[0].B) {
+        handleDrop();
+        return true;
+    }
 
-        if (released->c[0].R) {
-            handleTake();
-            return true;
-        }
+    if (released->c[0].R) {
+        handleTake();
+        return true;
     }
 
     bool result = false;
