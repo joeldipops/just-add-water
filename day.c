@@ -43,8 +43,8 @@ void onSecondTick() {
 
 void cancelDayTimers() {
     delete_timer(secondsTimer);
+    secondsTimer = 0;
 }
-
 
 /**
  * Called after the cloths have been animated
@@ -89,6 +89,7 @@ void startNewDay() {
 }
 
 void startFirstDay() {
+    prepareNewDayWeather();
     newDayWeather();
 
     disable_interrupts();
@@ -97,6 +98,7 @@ void startFirstDay() {
     secondsTimer = new_timer(TIMER_TICKS(TICKS_PER_SECOND), TF_CONTINUOUS, onSecondTick);
     enable_interrupts();
 
+    _turnCount = 1;
     _waiting = false;
 }
 
