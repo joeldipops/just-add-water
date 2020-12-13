@@ -3,6 +3,7 @@
 #include "text.h"
 #include "config.h"
 #include "renderer.h"
+#include "player.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,7 +77,7 @@ void drawQueue() {
     y -= TILE_WIDTH / 4;
 
     SpriteCode spriteId = QUEUED_GREEN_SPRITE;
-    if (_queueIndex < CLOTH_QUEUE_SIZE) {
+    if (getPlayer()->state != STATE_GAMEOVER) {
         for (s32 i = 0; i < _queueIndex; i++) {
             if (i == CLOTH_QUEUE_SIZE / 6 * 5) {
                 spriteId = QUEUED_RED_SPRITE;;
@@ -89,7 +90,8 @@ void drawQueue() {
         }
     } else {
         spriteId = QUEUED_RED_SPRITE;;
-        for (s32 i = 0; i < _queueIndex; i++) {
+        // A few extras to show we busted out of the container
+        for (s32 i = 0; i < _queueIndex + 2; i++) {
             drawScaledSprite(spriteId, QUEUE_MARGIN_LEFT + 2, y, 0, 2, 1);
             y -= TILE_WIDTH / 4;
         }
@@ -431,12 +433,12 @@ void increaseComplexity(s32 turnCount) {
  * Add a specific cloth to the end of the queue
  */
 bool enqueueCloth(Cloth* cloth) {
-    _clothQueue[_queueIndex] = cloth;
-    _queueIndex++;
-
     if (_queueIndex > CLOTH_QUEUE_SIZE) {
         return false;
     }
+
+    _clothQueue[_queueIndex] = cloth;
+    _queueIndex++;
 
     return true;
 }
@@ -446,6 +448,9 @@ bool enqueueCloth(Cloth* cloth) {
  * @return true if successful, false if the queue has overflowed.
  */
 bool enqueueNewCloth() {
+    if (_queueIndex > CLOTH_QUEUE_SIZE) {
+        return false;
+    }
     Cloth* cloth = &_masterClothList[_clothListLength];
     initCloth(
         cloth,
@@ -471,13 +476,14 @@ bool enqueueNewCloth() {
 
     enqueueCloth(cloth);
 
-    if (_queueIndex > CLOTH_QUEUE_SIZE) {
-        return false;
-    }
     return true;
 }
 
 bool enqueueClothsPerDay() {
+    if (_queueIndex + _clothsPerDay > CLOTH_QUEUE_SIZE) {
+        return false;
+    }
+
     for (s32 i = 0; i < _clothsPerDay; i++) {
         Cloth* cloth = &_masterClothList[_clothListLength];
         initCloth(cloth, SizeDie[rand() % SIZE_SIZE], DryingDie[rand() % DRYING_SIZE]);
@@ -499,10 +505,6 @@ bool enqueueClothsPerDay() {
         _clothListLength++;
 
         enqueueCloth(cloth);
-    }
-
-    if (_queueIndex + _clothsPerDay > CLOTH_QUEUE_SIZE) {
-        return false;
     }
 
     return true;
