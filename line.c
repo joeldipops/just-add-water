@@ -121,7 +121,7 @@ static void dropCloth(Line* line, Cloth* cloth) {
     const s32 numberOfFrames = 16;
     Animation* animations[animsNeeded];
     for (s32 i = 0; i < animsNeeded; i++) {
-        animations[i] = newAnimation(numberOfFrames);
+        animations[i] = newAnimation(numberOfFrames, 0);
     }
 
     s32 y = (line == &outsideLine) ? OUTSIDE_LINE_POSITION : INSIDE_LINE_POSITION;
@@ -133,6 +133,7 @@ static void dropCloth(Line* line, Cloth* cloth) {
 
     for (s32 i = 0; i < animsNeeded; i++) {
         startAnimation(animations[i]);
+
     }
 
     // Cloths that fall off the line go back in to the queue, their size already changed.

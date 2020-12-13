@@ -63,7 +63,7 @@ static void handleHang() {
 }
 
 static void animateDropped(s32 x, s32 y) {
-    Animation* anim = newAnimation(8);
+    Animation* anim = newAnimation(8, 0);
 
     x = LINES_MARGIN_LEFT + (TILE_WIDTH * x);
     y = (player.hands[HAND_TAKE].y
@@ -97,7 +97,7 @@ static void handleDrop() {
 }
 
 static void animateScore(s32 score, s32 x, s32 y) {
-    Animation* anim = newAnimation(8);
+    Animation* anim = newAnimation(8, 0);
 
     x = LINES_MARGIN_LEFT + (TILE_WIDTH * x);
     y = (player.hands[HAND_TAKE].y

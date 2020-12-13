@@ -13,10 +13,11 @@ void initAnimation() {
  * Constructor.
  * @param numberOfFrames.
  */
-Animation* newAnimation(s32 numberOfFrames) {
+Animation* newAnimation(s32 numberOfFrames, u32 typeCode) {
     Animation* result = calloc(1, sizeof(Animation));
     result->currentFrameIndex = 0;
     result->numberOfFrames = numberOfFrames;
+    result->typeCode = typeCode;
 
     // undefined.
     result->queueIndex = -1;
@@ -74,6 +75,14 @@ void abandonAnimation(Animation* animation) {
     free(animation);
 }
 
+void abandonAnimationsOfType(u32 typeCode) {
+    for (s32 i = 0; i < MAX_ANIMATIONS; i++) {
+        if (_queue[i] && _queue[i]->typeCode == typeCode) {
+            abandonAnimation(_queue[i]);
+        }
+    }
+}
+
 void abandonAllAnimations() {
     for (s32 i = 0; i < MAX_ANIMATIONS; i++) {
         if (_queue[i]) {
@@ -81,6 +90,7 @@ void abandonAllAnimations() {
         }
     }
 }
+
 
 void setSimpleFrame(Frame* frame, SpriteCode sprite, s32 x, s32 y, float seconds) {
     frame->sprite = sprite;

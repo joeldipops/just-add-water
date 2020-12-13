@@ -271,7 +271,7 @@ void prepareClothAnimation(Cloth* cloth, s32 x, s32 y) {
 
     Animation* animations[spritesNeeded];
     for (s32 i = 0; i < spritesNeeded; i++) {
-        animations[i] = newAnimation(numberOfFrames);
+        animations[i] = newAnimation(numberOfFrames, 1);
         animations[i]->numberOfFrames = numberOfFrames;
     }
 

@@ -63,6 +63,8 @@ void continueNewDay() {
         return;
     }
 
+    abandonAnimationsOfType(1);
+
     disable_interrupts();
     delete_timer(secondsTimer);
     secondsLeft = secondsPerDay;

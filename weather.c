@@ -116,7 +116,7 @@ void drawWeather() {
     if (_animationQueued) {
         _animationQueued = false;
 
-        Animation* anim = newAnimation(8);
+        Animation* anim = newAnimation(8, 0);
         for (s32 i = 0; i < 8; i++) {
             setSimpleFrame(
                 &anim->frames[i],

@@ -21,6 +21,7 @@ typedef struct {
 } Frame;
 
 struct Animation {
+    u32 typeCode;
     Frame frames[MAX_FRAMES];
     s32 currentFrameIndex;
     s32 queueIndex;
@@ -32,9 +33,10 @@ void initAnimation();
 void setSimpleFrame(Frame* frame, SpriteCode sprite, s32 x, s32 y, float seconds);
 
 void drawAnimations();
-Animation* newAnimation(s32 numberOfFrames);
+Animation* newAnimation(s32 numberOfFrames, u32 typeCode);
 void startAnimation(Animation* animation);
-void abandonAnimation(Animation* animation);
 void abandonAllAnimations();
+void abandonAnimation(Animation* animation);
+void abandonAnimationsOfType(u32 typeId);
 
 #endif
