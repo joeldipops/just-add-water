@@ -79,23 +79,6 @@ static void animateDropped(s32 x, s32 y) {
     startAnimation(anim);
 }
 
-static void handleDrop() {
-    Hand* hand = &player.hands[HAND_TAKE];
-    // If hand is empty, first grab whatever cloth we're sitting on.
-    if (!hand->cloth) {
-        hand->cloth = takeCloth(hand->y, hand->x);
-    }
-    // If nothing to drop, we're done.
-    if (!hand->cloth) {
-        return;
-    }
-
-    hand->cloth->isFreeable = true;
-    hand->cloth = 0;
-    player.dropped++;
-    animateDropped(hand->x, hand->y);
-}
-
 static void animateScore(s32 score, s32 x, s32 y) {
     Animation* anim = newAnimation(8, 0);
 
@@ -111,6 +94,35 @@ static void animateScore(s32 score, s32 x, s32 y) {
     }
 
     startAnimation(anim);
+}
+
+
+static void handleDrop() {
+    Hand* hand = &player.hands[HAND_TAKE];
+    // If hand is empty, first grab whatever cloth we're sitting on.
+    if (!hand->cloth) {
+        hand->cloth = takeCloth(hand->y, hand->x);
+    }
+    // If nothing to drop, we're done.
+    if (!hand->cloth) {
+        return;
+    }
+
+    if (isClothDry(hand->cloth)) {
+        // If it's dry, chuck it in the basket.
+        s32 clothScore = calculateScore(hand->cloth);
+        player.score += clothScore;
+        hand->cloth->isFreeable = true;
+        hand->cloth = 0;
+
+        animateScore(clothScore, hand->x, hand->y);
+    } else {
+        // otherwise, throw it on the ground.
+        hand->cloth->isFreeable = true;
+        hand->cloth = 0;
+        player.dropped++;
+        animateDropped(hand->x, hand->y);
+    }
 }
 
 static void handleTake() {
