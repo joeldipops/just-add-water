@@ -2,7 +2,7 @@
     #define LEFT_MARGIN 0
     #define TOP_MARGIN 0
 #else
-    #define LEFT_MARGIN 12
+    #define LEFT_MARGIN 22
     #define TOP_MARGIN 4
 
 #endif
@@ -11,7 +11,7 @@
 #define INIT_TURN_SECONDS 6
 #define INIT_TURN_CLOTHS 3
 
-#define LINE_SIZE 15
+#define LINE_SIZE 14
 
 #define RESOLUTION RESOLUTION_320x240
 //#define RESOLUTION RESOLUTION_640x576
